@@ -1,22 +1,60 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spending_share/main.dart';
+import 'package:spending_share/album.dart';
+import 'package:spending_share/counter.dart';
+import 'package:mockito/annotations.dart';
+import 'package:http/http.dart' as http;
+import 'package:mockito/mockito.dart';
 
+import 'widget_test.mocks.dart';
+
+@GenerateMocks([http.Client])
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Counter', () {
+    test('value should start at 0', () {
+      expect(Counter().value, 0);
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('Counter value should be incremented', () {
+      final counter = Counter();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      counter.increment();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(counter.value, 1);
+    });
+    test('Counter value should be descremented', () {
+      final counter = Counter();
+
+      counter.decrement();
+
+      expect(counter.value, -1);
+    });
+  });
+
+  group('fetchAlbum', () {
+    test('returns an Album if the http call completes successfully', () async {
+      final client = MockClient();
+
+      // Use Mockito to return a successful response when it calls the
+      // provided http.Client.
+      when(client
+          .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1')))
+          .thenAnswer((_) async =>
+          http.Response('{"userId": 1, "id": 2, "title": "mock"}', 200));
+
+      expect(await fetchAlbum(client), isA<Album>());
+    });
+
+    test('throws an exception if the http call completes with an error', () {
+      final client = MockClient();
+
+      // Use Mockito to return an unsuccessful response when it calls the
+      // provided http.Client.
+      when(client
+          .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1')))
+          .thenAnswer((_) async => http.Response('Not Found', 404));
+
+      expect(fetchAlbum(client), throwsException);
+    });
   });
 }
+
