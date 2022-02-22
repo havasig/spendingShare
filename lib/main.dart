@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:spending_share/ui/constants/color_constants.dart';
+import 'package:spending_share/ui/widgets/button.dart';
+import 'package:spending_share/ui/widgets/calculator.dart';
+import 'package:spending_share/ui/widgets/input_field.dart';
+import 'package:spending_share/ui/widgets/scroll_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,11 +15,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return GetMaterialApp(
+      title: 'Speding Share',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          fontFamily: 'Nunito',
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: ColorConstants.backgroundBlack,
+          scrollbarTheme: ScrollbarThemeData(
+              isAlwaysShown: true,
+              thickness: MaterialStateProperty.all(10),
+              thumbColor: MaterialStateProperty.all(ColorConstants.defaultOrange),
+              radius: const Radius.circular(10))),
+      themeMode: ThemeMode.dark,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -47,13 +60,33 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            ElevatedButton(
+              child: const Text('Button Page'),
+              onPressed: () {
+                Get.to(() => const ButtonPage());
+              },
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            ElevatedButton(
+              child: const Text('Input Field Page'),
+              onPressed: () {
+                Get.to(() => const InputFieldPage());
+              },
             ),
+
+            ElevatedButton(
+              child: const Text('Scroll View Page'),
+              onPressed: () {
+                Get.to(() => ScrollViewPage());
+              },
+            ),
+
+            ElevatedButton(
+              child: const Text('Calculator Page'),
+              onPressed: () {
+                Get.to(() => CalculatorPage());
+              },
+            ),
+
           ],
         ),
       ),
