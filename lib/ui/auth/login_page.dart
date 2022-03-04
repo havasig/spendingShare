@@ -142,10 +142,11 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Get.to(() => const RegisterPage());
                   },
-                  child: Text('registration'.tr,
+                  child: Text('registration-exclamation'.tr,
                       style: TextStyleConstants.body_2_medium.copyWith(
                         color: ColorConstants.defaultOrange,
                         decoration: TextDecoration.underline,
+                        decorationThickness: 2,
                       )),
                 ),
               ],
@@ -158,6 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyleConstants.body_2_medium.copyWith(
                   color: ColorConstants.defaultOrange,
                   decoration: TextDecoration.underline,
+                  decorationThickness: 2,
                 ),
               ),
             ),

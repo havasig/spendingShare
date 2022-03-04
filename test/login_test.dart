@@ -1,30 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 
-class _Wrapper extends StatelessWidget {
-  final Widget child;
-
-  const _Wrapper(this.child);
-
-  @override
-  Widget build(BuildContext context) {
-    ScreenUtil.init(const BoxConstraints(), context: context);
-    return child;
-  }
-}
-
-Widget testableWidget({required Widget child}) {
-  return MediaQuery(
-    data: const MediaQueryData(),
-    child: GetMaterialApp(
-      home: Scaffold(body: _Wrapper(child)),
-    ),
-  );
-}
+import 'wrapper.dart';
 
 void main() {
   group('Login', () {
@@ -67,7 +46,7 @@ void main() {
       var testWidget = testableWidget(child: const LoginPage());
       await tester.pumpWidget(testWidget);
       final noAccountTextFinder = find.text('no-account');
-      final registrationFinder = find.widgetWithText(TextButton, 'registration');
+      final registrationFinder = find.widgetWithText(TextButton, 'registration-exclamation');
       expect(noAccountTextFinder, findsOneWidget);
       expect(registrationFinder, findsOneWidget);
     });
@@ -104,6 +83,4 @@ void main() {
     /// present in the screen.
     expect(find.byType(RegisterPage), findsOneWidget);
   });*/
-
-
 }
