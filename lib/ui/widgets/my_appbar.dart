@@ -11,6 +11,9 @@ class MyAppBar extends AppBar {
   final Widget? suffixWidget;
   final double size;
 
+  @override
+  final Size preferredSize;
+
   MyAppBar({
     Key? key,
     this.titleText = "",
@@ -45,7 +48,4 @@ class MyAppBar extends AppBar {
               : null,
           actions: [suffixWidget ?? const SizedBox.shrink()],
         );
-
-  @override
-  final Size preferredSize;
 }

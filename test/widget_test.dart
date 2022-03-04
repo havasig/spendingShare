@@ -11,57 +11,7 @@ import 'widget_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() {
-  /*
-  group('Login', () {
-    testWidgets('Login has every item', (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(
-        home: Scaffold(
-          body: LoginPage(),
-        ),
-      ));
 
-      await tester.enterText(find.byKey(const Key('email_input')), 'admin@email.com');
-      //await tester.enterText(find.byKey(const Key('password_input')), 'admin');
-
-      final emailFinder = find.text('admin@email.com');
-      //final passwordFinder = find.text('admin@email.com');
-      //final buttonFinder = find.widgetWithText(Button, 'login');
-      //final forgotPassword = find.widgetWithText(TextButton, 'forgot-password');
-
-      expect(emailFinder, findsOneWidget);
-      //expect(passwordFinder, findsOneWidget);
-      //expect(buttonFinder, findsOneWidget);
-      //expect(forgotPassword, findsOneWidget);
-    });
-
-    testWidgets('Authenticate successfully', (WidgetTester tester) async {});
-
-    testWidgets('Authentication fails', (WidgetTester tester) async {});
-  });
-
-  testWidgets('Button is present and triggers navigation after tapped', (WidgetTester tester) async {
-    final mockObserver = MockNavigatorObserver();
-    await tester.pumpWidget(
-      MaterialApp(
-        home: const Scaffold(
-          body: LoginPage(),
-        ),
-        navigatorObservers: [mockObserver],
-      ),
-    );
-
-    expect(find.byKey(const Key('registration')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('registration')));
-    await tester.pumpAndSettle();
-
-    /// Verify that a push event happened
-    //verify(mockObserver.didPush(any, any));
-
-    /// You'd also want to be sure that your page is now
-    /// present in the screen.
-    expect(find.byType(RegisterPage), findsOneWidget);
-  });
-  */
 
   group('Counter', () {
     test('value should start at 0', () {
