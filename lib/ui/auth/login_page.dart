@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -7,9 +8,13 @@ import 'package:spending_share/ui/auth/register_page.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
+import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
+
+import 'authentication.dart';
+import 'main_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -54,128 +59,124 @@ class _LoginPageState extends State<LoginPage> {
     TextValidator.validatePassText(_passwordTextEditingController.value.text);
   }
 
-  void login() {
-    /*
-    Get.to(ProfileSettingsPage());
-
-    loginStore.email = emailTextEditingController.text;
-    loginStore.password = passTextEditingController.text;
-
+  Future<void> signInWithEmailAndPassword() async {
     try {
-      dynamic loginWrapper;
-      if (false) {
-        loginWrapper = await loginStore.loginWithAdminEmailPass();
-      } else {
-        loginWrapper = await loginStore.loginWithEmailPass();
-      }
-      if (loginWrapper != null) {
-        await userStore.loggedIn(loginWrapper);
-        loginStore.handleUserLogin(context, loginWrapper.user);
-      }
-    } catch (e) {
-      await showDialog(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: 'admin@email.com', //_emailTextEditingController.text,
+        password: 'password', //_passwordTextEditingController.text,
+      );
+      Get.to(() => const MainPage());
+    } on FirebaseAuthException catch (e) {
+      showDialog<void>(
         context: context,
-        builder: (BuildContext context) =>
-            OkPopup(
-              text: "ERROR".tr,
-              content: Text(loginStore.errorKey ?? e.toString()),
-            ),
+        builder: (context) {
+          return ErrorDialog(
+            title: 'Sign in failed',
+            e: e,
+          );
+        },
       );
     }
-
-    setState(() {});
-    */
   }
+
+  final _formKey = GlobalKey<FormState>(debugLabel: '_LoginFormState');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(h(32)),
-        child: Column(
-          children: [
-            const Spacer(),
-            Text(
-              'login'.tr,
-              style: TextStyleConstants.h_3,
-            ),
-            const Spacer(),
-            InputField(
-              key: const Key('email_input'),
-              focusNode: _emailFocusNode,
-              textEditingController: _emailTextEditingController,
-              onChanged: (text) => setState(() {}),
-              prefixIcon: const Icon(
-                Icons.mail,
-                color: ColorConstants.defaultOrange,
+        padding: EdgeInsets.all(h(16)),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const Spacer(),
+              Text(
+                'login'.tr,
+                style: TextStyleConstants.h_3,
               ),
-              labelText: "email".tr,
-              hintText: "your-email".tr,
-              errorText: emailHadFocus ? _errorText : null,
-            ),
-            const Spacer(),
-            InputField(
-              key: const Key('password_input'),
-              focusNode: _passwordFocusNode,
-              textEditingController: _passwordTextEditingController,
-              isPasswordField: true,
-              labelText: "password".tr,
-              hintText: "your-password".tr,
-              onChanged: (text) => setState(() {}),
-              errorText: passwordHadFocus ? _errorText : null,
-            ),
-            const Spacer(),
-            Button(
-              onPressed: () {},
-              text: 'login'.tr,
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'no-account'.tr,
-                  style: TextStyleConstants.body_2_medium,
-                ),
-                TextButton(
-                  key: const Key('registration'),
-                  onPressed: () {
-                    Get.to(() => const RegisterPage());
-                  },
-                  child: Text('registration-exclamation'.tr,
-                      style: TextStyleConstants.body_2_medium.copyWith(
-                        color: ColorConstants.defaultOrange,
-                        decoration: TextDecoration.underline,
-                        decorationThickness: 2,
-                      )),
-                ),
-              ],
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'forgot-password'.tr,
-                style: TextStyleConstants.body_2_medium.copyWith(
+              const Spacer(),
+              InputField(
+                key: const Key('email_input'),
+                focusNode: _emailFocusNode,
+                textEditingController: _emailTextEditingController,
+                onChanged: (text) => setState(() {}),
+                prefixIcon: const Icon(
+                  Icons.mail,
                   color: ColorConstants.defaultOrange,
-                  decoration: TextDecoration.underline,
-                  decorationThickness: 2,
+                ),
+                labelText: "email".tr,
+                hintText: "your-email".tr,
+                errorText: emailHadFocus ? _errorText : null,
+              ),
+              const Spacer(),
+              InputField(
+                key: const Key('password_input'),
+                focusNode: _passwordFocusNode,
+                textEditingController: _passwordTextEditingController,
+                isPasswordField: true,
+                labelText: "password".tr,
+                hintText: "your-password".tr,
+                onChanged: (text) => setState(() {}),
+                errorText: passwordHadFocus ? _errorText : null,
+              ),
+              const Spacer(),
+              Button(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    signInWithEmailAndPassword();
+                  }
+                },
+                text: 'login'.tr,
+              ),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'no-account'.tr,
+                    style: TextStyleConstants.body_2_medium,
+                  ),
+                  TextButton(
+                    key: const Key('registration'),
+                    onPressed: () {
+                      Get.to(() => const RegisterPage());
+                    },
+                    child: Text('registration-exclamation'.tr,
+                        style: TextStyleConstants.body_2_medium.copyWith(
+                          color: ColorConstants.defaultOrange,
+                          decoration: TextDecoration.underline,
+                          decorationThickness: 2,
+                        )),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'forgot-password'.tr,
+                  style: TextStyleConstants.body_2_medium.copyWith(
+                    color: ColorConstants.defaultOrange,
+                    decoration: TextDecoration.underline,
+                    decorationThickness: 2,
+                  ),
                 ),
               ),
-            ),
-            const Spacer(),
-            Button(
-              textColor: ColorConstants.white.withOpacity(0.8),
-              buttonColor: ColorConstants.lightGray,
-              onPressed: () {},
-              text: 'login-with-google'.tr,
-              prefixWidget: SvgPicture.asset('assets/graphics/icons/google_logo.svg'),
-              suffixWidget: Icon(
-                Icons.arrow_forward_ios,
-                color: ColorConstants.white.withOpacity(0.8),
+              const Spacer(),
+              Button(
+                textColor: ColorConstants.white.withOpacity(0.8),
+                buttonColor: ColorConstants.lightGray,
+                onPressed: () {},
+                text: 'login-with-google'.tr,
+                prefixWidget: SvgPicture.asset('assets/graphics/icons/google_logo.svg'),
+                suffixWidget: Icon(
+                  Icons.arrow_forward_ios,
+                  color: ColorConstants.white.withOpacity(0.8),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

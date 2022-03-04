@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
+import 'package:spending_share/ui/auth/main_page.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
+import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
@@ -76,15 +79,30 @@ class _RegisterPageState extends State<RegisterPage> {
     TextValidator.validatePassText(_passwordTextEditingController.value.text);
   }
 
-  void register() {
-    // TODO registration
+  Future<void> registerAccount(
+      String email, String displayName, String password, void Function(FirebaseAuthException e) errorCallback) async {
+    try {
+      var credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      await credential.user!.updateDisplayName(displayName);
+      Get.to(() => const MainPage());
+    } on FirebaseAuthException catch (e) {
+      showDialog<void>(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(
+            title: 'Sign up failed',
+            e: e,
+          );
+        },
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(h(32)),
+        padding: EdgeInsets.all(h(16)),
         child: Column(
           children: [
             const Spacer(),
@@ -144,7 +162,9 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             const Spacer(),
             Button(
-              onPressed: () {},
+              onPressed: () {
+                registerAccount('admin@email.com', 'displayName', 'password', (e) {});
+              },
               text: 'sign-up'.tr,
             ),
             const Spacer(),

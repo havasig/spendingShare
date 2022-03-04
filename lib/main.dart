@@ -1,14 +1,28 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:spending_share/ui/auth/login_page.dart';
+import 'package:provider/provider.dart';
+import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
+import 'package:spending_share/ui/widgets/my_appbar.dart';
 import 'package:spending_share/utils/localization_service.dart';
 
-Future<void> main() async {
+import 'firebase_options.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalizationService.loadAllTranslations();
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ApplicationState(),
+      builder: (context, _) => const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -42,13 +56,11 @@ class MyApp extends StatelessWidget {
             child: child!,
           );
         },
-        home: const LoginPage(),
+        home: const MyHomePage(title: 'Main Page'),
       ),
     );
   }
 }
-
-/*
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -62,14 +74,49 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar(
-        titleText: widget.title,
+    return SafeArea(
+      child: Scaffold(
+        body: Consumer<ApplicationState>(
+          builder: (context, appState, _) => Authentication(
+            loginState: appState.loginState,
+          ),
+        ),
       ),
+    );
+  }
+}
+
+/*
+
+class LaunchPage extends StatelessWidget {
+  LaunchPage({Key? key}) : super(key: key);
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ElevatedButton(
+              child: const Text('Launch'),
+              onPressed: () {
+                Get.to(() => LaunchPage());
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Login'),
+              onPressed: () {
+                Get.to(() => const LoginPage());
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Register'),
+              onPressed: () {
+                Get.to(() => const RegisterPage());
+              },
+            ),
             ElevatedButton(
               child: const Text('Input Field Page'),
               onPressed: () {
