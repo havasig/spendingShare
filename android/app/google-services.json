@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "538495696565",
+    "project_id": "spending-share",
+    "storage_bucket": "spending-share.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538495696565:android:659beadd395f40ace608fc",
+        "android_client_info": {
+          "package_name": "hu.havasig.spending_share"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "538495696565-5dg424eueksl6b8ahivpdnp201mc4n1u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hu.havasig.spending_share",
+            "certificate_hash": "7c190a2e37b6b23c22127ac868cdccda6c8b9c06"
+          }
+        },
+        {
+          "client_id": "538495696565-dofihbbcrnr95coo5vc7cku6evkn9tva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqLIARLLShPrBhqo1DpOCbtS_BTY30T1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "538495696565-dofihbbcrnr95coo5vc7cku6evkn9tva.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "538495696565-hv23f0eeb12d8ps12c8s8rjeo35vmqc1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "hu.havasig.spending-share"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

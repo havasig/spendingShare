@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/auth/main_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
@@ -17,18 +18,20 @@ class Authentication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (loginState) {
-      case ApplicationLoginState.loggedIn:
-        return MainPage();
-      case ApplicationLoginState.loggedOut:
-        return const LoginPage();
-      default:
-        return Row(
-          children: const [
-            Text("Internal error, this shouldn't happen..."),
-          ],
-        );
-    }
+    return Consumer<ApplicationState>(builder: (context, appState, _) {
+      switch (loginState) {
+        case ApplicationLoginState.loggedIn:
+          return const MainPage();
+        case ApplicationLoginState.loggedOut:
+          return const LoginPage();
+        default:
+          return Row(
+            children: const [
+              Text("Internal error, this shouldn't happen..."),
+            ],
+          );
+      }
+    });
   }
 
   void showErrorDialog(BuildContext context, String title, Exception e) {

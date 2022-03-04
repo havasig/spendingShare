@@ -163,7 +163,7 @@ class _RegisterPageState extends State<RegisterPage> {
             const Spacer(),
             Button(
               onPressed: () {
-                registerAccount('admin@email.com', 'displayName', 'password', (e) {});
+                registerAccount('havasi.gaabor@gmail.com', 'displayName', 'password', (e) {});
               },
               text: 'sign-up'.tr,
             ),
