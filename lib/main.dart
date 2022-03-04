@@ -3,10 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
-import 'package:spending_share/ui/widgets/calculator.dart';
-import 'package:spending_share/ui/widgets/input_field.dart';
-import 'package:spending_share/ui/widgets/my_appbar.dart';
-import 'package:spending_share/ui/widgets/scroll_view.dart';
 import 'package:spending_share/utils/localization_service.dart';
 
 Future<void> main() async {
@@ -42,7 +38,6 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           ScreenUtil.setContext(context);
           return MediaQuery(
-            //Setting font does not change with system font size
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
             child: child!,
           );
@@ -52,6 +47,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/*
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -97,3 +94,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+*/

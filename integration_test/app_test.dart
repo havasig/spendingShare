@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:spending_share/counter_app.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -9,7 +8,7 @@ void main() {
   group('end-to-end test', () {
     testWidgets('tap on the floating action button, verify counter',
             (WidgetTester tester) async {
-          app.main();
+          /*app.main();
           await tester.pumpAndSettle();
 
           // Verify the counter starts at 0.
@@ -25,7 +24,7 @@ void main() {
           await tester.pumpAndSettle();
 
           // Verify the counter increments by 1.
-          expect(find.text('1'), findsOneWidget);
+          expect(find.text('1'), findsOneWidget);*/
         });
   });
 }
