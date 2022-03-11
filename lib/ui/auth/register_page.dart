@@ -84,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       var credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       await credential.user!.updateDisplayName(displayName);
-      Get.offAll(() => const MyGroupsPage());
+      Get.offAll(() => MyGroupsPage());
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
         context: context,

@@ -21,5 +21,7 @@
   "statistics": "Statistics",
   "group": "Group",
   "settings": "Settings",
-  "profile": "Profile"
+  "profile": "Profile",
+  "no-groups": "No groups",
+  "join-group": "Join group"
 }

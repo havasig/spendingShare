@@ -16,19 +16,19 @@ void main() {
     'MyGroups',
     () {
       testWidgets('MyGroups is created', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: const MyGroupsPage());
+        var testWidget = testableWidget(child: MyGroupsPage());
         await tester.pumpWidget(testWidget);
       });
 
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: const MyGroupsPage());
+        var testWidget = testableWidget(child: MyGroupsPage());
         await tester.pumpWidget(testWidget);
         final joinFinder = find.text('join');
         expect(joinFinder, findsOneWidget);
       });
 
       testWidgets('MyGroups has my groups text', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: const MyGroupsPage());
+        var testWidget = testableWidget(child: MyGroupsPage());
         await tester.pumpWidget(testWidget);
         final joinFinder = find.text('my-groups');
         expect(joinFinder, findsOneWidget);
@@ -36,14 +36,14 @@ void main() {
 
       testWidgets('MyGroups display my groups', (WidgetTester tester) async {
         // TODO
-        var testWidget = testableWidget(child: const MyGroupsPage());
+        var testWidget = testableWidget(child: MyGroupsPage());
         await tester.pumpWidget(testWidget);
         final joinFinder = find.text('my-groups');
         expect(joinFinder, findsOneWidget);
       });
 
       testWidgets('MyGroups has add button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: const MyGroupsPage());
+        var testWidget = testableWidget(child: MyGroupsPage());
         await tester.pumpWidget(testWidget);
         final Finder fab = find.byTooltip('create_group');
         expect(fab, findsOneWidget);

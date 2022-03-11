@@ -21,7 +21,7 @@ class Authentication extends StatelessWidget {
     return Consumer<ApplicationState>(builder: (context, appState, _) {
       switch (loginState) {
         case ApplicationLoginState.loggedIn:
-          return const MyGroupsPage();
+          return MyGroupsPage();
         case ApplicationLoginState.loggedOut:
           return const LoginPage();
         default:

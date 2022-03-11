@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
         email: 'havasi.gaabor@gmail.com', //_emailTextEditingController.text,
         password: 'password', //_passwordTextEditingController.text,
       );
-      Get.offAll(() => const MyGroupsPage());
+      Get.offAll(() => MyGroupsPage());
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
         context: context,
@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                 buttonColor: ColorConstants.lightGray,
                 onPressed: () async {
                   await signInWithGoogle().then((value) {
-                    Get.offAll(() => const MyGroupsPage());
+                    Get.offAll(() => MyGroupsPage());
                   });
                 },
                 text: 'login-with-google'.tr,
