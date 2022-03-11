@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
@@ -28,31 +27,31 @@ class MyGroupsPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: MyAppBar(
-        hasBack: true,
-        hasForward: true,
-        backText: 'Back',
-        forwardText: 'Forward',
-        titleText: 'Title',
-      ),
+        appBar: MyAppBar(
+          hasBack: true,
+          hasForward: true,
+          backText: 'Back',
+          forwardText: 'Forward',
+          titleText: 'Title',
+        ),
         body: Padding(
-      padding: EdgeInsets.all(h(16)),
-      child: Column(children: [
-        Text('main Page'),
-        Button(
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-            Get.offAll(() => LoginPage());
-          },
-          text: 'logout',
-        ),
-        TextButton(
-          onPressed: addUser,
-          child: Text(
-            'Add User',
-          ),
-        ),
-      ]),
-    ));
+          padding: EdgeInsets.all(h(16)),
+          child: Column(children: [
+            Text('main Page'),
+            Button(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Get.offAll(() => LoginPage());
+              },
+              text: 'logout',
+            ),
+            TextButton(
+              onPressed: addUser,
+              child: Text(
+                'Add User',
+              ),
+            ),
+          ]),
+        ));
   }
 }

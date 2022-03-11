@@ -25,12 +25,8 @@ class ScrollViewPage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   itemCount: dummyData.length,
                   controller: _firstController,
-                  gridDelegate:
-                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          childAspectRatio: 3 / 2,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 20),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200, childAspectRatio: 3 / 2, crossAxisSpacing: 20, mainAxisSpacing: 20),
                   itemBuilder: (context, index) {
                     return GridTile(
                         child: Container(

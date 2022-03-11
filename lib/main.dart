@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
-import 'package:spending_share/ui/widgets/my_appbar.dart';
 import 'package:spending_share/utils/localization_service.dart';
 
 import 'firebase_options.dart';
@@ -85,60 +84,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-/*
-
-class LaunchPage extends StatelessWidget {
-  LaunchPage({Key? key}) : super(key: key);
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              child: const Text('Launch'),
-              onPressed: () {
-                Get.to(() => LaunchPage());
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Login'),
-              onPressed: () {
-                Get.to(() => const LoginPage());
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Register'),
-              onPressed: () {
-                Get.to(() => const RegisterPage());
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Input Field Page'),
-              onPressed: () {
-                Get.to(() => const InputFieldPage());
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Scroll View Page'),
-              onPressed: () {
-                Get.to(() => ScrollViewPage());
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Calculator Page'),
-              onPressed: () {
-                Get.to(() => CalculatorPage());
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/

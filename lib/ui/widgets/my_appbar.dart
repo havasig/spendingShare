@@ -26,7 +26,7 @@ class MyAppBar extends AppBar {
     this.onForward,
     this.titleWidget,
     this.suffixWidget,
-  })  :         super(
+  }) : super(
           key: key,
           title: Text(titleText, style: TextStyleConstants.body_1.copyWith(fontWeight: FontWeight.bold)),
           elevation: 0,

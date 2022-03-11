@@ -14,7 +14,6 @@ import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
-import 'authentication.dart';
 import '../groups/my_groups.dart';
 
 class LoginPage extends StatefulWidget {

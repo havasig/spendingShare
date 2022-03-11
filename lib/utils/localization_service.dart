@@ -26,8 +26,7 @@ class LocalizationService extends Translations {
     const Locale('hu', 'HU'),
   ];
 
-  static final _keys =
-      <String, Map<String, String>>{};
+  static final _keys = <String, Map<String, String>>{};
 
   static Future<bool> loadAllTranslations() async {
     for (final locale in locales) {

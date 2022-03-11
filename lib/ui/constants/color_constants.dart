@@ -7,8 +7,6 @@ class ColorConstants {
   static const Color backgroundBlack = Color(0xFF16171d);
   static const Color lightGray = Color(0xFF393E46);
 
-
-
   static const Color green = Color(0xFF1AB84E);
   static const Color yellow = Color(0xFFF5a802);
   static const Color focusedOrange = Color(0xFFDD3214);

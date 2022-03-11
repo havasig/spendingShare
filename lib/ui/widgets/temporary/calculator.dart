@@ -46,29 +46,24 @@ class _CalculatorPageState extends State<CalculatorPage> {
         children: <Widget>[
           Expanded(
             child: Container(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        userInput,
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(15),
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        answer,
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ]),
+              child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(20),
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    userInput,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(15),
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    answer,
+                    style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                )
+              ]),
             ),
           ),
           Expanded(
@@ -76,8 +71,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
             child: Container(
               child: GridView.builder(
                   itemCount: numberButtons.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
                   itemBuilder: (BuildContext context, int index) {
                     // Clear Button
                     if (index == 0) {
@@ -120,8 +114,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       return CalculatorButton(
                         buttontapped: () {
                           setState(() {
-                            userInput =
-                                userInput.substring(0, userInput.length - 1);
+                            userInput = userInput.substring(0, userInput.length - 1);
                           });
                         },
                         buttonText: numberButtons[index],
@@ -152,12 +145,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           });
                         },
                         buttonText: numberButtons[index],
-                        color: isOperator(numberButtons[index])
-                            ? Colors.blueAccent
-                            : Colors.white,
-                        textColor: isOperator(numberButtons[index])
-                            ? Colors.white
-                            : Colors.black,
+                        color: isOperator(numberButtons[index]) ? Colors.blueAccent : Colors.white,
+                        textColor: isOperator(numberButtons[index]) ? Colors.white : Colors.black,
                       );
                     }
                   }), // GridView.builder
@@ -190,7 +179,6 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
 // creating Stateless Widget for buttons
 class CalculatorButton extends StatelessWidget {
-
   // declaring variables
   final color;
   final textColor;

@@ -27,7 +27,7 @@ class Authentication extends StatelessWidget {
         default:
           return Row(
             children: const [
-              Text("Internal error, this shouldn't happen..."),
+              Text('Internal error, this shouldn\'t happen...'),
             ],
           );
       }

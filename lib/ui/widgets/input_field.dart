@@ -63,9 +63,7 @@ class _InputFieldState extends State<InputField> {
       child: Container(
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
-            color: widget.hasGlow
-                ? ColorConstants.defaultOrange.withOpacity(0.2)
-                : Colors.transparent,
+            color: widget.hasGlow ? ColorConstants.defaultOrange.withOpacity(0.2) : Colors.transparent,
             spreadRadius: 4,
             blurRadius: 10,
           )
@@ -77,16 +75,14 @@ class _InputFieldState extends State<InputField> {
                 widget.labelColor = widget.focusColor;
                 passVisibilityColor = widget.focusColor;
                 if (widget.suffixIcon is Icon) {
-                  widget.suffixIcon = Icon((widget.suffixIcon as Icon).icon,
-                      color: widget.focusColor);
+                  widget.suffixIcon = Icon((widget.suffixIcon as Icon).icon, color: widget.focusColor);
                 }
                 widget.hasGlow = true;
               } else {
                 widget.labelColor = widget.color;
                 passVisibilityColor = widget.color;
                 if (widget.suffixIcon is Icon) {
-                  widget.suffixIcon = Icon((widget.suffixIcon as Icon).icon,
-                      color: widget.color);
+                  widget.suffixIcon = Icon((widget.suffixIcon as Icon).icon, color: widget.color);
                 }
                 widget.hasGlow = false;
               }
@@ -105,8 +101,7 @@ class _InputFieldState extends State<InputField> {
             onChanged: (String str) {
               widget.onChanged?.call(str);
             },
-            style: TextStyle(
-                color: widget.enabled ? null : ColorConstants.darkGray),
+            style: TextStyle(color: widget.enabled ? null : ColorConstants.darkGray),
             decoration: InputDecoration(
               alignLabelWithHint: true,
               fillColor: ColorConstants.darkGray,
@@ -114,9 +109,7 @@ class _InputFieldState extends State<InputField> {
               suffixIcon: widget.isPasswordField
                   ? IconButton(
                       color: passVisibilityColor,
-                      icon: Icon(widget.obscureText!
-                          ? Icons.visibility_off
-                          : Icons.visibility),
+                      icon: Icon(widget.obscureText! ? Icons.visibility_off : Icons.visibility),
                       onPressed: () {
                         setState(() {
                           widget.obscureText = !widget.obscureText!;
@@ -161,10 +154,7 @@ class _InputFieldState extends State<InputField> {
                 ),
               ),
               labelText: widget.labelText,
-              labelStyle: TextStyle(
-                  color: widget.focusNode!.hasFocus
-                      ? widget.focusColor
-                      : widget.color),
+              labelStyle: TextStyle(color: widget.focusNode!.hasFocus ? widget.focusColor : widget.color),
               hintText: widget.hintText,
               errorText: widget.errorText,
               focusColor: widget.color,
@@ -226,9 +216,7 @@ class _InputFieldPageState extends State<InputFieldPage> {
               enabled: false,
               suffixIcon: Icon(
                 Icons.accessibility,
-                color: focusNode2.hasFocus
-                    ? ColorConstants.defaultOrange
-                    : ColorConstants.white,
+                color: focusNode2.hasFocus ? ColorConstants.defaultOrange : ColorConstants.white,
               ),
             ),
           ],
