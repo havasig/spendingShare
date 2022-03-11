@@ -14,5 +14,12 @@
   "name": "Name",
   "your-name": "Your name",
   "password-confirmation": "Password confirmation",
-  "already-have-account": "You already have an account?"
+  "already-have-account": "You already have an account?",
+  "join": "Join",
+  "back": "Back",
+  "my-groups": "My Groups",
+  "statistics": "Statistics",
+  "group": "Group",
+  "settings": "Settings",
+  "profile": "Profile"
 }

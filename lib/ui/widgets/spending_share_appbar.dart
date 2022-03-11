@@ -4,9 +4,10 @@ import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
-class MyAppBar extends AppBar {
+class SpendingShareAppBar extends AppBar {
   final String titleText;
-  final String backText;
+
+  //final String backText;
   final String forwardText;
   final bool hasBack;
   final bool hasForward;
@@ -15,10 +16,10 @@ class MyAppBar extends AppBar {
   final Widget? titleWidget;
   final Widget? suffixWidget;
 
-  MyAppBar({
+  SpendingShareAppBar({
     Key? key,
     this.titleText = '',
-    this.backText = 'Back',
+    //this.backText = 'back',
     this.forwardText = '',
     this.hasBack = true,
     this.hasForward = false,
@@ -32,7 +33,7 @@ class MyAppBar extends AppBar {
           elevation: 0,
           centerTitle: true,
           automaticallyImplyLeading: false,
-          backgroundColor: ColorConstants.backgroundBlack,
+          backgroundColor: ColorConstants.darkGray,
           leadingWidth: w(100),
           leading: hasBack
               ? GestureDetector(
@@ -47,7 +48,7 @@ class MyAppBar extends AppBar {
                         color: ColorConstants.white,
                       ),
                       Text(
-                        backText,
+                        'back'.tr, //backText.tr,
                         style: TextStyleConstants.body_1.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],

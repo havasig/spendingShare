@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:spending_share/ui/auth/register_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 
-import 'wrapper.dart';
+import '../wrapper.dart';
 
 void main() {
   group('Register', () {
