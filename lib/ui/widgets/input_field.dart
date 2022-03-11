@@ -208,20 +208,20 @@ class _InputFieldPageState extends State<InputFieldPage> {
                 Icons.mail,
                 color: ColorConstants.defaultOrange,
               ),
-              labelText: "Email address",
-              hintText: "Your email",
+              labelText: 'Email address',
+              hintText: 'Your email',
             ),
             const SizedBox(height: 50),
             InputField(
-              labelText: "Label Text",
-              hintText: "Hint Text",
+              labelText: 'Label Text',
+              hintText: 'Hint Text',
               focusNode: focusNode2,
               isPasswordField: true,
             ),
             const SizedBox(height: 50),
             InputField(
-              labelText: "Label Text",
-              hintText: "Hint Text",
+              labelText: 'Label Text',
+              hintText: 'Hint Text',
               focusNode: focusNode3,
               enabled: false,
               suffixIcon: Icon(
@@ -240,7 +240,7 @@ class _InputFieldPageState extends State<InputFieldPage> {
 
 String validatePassword(String value) {
   if ((value.length < 5) && value.isNotEmpty) {
-    return "Password should contain more than 5 characters";
+    return 'Password should contain more than 5 characters';
   }
-  return "";
+  return '';
 }

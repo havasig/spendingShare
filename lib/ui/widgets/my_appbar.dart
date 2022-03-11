@@ -17,9 +17,9 @@ class MyAppBar extends AppBar {
 
   MyAppBar({
     Key? key,
-    this.titleText = "",
-    this.backText = "",
-    this.forwardText = "",
+    this.titleText = '',
+    this.backText = 'Back',
+    this.forwardText = '',
     this.hasBack = true,
     this.hasForward = false,
     this.onBack,

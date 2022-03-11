@@ -23,17 +23,17 @@ class MyGroupsPage extends StatelessWidget {
             'company': 'company', // Stokes and Sons
             'age': 42 // 42
           })
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+          .then((value) => print('User Added'))
+          .catchError((error) => print('Failed to add user: $error'));
     }
 
     return Scaffold(
       appBar: MyAppBar(
         hasBack: true,
         hasForward: true,
-        backText: "Back",
-        forwardText: "Forward",
-        titleText: "Title",
+        backText: 'Back',
+        forwardText: 'Forward',
+        titleText: 'Title',
       ),
         body: Padding(
       padding: EdgeInsets.all(h(16)),
@@ -49,7 +49,7 @@ class MyGroupsPage extends StatelessWidget {
         TextButton(
           onPressed: addUser,
           child: Text(
-            "Add User",
+            'Add User',
           ),
         ),
       ]),
