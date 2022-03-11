@@ -15,7 +15,7 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
 import 'authentication.dart';
-import 'main_page.dart';
+import '../groups/my_groups.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
         email: 'havasi.gaabor@gmail.com', //_emailTextEditingController.text,
         password: 'password', //_passwordTextEditingController.text,
       );
-      Get.to(() => const MainPage());
+      Get.offAll(() => const MyGroupsPage());
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
         context: context,
@@ -170,10 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                 buttonColor: ColorConstants.lightGray,
                 onPressed: () async {
                   await signInWithGoogle().then((value) {
-                    if (value != null)
-                      Get.to(() => MainPage());
-                    else
-                      print('rip');
+                    Get.offAll(() => const MyGroupsPage());
                   });
                 },
                 text: 'login-with-google'.tr,

@@ -5,7 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
-import 'package:spending_share/ui/auth/main_page.dart';
+import 'package:spending_share/ui/groups/my_groups.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
@@ -84,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       var credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       await credential.user!.updateDisplayName(displayName);
-      Get.to(() => const MainPage());
+      Get.offAll(() => const MyGroupsPage());
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
         context: context,

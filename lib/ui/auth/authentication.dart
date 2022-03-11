@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
-import 'package:spending_share/ui/auth/main_page.dart';
+import 'package:spending_share/ui/groups/my_groups.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 
 import '../../firebase_options.dart';
@@ -21,7 +21,7 @@ class Authentication extends StatelessWidget {
     return Consumer<ApplicationState>(builder: (context, appState, _) {
       switch (loginState) {
         case ApplicationLoginState.loggedIn:
-          return const MainPage();
+          return const MyGroupsPage();
         case ApplicationLoginState.loggedOut:
           return const LoginPage();
         default:
