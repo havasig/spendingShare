@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,20 +14,25 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalizationService.loadAllTranslations();
-  await Firebase.initializeApp(
+  final app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final firestore = FirebaseFirestore.instanceFor(app: app);
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ApplicationState(),
-      builder: (context, _) => const MyApp(),
+      builder: (context, _) => MyApp(firestore: firestore),
     ),
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key, required this.firestore}) : super(key: key);
+
+  final FirebaseFirestore firestore;
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +62,16 @@ class MyApp extends StatelessWidget {
             child: child!,
           );
         },
-        home: const MyHomePage(title: 'Main Page'),
+        home: MyHomePage(firestore: firestore),
       ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.firestore}) : super(key: key);
 
-  final String title;
+  final FirebaseFirestore firestore;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -80,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Consumer<ApplicationState>(
           builder: (context, appState, _) => Authentication(
             loginState: appState.loginState,
+            firestore: widget.firestore,
           ),
         ),
       ),

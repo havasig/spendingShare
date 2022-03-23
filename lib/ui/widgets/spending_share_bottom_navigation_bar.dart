@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
@@ -6,9 +7,10 @@ import 'package:spending_share/ui/groups/my_groups.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class SpendingShareBottomNavigationBar extends StatefulWidget {
-  final int selectedIndex;
+  const SpendingShareBottomNavigationBar({Key? key, required this.selectedIndex, required this.firestore}) : super(key: key);
 
-  const SpendingShareBottomNavigationBar({required this.selectedIndex, Key? key}) : super(key: key);
+  final int selectedIndex;
+  final FirebaseFirestore firestore;
 
   @override
   _SpendingShareBottomNavigationBarState createState() => _SpendingShareBottomNavigationBarState();
@@ -58,7 +60,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
           ),
           GestureDetector(
             onTap: () {
-              Get.offAll(() => MyGroupsPage(), transition: Transition.noTransition);
+              Get.offAll(() => MyGroupsPage(firestore: widget.firestore), transition: Transition.noTransition);
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,

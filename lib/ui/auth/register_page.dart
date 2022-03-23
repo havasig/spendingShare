@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,7 +16,9 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({Key? key, required this.firestore}) : super(key: key);
+
+  final FirebaseFirestore firestore;
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -84,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       var credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       await credential.user!.updateDisplayName(displayName);
-      Get.offAll(() => MyGroupsPage());
+      Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
         context: context,
@@ -178,7 +181,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 TextButton(
                   key: const Key('login'),
                   onPressed: () {
-                    Get.to(() => const LoginPage());
+                    Get.to(() => LoginPage(firestore: widget.firestore));
                   },
                   child: Text('login'.tr,
                       style: TextStyleConstants.body_2_medium.copyWith(

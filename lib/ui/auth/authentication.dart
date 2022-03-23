@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,18 +13,20 @@ class Authentication extends StatelessWidget {
   const Authentication({
     Key? key,
     required this.loginState,
+    required this.firestore,
   }) : super(key: key);
 
   final ApplicationLoginState loginState;
+  final FirebaseFirestore firestore;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(builder: (context, appState, _) {
       switch (loginState) {
         case ApplicationLoginState.loggedIn:
-          return MyGroupsPage();
+          return MyGroupsPage(firestore: firestore);
         case ApplicationLoginState.loggedOut:
-          return const LoginPage();
+          return LoginPage(firestore: firestore);
         default:
           return Row(
             children: const [

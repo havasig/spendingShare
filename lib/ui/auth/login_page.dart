@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,7 +18,9 @@ import 'package:spending_share/utils/text_validator.dart';
 import '../groups/my_groups.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key, required this.firestore}) : super(key: key);
+
+  final FirebaseFirestore firestore;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -65,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
         email: 'havasi.gaabor@gmail.com', //_emailTextEditingController.text,
         password: 'password', //_passwordTextEditingController.text,
       );
-      Get.offAll(() => MyGroupsPage());
+      Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
         context: context,
@@ -140,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextButton(
                     key: const Key('registration'),
                     onPressed: () {
-                      Get.to(() => const RegisterPage());
+                      Get.to(() => RegisterPage(firestore: widget.firestore));
                     },
                     child: Text('registration-exclamation'.tr,
                         style: TextStyleConstants.body_2_medium.copyWith(
@@ -169,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                 buttonColor: ColorConstants.lightGray,
                 onPressed: () async {
                   await signInWithGoogle().then((value) {
-                    Get.offAll(() => MyGroupsPage());
+                    Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
                   });
                 },
                 text: 'login-with-google'.tr,

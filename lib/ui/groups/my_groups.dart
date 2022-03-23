@@ -12,12 +12,14 @@ import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
-import 'package:spending_share/utils/globals.dart' as globals;
-
 class MyGroupsPage extends StatelessWidget {
-  MyGroupsPage({Key? key}) : super(key: key);
+  MyGroupsPage({Key? key, required this.firestore}) : super(key: key);
 
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  final FirebaseFirestore firestore;
+
+  CollectionReference get users => firestore.collection('users');
+
+  CollectionReference get groups => firestore.collection('groups');
 
   Future<void> addUser() {
     // Call the user's CollectionReference to add a new user
@@ -52,7 +54,7 @@ class MyGroupsPage extends StatelessWidget {
                 Button(
                   onPressed: () {
                     FirebaseAuth.instance.signOut();
-                    Get.offAll(() => LoginPage());
+                    Get.offAll(() => LoginPage(firestore: firestore));
                   },
                   text: 'logout',
                 ),
@@ -63,7 +65,7 @@ class MyGroupsPage extends StatelessWidget {
                   ),
                 ),
                 StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection('groups').where('name', isEqualTo: 'adminokTalalkozoja').snapshots(),
+                    stream: groups.where('name', isEqualTo: 'adminokTalalkozoja').snapshots(),
                     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (!snapshot.hasData) return const NoGroupsYet(); // TODO ide jon a nincs csoportja kep
                       if (snapshot.hasData && snapshot.data!.docs.isEmpty) return const NoGroupsYet(); // TODO ide jon a nincs csoportja kep
@@ -86,7 +88,10 @@ class MyGroupsPage extends StatelessWidget {
           child: const Icon(Icons.add),
         ),
       ),
-      bottomNavigationBar: const SpendingShareBottomNavigationBar(selectedIndex: 1),
+      bottomNavigationBar: SpendingShareBottomNavigationBar(
+        selectedIndex: 1,
+        firestore: firestore,
+      ),
     );
   }
 }
@@ -143,7 +148,14 @@ class HaveGroups extends StatelessWidget {
   const HaveGroups({Key? key, required this.snapshot}) : super(key: key);
 
   getGroupItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data?.docs.map((doc) => GroupIcon(onTap: () {}, name: doc['name'], icon: doc['icon'], color: doc['color'],)).toList();
+    return snapshot.data?.docs
+        .map((doc) => GroupIcon(
+              onTap: () {},
+              name: doc['name'],
+              icon: doc['icon'],
+              color: doc['color'],
+            ))
+        .toList();
   }
 
   @override

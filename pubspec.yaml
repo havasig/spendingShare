@@ -28,6 +28,8 @@ dependencies:
 dev_dependencies:
   mockito: ^5.1.0
   build_runner: ^2.1.7
+  fake_cloud_firestore: ^1.2.2
+
   flutter_test:
     sdk: flutter
 
