@@ -17,11 +17,14 @@
   "already-have-account": "You already have an account?",
   "join": "Join",
   "back": "Back",
-  "my-groups": "My Groups",
+  "my-groups": "My groups",
   "statistics": "Statistics",
   "group": "Group",
   "settings": "Settings",
   "profile": "Profile",
   "no-groups": "No groups",
-  "join-group": "Join group"
+  "join-group": "Join group",
+  "you-are-not-a-member": "You are not a member of any group. Create a group or join via link.",
+  "paste-code-here": "Paste code here and click on join button, or if it is copied on clipboard, just click Join immediately. If you do not have the join link yet, ask your friends."
+
 }

@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
@@ -13,24 +11,135 @@ import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.d
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class MyGroupsPage extends StatelessWidget {
-  MyGroupsPage({Key? key, required this.firestore}) : super(key: key);
+  const MyGroupsPage({Key? key, required this.firestore}) : super(key: key);
 
   final FirebaseFirestore firestore;
 
-  CollectionReference get users => firestore.collection('users');
-
   CollectionReference get groups => firestore.collection('groups');
 
-  Future<void> addUser() {
-    // Call the user's CollectionReference to add a new user
-    return users
-        .add({
-          'full_name': 'fullName', // John Doe
-          'company': 'company', // Stokes and Sons
-          'age': 42 // 42
-        })
-        .then((value) => print('User Added'))
-        .catchError((error) => print('Failed to add user: $error'));
+  @override
+  Widget build(BuildContext context) {
+    //TODO get my groups
+    Stream<QuerySnapshot<Object?>> myGroups = groups.where('name', isEqualTo: 'adminokTalalkozoja').snapshots();
+
+    return StreamBuilder<QuerySnapshot>(
+        stream: myGroups,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return NoGroupsYet(firestore: firestore);
+          } else {
+            return HaveGroups(
+              snapshot: snapshot,
+              firestore: firestore,
+            );
+          }
+        });
+  }
+}
+
+class NoGroupsYet extends StatelessWidget {
+  const NoGroupsYet({Key? key, required this.firestore}) : super(key: key);
+
+  final FirebaseFirestore firestore;
+
+  @override
+  Widget build(BuildContext context) {
+    FocusNode focusNode = FocusNode();
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: SpendingShareAppBar(
+        hasBack: false,
+        hasForward: true,
+        forwardText: 'join'.tr,
+        titleText: 'my-groups'.tr,
+      ),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(h(16)),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'no-groups'.tr,
+                        style: TextStyleConstants.body_2_medium,
+                      ),
+                      SizedBox(height: h(8)),
+                      Text(
+                        'you-are-not-member'.tr,
+                        style: TextStyleConstants.sub_1,
+                      ),
+                      SizedBox(height: h(16)),
+                      Text(
+                        'paste-code-here'.tr,
+                        style: TextStyleConstants.sub_1,
+                      ),
+                      SizedBox(height: h(16)),
+                      InputField(
+                        key: const Key('join_input_field'),
+                        focusNode: focusNode,
+                        hintText: 'join'.tr,
+                        labelText: 'join'.tr,
+                        prefixIcon: const Icon(
+                          Icons.group_add,
+                          color: ColorConstants.defaultOrange,
+                        ),
+                      ),
+                      SizedBox(height: h(16)),
+                      Button(
+                        key: const Key('join_button'),
+                        onPressed: () {},
+                        text: 'join'.tr,
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FloatingActionButton(
+          key: const Key('create_group'),
+          tooltip: 'create_group',
+          backgroundColor: ColorConstants.defaultOrange,
+          splashColor: ColorConstants.lightGray,
+          onPressed: () {},
+          //shape: const StadiumBorder(side: BorderSide(color: ColorConstants.darkGray, width: 4)),
+          child: const Icon(Icons.add),
+        ),
+      ),
+      bottomNavigationBar: SpendingShareBottomNavigationBar(
+        key: const Key('bottom_navigation'),
+        selectedIndex: 1,
+        firestore: firestore,
+      ),
+    );
+  }
+}
+
+class HaveGroups extends StatelessWidget {
+  const HaveGroups({Key? key, required this.snapshot, required this.firestore}) : super(key: key);
+
+  final AsyncSnapshot<QuerySnapshot<Object?>> snapshot;
+  final FirebaseFirestore firestore;
+
+  getGroupItems(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return snapshot.data?.docs
+        .map((doc) => GroupIcon(
+              onTap: () {},
+              name: doc['name'],
+              icon: doc['icon'],
+              color: doc['color'],
+            ))
+        .toList();
   }
 
   @override
@@ -50,27 +159,11 @@ class MyGroupsPage extends StatelessWidget {
             padding: EdgeInsets.all(h(16)),
             child: Column(
               children: [
-                Text('main Page'),
-                Button(
-                  onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                    Get.offAll(() => LoginPage(firestore: firestore));
-                  },
-                  text: 'logout',
+                ListView(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  children: getGroupItems(snapshot),
                 ),
-                TextButton(
-                  onPressed: addUser,
-                  child: Text(
-                    'Add User',
-                  ),
-                ),
-                StreamBuilder<QuerySnapshot>(
-                    stream: groups.where('name', isEqualTo: 'adminokTalalkozoja').snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData) return const NoGroupsYet(); // TODO ide jon a nincs csoportja kep
-                      if (snapshot.hasData && snapshot.data!.docs.isEmpty) return const NoGroupsYet(); // TODO ide jon a nincs csoportja kep
-                      return HaveGroups(snapshot: snapshot);
-                    }),
               ],
             ),
           ),
@@ -89,81 +182,10 @@ class MyGroupsPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
+        key: const Key('bottom_navigation'),
         selectedIndex: 1,
         firestore: firestore,
       ),
-    );
-  }
-}
-
-class NoGroupsYet extends StatelessWidget {
-  const NoGroupsYet({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    FocusNode focusNode = FocusNode();
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'no-groups'.tr,
-            style: TextStyleConstants.body_2_medium,
-          ),
-          SizedBox(height: h(8)),
-          Text(
-            'you-are-not-member'.tr,
-            style: TextStyleConstants.sub_1,
-          ),
-          SizedBox(height: h(16)),
-          Text(
-            'paste-code-here'.tr,
-            style: TextStyleConstants.sub_1,
-          ),
-          SizedBox(height: h(16)),
-          InputField(
-            focusNode: focusNode,
-            hintText: 'join'.tr,
-            labelText: 'join'.tr,
-            prefixIcon: const Icon(
-              Icons.group_add,
-              color: ColorConstants.defaultOrange,
-            ),
-          ),
-          SizedBox(height: h(16)),
-          Button(
-            onPressed: () {},
-            text: 'join'.tr,
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class HaveGroups extends StatelessWidget {
-  final AsyncSnapshot<QuerySnapshot<Object?>> snapshot;
-
-  const HaveGroups({Key? key, required this.snapshot}) : super(key: key);
-
-  getGroupItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data?.docs
-        .map((doc) => GroupIcon(
-              onTap: () {},
-              name: doc['name'],
-              icon: doc['icon'],
-              color: doc['color'],
-            ))
-        .toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      children: getGroupItems(snapshot),
     );
   }
 }

@@ -1,31 +1,49 @@
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spending_share/ui/groups/my_groups.dart';
-
-import '../wrapper.dart';
 
 void main() {
   group(
-    'MyGroups',
+    'MyGroups with data',
     () {
-      testWidgets('MyGroups is created', (WidgetTester tester) async {
-        final firestore = FakeFirebaseFirestore();
-        await firestore.collection('groups').add({
-          'name': 'adminokTalalkozoja',
-        });
+      /*
+      late FakeFirebaseFirestore firestore;
 
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
-        await tester.pumpWidget(testWidget);
+      setUpAll(() async {
+        firestore = FakeFirebaseFirestore();
       });
 
-      /*
+      setUp(() async {
+        await firestore.collection('groups').add({
+          'name': 'test_group',
+        });
+      });
+
+      tearDown(() async {
+        await firestore.clearPersistence();
+      });
+
+      testWidgets('MyGroups is created', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        await tester.pumpWidget(testWidget);
+
+        expect(find.byKey(const Key('test_group')), findsOneWidget);
+      });
+
+      testWidgets('MyGroups has add button', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        await tester.pumpWidget(testWidget);
+        final Finder fab = find.byTooltip('create_group');
+        expect(fab, findsOneWidget);
+      });
+
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
         final joinFinder = find.text('join');
         expect(joinFinder, findsOneWidget);
       });
+      */
 
+      /*
       testWidgets('MyGroups has my groups text', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
@@ -41,12 +59,6 @@ void main() {
         expect(joinFinder, findsOneWidget);
       });
 
-      testWidgets('MyGroups has add button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
-        await tester.pumpWidget(testWidget);
-        final Finder fab = find.byTooltip('create_group');
-        expect(fab, findsOneWidget);
-      });
 
 
        */

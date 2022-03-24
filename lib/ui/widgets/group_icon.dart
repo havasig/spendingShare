@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:spending_share/utils/globals.dart' as globals;
 
 class GroupIcon extends StatelessWidget {
