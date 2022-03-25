@@ -15,8 +15,8 @@ class ErrorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       actionsPadding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: Text(
         title,
         style: TextStyleConstants.h_5,

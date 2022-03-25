@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
-import 'package:spending_share/ui/groups/my_groups.dart';
+import 'package:spending_share/ui/groups/my_groups_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 
 import '../../firebase_options.dart';

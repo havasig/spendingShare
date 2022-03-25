@@ -34,6 +34,7 @@ class Button extends StatelessWidget {
       side: borderSide,
       onPrimary: textColor,
       primary: buttonColor,
+      shadowColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),

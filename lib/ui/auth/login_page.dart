@@ -11,11 +11,12 @@ import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
+import 'package:spending_share/ui/widgets/dialogs/forgot_password_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
-import '../groups/my_groups.dart';
+import '../groups/my_groups_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.firestore}) : super(key: key);
@@ -156,7 +157,13 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const ForgotPasswordDialog();
+                      });
+                },
                 child: Text(
                   'forgot-password'.tr,
                   style: TextStyleConstants.body_2_medium.copyWith(

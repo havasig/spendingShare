@@ -25,6 +25,10 @@
   "no-groups": "No groups",
   "join-group": "Join group",
   "you-are-not-a-member": "You are not a member of any group. Create a group or join via link.",
-  "paste-code-here": "Paste code here and click on join button, or if it is copied on clipboard, just click Join immediately. If you do not have the join link yet, ask your friends."
-
+  "paste-code-here": "Paste code here and click on join button, or if it is copied on clipboard, just click Join immediately. If you do not have the join link yet, ask your friends.",
+  "who-are-you": "Who are you?",
+  "none-of-these": "None of these? Enter your name here",
+  "forgot-password-text": "If you forget your password, just ask a reminder from us. We will contact you by email, if your email is registered.",
+  "send-reminder": "Send reminder",
+  "close": "Close"
 }
