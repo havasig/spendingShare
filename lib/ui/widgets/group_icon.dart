@@ -1,194 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:spending_share/models/group.dart';
+import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 
 class GroupIcon extends StatelessWidget {
   final VoidCallback onTap;
-  final String name;
-  final String icon;
-  final String color;
+  final Group group;
+  final int circleShade = 500;
+  final int iconShade = 100;
+  final double width;
 
   const GroupIcon({
     Key? key,
     required this.onTap,
-    required this.name,
-    required this.icon,
-    required this.color,
+    required this.group,
+    required this.width,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int circleShade = 500;
-    int iconShade = 100;
-    return Wrap(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Material(
             type: MaterialType.transparency,
             child: Ink(
               decoration: BoxDecoration(
-                color: Colors.pink[circleShade],
+                color: globals.colors[group.color]?[circleShade] ?? Colors.orange[circleShade],
                 shape: BoxShape.circle,
               ),
               child: InkWell(
-                //This keeps the splash effect within the circle
-                borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
+                borderRadius: BorderRadius.circular(1000),
                 onTap: onTap,
                 child: Padding(
-                  padding: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(width),
                   child: Icon(
-                    globals.icons[icon] ?? Icons.ac_unit,
-                    size: 30.0,
-                    color: Colors.pink[iconShade],
+                    globals.icons[group.icon] ?? Icons.group,
+                    size: 30,
+                    color: globals.colors[group.color]?[iconShade] ?? Colors.orange[iconShade],
                   ),
                 ),
               ),
             )),
-        Material(
-            type: MaterialType.transparency,
-            child: Ink(
-              decoration: BoxDecoration(
-                color: Colors.red[circleShade],
-                shape: BoxShape.circle,
-              ),
-              child: InkWell(
-                //This keeps the splash effect within the circle
-                borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
-                onTap: onTap,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    globals.icons[icon] ?? Icons.ac_unit,
-                    size: 30.0,
-                    color: Colors.red[iconShade],
-                  ),
-                ),
-              ),
-            )),
-        Material(
-            type: MaterialType.transparency,
-            child: Ink(
-              decoration: BoxDecoration(
-                color: Colors.teal[circleShade],
-                shape: BoxShape.circle,
-              ),
-              child: InkWell(
-                //This keeps the splash effect within the circle
-                borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
-                onTap: onTap,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    globals.icons[icon] ?? Icons.ac_unit,
-                    size: 30.0,
-                    color: Colors.teal[iconShade],
-                  ),
-                ),
-              ),
-            )),
-        Material(
-            type: MaterialType.transparency,
-            child: Ink(
-              decoration: BoxDecoration(
-                color: Colors.green[circleShade],
-                shape: BoxShape.circle,
-              ),
-              child: InkWell(
-                //This keeps the splash effect within the circle
-                borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
-                onTap: onTap,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    globals.icons[icon] ?? Icons.ac_unit,
-                    size: 30.0,
-                    color: Colors.green[iconShade],
-                  ),
-                ),
-              ),
-            )),
-        Material(
-            type: MaterialType.transparency,
-            child: Ink(
-              decoration: BoxDecoration(
-                color: Colors.lightBlue[circleShade],
-                shape: BoxShape.circle,
-              ),
-              child: InkWell(
-                //This keeps the splash effect within the circle
-                borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
-                onTap: onTap,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    globals.icons[icon] ?? Icons.ac_unit,
-                    size: 30.0,
-                    color: Colors.lightBlue[iconShade],
-                  ),
-                ),
-              ),
-            )),
-        Material(
-            type: MaterialType.transparency,
-            child: Ink(
-              decoration: BoxDecoration(
-                color: Colors.orange[circleShade],
-                shape: BoxShape.circle,
-              ),
-              child: InkWell(
-                //This keeps the splash effect within the circle
-                borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
-                onTap: onTap,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    globals.icons[icon] ?? Icons.ac_unit,
-                    size: 30.0,
-                    color: Colors.orange[iconShade],
-                  ),
-                ),
-              ),
-            )),
-        Material(
-            type: MaterialType.transparency,
-            child: Ink(
-              decoration: BoxDecoration(
-                color: Colors.purple[circleShade],
-                shape: BoxShape.circle,
-              ),
-              child: InkWell(
-                //This keeps the splash effect within the circle
-                borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
-                onTap: onTap,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    globals.icons[icon] ?? Icons.ac_unit,
-                    size: 30.0,
-                    color: Colors.purple[iconShade],
-                  ),
-                ),
-              ),
-            )),
-        Material(
-            type: MaterialType.transparency,
-            child: Ink(
-              decoration: BoxDecoration(
-                color: Colors.blueGrey[circleShade],
-                shape: BoxShape.circle,
-              ),
-              child: InkWell(
-                //This keeps the splash effect within the circle
-                borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
-                onTap: onTap,
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    globals.icons[icon] ?? Icons.ac_unit,
-                    size: 30.0,
-                    color: Colors.blueGrey[iconShade],
-                  ),
-                ),
-              ),
-            )),
+        SizedBox(
+          width: width*2+30,
+          child: Text(
+            group.name,
+            style: TextStyleConstants.body_2_medium,
+          ),
+        )
       ],
     );
   }

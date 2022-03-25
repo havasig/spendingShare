@@ -1,10 +1,14 @@
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spending_share/ui/groups/my_groups.dart';
+
+import '../wrapper.dart';
 
 void main() {
   group(
-    'MyGroups with data',
+    'MyGroups with one group',
     () {
-      /*
       late FakeFirebaseFirestore firestore;
 
       setUpAll(() async {
@@ -13,98 +17,113 @@ void main() {
 
       setUp(() async {
         await firestore.collection('groups').add({
-          'name': 'test_group',
+          'name': 'test group',
+          'icon': 'wallet',
+          'color': 'orange',
         });
       });
 
-      tearDown(() async {
-        await firestore.clearPersistence();
-      });
+      /* TODO igy kell tesztelni a create-t
+      firebase.assertSucceeds(app.firestore().collection("public").doc("test-document").get());
 
-      testWidgets('MyGroups is created', (WidgetTester tester) async {
+       */
+
+      testWidgets('MyGroups has my groups header', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-
-        expect(find.byKey(const Key('test_group')), findsOneWidget);
-      });
-
-      testWidgets('MyGroups has add button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
-        await tester.pumpWidget(testWidget);
-        final Finder fab = find.byTooltip('create_group');
-        expect(fab, findsOneWidget);
+        final textFinder = find.text('my-groups');
+        expect(textFinder, findsOneWidget);
       });
 
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final joinFinder = find.text('join');
-        expect(joinFinder, findsOneWidget);
+        final textFinder = find.text('join');
+        expect(textFinder, findsOneWidget);
       });
-      */
 
-      /*
-      testWidgets('MyGroups has my groups text', (WidgetTester tester) async {
+      testWidgets('MyGroups has add button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final joinFinder = find.text('my-groups');
-        expect(joinFinder, findsOneWidget);
+        final createGroupFinder = find.byKey(const Key('create_group'));
+        expect(createGroupFinder, findsOneWidget);
       });
 
-      testWidgets('MyGroups display my groups', (WidgetTester tester) async {
-        // TODO
+      testWidgets('MyGroups has my group', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final joinFinder = find.text('my-groups');
-        expect(joinFinder, findsOneWidget);
+        final textFinder = find.text('test group');
+        expect(textFinder, findsOneWidget);
       });
 
-
-
-       */
-
-/*
-
-      testWidgets('Login has password input filed', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: const LoginPage());
+      testWidgets('MyGroups has picked icon', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        await tester.enterText(find.byKey(const Key('password_input')), 'admin');
-        final passwordFinder = find.text('admin');
-        expect(passwordFinder, findsOneWidget);
+        final textFinder = find.byIcon(Icons.account_balance_wallet);
+        expect(textFinder, findsOneWidget);
+      });
+    },
+  );
+  group(
+    'MyGroups with two group',
+    () {
+      late FakeFirebaseFirestore firestore;
+
+      setUpAll(() async {
+        firestore = FakeFirebaseFirestore();
       });
 
-      testWidgets('Login has login button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: const LoginPage());
+      setUp(() async {
+        await firestore.collection('groups').add({
+          'name': 'test group',
+          'icon': 'wallet',
+          'color': 'orange',
+        });
+        await firestore.collection('groups').add({
+          'name': 'test group two',
+          'icon': 'sport',
+          'color': 'green',
+        });
+      });
+
+      testWidgets('MyGroups has my groups header', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final buttonFinder = find.widgetWithText(Button, 'login');
-        expect(buttonFinder, findsOneWidget);
+        final textFinder = find.text('my-groups');
+        expect(textFinder, findsOneWidget);
       });
 
-      testWidgets('Login has forgot password text button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: const LoginPage());
+      testWidgets('MyGroups has join button', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final forgotPasswordFinder = find.widgetWithText(TextButton, 'forgot-password');
-        expect(forgotPasswordFinder, findsOneWidget);
+        final textFinder = find.text('join');
+        expect(textFinder, findsOneWidget);
       });
 
-      testWidgets('Login has no account, registration option', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: const LoginPage());
+      testWidgets('MyGroups has add button', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final noAccountTextFinder = find.text('no-account');
-        final registrationFinder = find.widgetWithText(TextButton, 'registration-exclamation');
-        expect(noAccountTextFinder, findsOneWidget);
-        expect(registrationFinder, findsOneWidget);
+        final createGroupFinder = find.byKey(const Key('create_group'));
+        expect(createGroupFinder, findsOneWidget);
       });
 
-      testWidgets(
-        'Login has has login with google button',
-        (WidgetTester tester) async {
-          var testWidget = testableWidget(child: const LoginPage());
-          await tester.pumpWidget(testWidget);
-          final loginWithGoogleButton = find.widgetWithText(Button, 'login-with-google');
-          expect(loginWithGoogleButton, findsOneWidget);
-        },
-      );*/
+      testWidgets('MyGroups has my groups', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        await tester.pumpWidget(testWidget);
+        final textFinder = find.text('test group');
+        final textTwoFinder = find.text('test group two');
+        expect(textFinder, findsOneWidget);
+        expect(textTwoFinder, findsOneWidget);
+      });
+
+      testWidgets('MyGroups has picked icons', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        await tester.pumpWidget(testWidget);
+        final iconFinder = find.byIcon(Icons.account_balance_wallet);
+        final iconTwoFinder = find.byIcon(Icons.directions_run);
+        expect(iconFinder, findsOneWidget);
+        expect(iconTwoFinder, findsOneWidget);
+      });
     },
   );
 }

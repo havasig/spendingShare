@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
@@ -49,8 +50,6 @@ class NoGroupsYet extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: SpendingShareAppBar(
         hasBack: false,
-        hasForward: true,
-        forwardText: 'join'.tr,
         titleText: 'my-groups'.tr,
       ),
       body: GestureDetector(
@@ -104,18 +103,7 @@ class NoGroupsYet extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FloatingActionButton(
-          key: const Key('create_group'),
-          tooltip: 'create_group',
-          backgroundColor: ColorConstants.defaultOrange,
-          splashColor: ColorConstants.lightGray,
-          onPressed: () {},
-          //shape: const StadiumBorder(side: BorderSide(color: ColorConstants.darkGray, width: 4)),
-          child: const Icon(Icons.add),
-        ),
-      ),
+      floatingActionButton: createGroupFab,
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),
         selectedIndex: 1,
@@ -131,15 +119,16 @@ class HaveGroups extends StatelessWidget {
   final AsyncSnapshot<QuerySnapshot<Object?>> snapshot;
   final FirebaseFirestore firestore;
 
-  getGroupItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data?.docs
-        .map((doc) => GroupIcon(
-              onTap: () {},
-              name: doc['name'],
-              icon: doc['icon'],
-              color: doc['color'],
-            ))
-        .toList();
+  List<GroupIcon> getGroupItems(AsyncSnapshot<QuerySnapshot> snapshot, double iconWidth) {
+    return snapshot.data?.docs.map((doc) {
+          Group group = Group.fromDocument(doc);
+          return GroupIcon(
+            onTap: () {},
+            group: group,
+            width: iconWidth,
+          );
+        }).toList() ??
+        [];
   }
 
   @override
@@ -152,35 +141,19 @@ class HaveGroups extends StatelessWidget {
         forwardText: 'join'.tr,
         titleText: 'my-groups'.tr,
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(h(16)),
-            child: Column(
-              children: [
-                ListView(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  children: getGroupItems(snapshot),
-                ),
-              ],
-            ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Container(
+          alignment: Alignment.topCenter,
+          child: Wrap(
+            alignment: WrapAlignment.start,
+            runSpacing: 10,
+            spacing: 15,
+            children: getGroupItems(snapshot, (MediaQuery.of(context).size.width - 197) / 8), //-padding*2 -iconWidth*4 -spacing*3
           ),
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FloatingActionButton(
-          key: const Key('create_group'),
-          tooltip: 'create_group',
-          backgroundColor: ColorConstants.defaultOrange,
-          splashColor: ColorConstants.lightGray,
-          onPressed: () {},
-          //shape: const StadiumBorder(side: BorderSide(color: ColorConstants.darkGray, width: 4)),
-          child: const Icon(Icons.add),
-        ),
-      ),
+      floatingActionButton: createGroupFab,
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),
         selectedIndex: 1,
@@ -189,3 +162,15 @@ class HaveGroups extends StatelessWidget {
     );
   }
 }
+
+Widget createGroupFab = Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: FloatingActionButton(
+    key: const Key('create_group'),
+    tooltip: 'create_group',
+    backgroundColor: ColorConstants.defaultOrange,
+    splashColor: ColorConstants.lightGray,
+    onPressed: () {},
+    child: const Icon(Icons.add),
+  ),
+);

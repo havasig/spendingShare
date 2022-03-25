@@ -74,7 +74,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
                   height: 4,
                 ),
                 Text(
-                  "groups".tr,
+                  'groups'.tr,
                   style: TextStyleConstants.sub_1.copyWith(
                     fontSize: 10,
                     color: widget.selectedIndex == 1 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
