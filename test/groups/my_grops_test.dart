@@ -11,26 +11,17 @@ void main() {
     () {
       late FakeFirebaseFirestore firestore;
 
-      setUpAll(() async {
-        firestore = FakeFirebaseFirestore();
-      });
-
       setUp(() async {
-        await firestore.collection('groups').add({
-          'name': 'test group',
-          'icon': 'wallet',
-          'color': 'orange',
-        });
+        firestore = FakeFirebaseFirestore();
+        await firestore.collection('users').doc('currentuserid').set({'name': 'Doe'});
+        var user = firestore.collection('users').doc('currentuserid');
+        await firestore.collection('groups').add({'name': 'test group', 'icon': 'wallet', 'color': 'orange', 'admin': user});
       });
-
-      /* TODO igy kell tesztelni a create-t
-      firebase.assertSucceeds(app.firestore().collection("public").doc("test-document").get());
-
-       */
 
       testWidgets('MyGroups has my groups header', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final textFinder = find.text('my-groups');
         expect(textFinder, findsOneWidget);
       });
@@ -38,6 +29,7 @@ void main() {
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final textFinder = find.text('join');
         expect(textFinder, findsOneWidget);
       });
@@ -45,6 +37,7 @@ void main() {
       testWidgets('MyGroups has add button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final createGroupFinder = find.byKey(const Key('create_group'));
         expect(createGroupFinder, findsOneWidget);
       });
@@ -52,6 +45,7 @@ void main() {
       testWidgets('MyGroups has my group', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final textFinder = find.text('test group');
         expect(textFinder, findsOneWidget);
       });
@@ -59,6 +53,7 @@ void main() {
       testWidgets('MyGroups has picked icon', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final textFinder = find.byIcon(Icons.account_balance_wallet);
         expect(textFinder, findsOneWidget);
       });
@@ -69,26 +64,18 @@ void main() {
     () {
       late FakeFirebaseFirestore firestore;
 
-      setUpAll(() async {
-        firestore = FakeFirebaseFirestore();
-      });
-
       setUp(() async {
-        await firestore.collection('groups').add({
-          'name': 'test group',
-          'icon': 'wallet',
-          'color': 'orange',
-        });
-        await firestore.collection('groups').add({
-          'name': 'test group two',
-          'icon': 'sport',
-          'color': 'green',
-        });
+        firestore = FakeFirebaseFirestore();
+        await firestore.collection('users').doc('currentuserid').set({'name': 'Doe'});
+        var user = firestore.collection('users').doc('currentuserid');
+        await firestore.collection('groups').add({'name': 'test group', 'icon': 'wallet', 'color': 'orange', 'admin': user});
+        await firestore.collection('groups').add({'name': 'test group 2', 'icon': 'sport', 'color': 'orange', 'admin': user});
       });
 
       testWidgets('MyGroups has my groups header', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final textFinder = find.text('my-groups');
         expect(textFinder, findsOneWidget);
       });
@@ -96,6 +83,7 @@ void main() {
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final textFinder = find.text('join');
         expect(textFinder, findsOneWidget);
       });
@@ -103,6 +91,7 @@ void main() {
       testWidgets('MyGroups has add button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final createGroupFinder = find.byKey(const Key('create_group'));
         expect(createGroupFinder, findsOneWidget);
       });
@@ -110,8 +99,9 @@ void main() {
       testWidgets('MyGroups has my groups', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final textFinder = find.text('test group');
-        final textTwoFinder = find.text('test group two');
+        final textTwoFinder = find.text('test group 2');
         expect(textFinder, findsOneWidget);
         expect(textTwoFinder, findsOneWidget);
       });
@@ -119,6 +109,7 @@ void main() {
       testWidgets('MyGroups has picked icons', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
+        await tester.pump();
         final iconFinder = find.byIcon(Icons.account_balance_wallet);
         final iconTwoFinder = find.byIcon(Icons.directions_run);
         expect(iconFinder, findsOneWidget);

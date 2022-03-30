@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
+import 'package:spending_share/ui/groups/who_are_you.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 
@@ -42,6 +44,15 @@ class SettingsPage extends StatelessWidget {
             onPressed: addUser,
             child: Text(
               'Add User',
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              var group = await firestore.collection('groups').doc('BogfSst9NagxAHtnt5XJ').get();
+              Get.to(() => WhoAreYou(firestore: firestore, group: Group.fromDocument(group)));
+            },
+            child: Text(
+              'Who are you?',
             ),
           ),
         ],

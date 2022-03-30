@@ -30,5 +30,9 @@
   "none-of-these": "None of these? Enter your name here",
   "forgot-password-text": "If you forget your password, just ask a reminder from us. We will contact you by email, if your email is registered.",
   "send-reminder": "Send reminder",
-  "close": "Close"
+  "close": "Close",
+  "user-is-taken": "User is taken",
+  "user-is-taken-text": "Someone already using this user. Choose yourserlf, or sort it out with your friends, who you are.",
+  "sign-up-failed": "Sign up failed"
+
 }

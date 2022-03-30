@@ -23,7 +23,7 @@ class MyGroupsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO get my groups
-    Stream<QuerySnapshot<Object?>> myGroups = groups.where('name', isEqualTo: 'adminokTalalkozoja').snapshots();
+    Stream<QuerySnapshot<Object?>> myGroups = groups.where('admin', isEqualTo: firestore.doc('users/currentuserid')).snapshots();
 
     return StreamBuilder<QuerySnapshot>(
         stream: myGroups,
@@ -145,7 +145,7 @@ class HaveGroups extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Container(
-          alignment: Alignment.topCenter,
+          alignment: Alignment.topLeft,
           child: Wrap(
             alignment: WrapAlignment.start,
             runSpacing: 10,

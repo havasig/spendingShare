@@ -93,8 +93,8 @@ class _RegisterPageState extends State<RegisterPage> {
         context: context,
         builder: (context) {
           return ErrorDialog(
-            title: 'Sign up failed',
-            e: e,
+            title: 'sign-in-failed'.tr,
+            message: '${(e as dynamic).message}'.tr,
           );
         },
       );

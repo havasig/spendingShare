@@ -7,8 +7,8 @@ import 'package:spending_share/ui/widgets/input_field.dart';
 
 import '../button.dart';
 
-class ForgotPasswordDialog extends StatelessWidget {
-  const ForgotPasswordDialog({Key? key}) : super(key: key);
+class UserIsTakenDialog extends StatelessWidget {
+  const UserIsTakenDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ForgotPasswordDialog extends StatelessWidget {
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: Text(
-        'forgot-password'.tr,
+        'user-is-taken'.tr,
         style: TextStyleConstants.h_5,
       ),
       content: SingleChildScrollView(

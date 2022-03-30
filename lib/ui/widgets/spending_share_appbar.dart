@@ -6,8 +6,6 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 
 class SpendingShareAppBar extends AppBar {
   final String titleText;
-
-  //final String backText;
   final String forwardText;
   final bool hasBack;
   final bool hasForward;
@@ -19,7 +17,6 @@ class SpendingShareAppBar extends AppBar {
   SpendingShareAppBar({
     Key? key,
     this.titleText = '',
-    //this.backText = 'back',
     this.forwardText = '',
     this.hasBack = true,
     this.hasForward = false,

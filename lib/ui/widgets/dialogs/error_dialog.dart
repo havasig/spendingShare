@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 
@@ -7,9 +8,9 @@ import '../button.dart';
 
 class ErrorDialog extends StatelessWidget {
   final String title;
-  final Exception e;
+  final String message;
 
-  const ErrorDialog({Key? key, required this.title, required this.e}) : super(key: key);
+  const ErrorDialog({Key? key, required this.title, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,14 @@ class ErrorDialog extends StatelessWidget {
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: Text(
-        title,
+        title.tr,
         style: TextStyleConstants.h_5,
       ),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
             Text(
-              '${(e as dynamic).message}',
+              message,
               style: TextStyleConstants.body_1,
             ),
             Divider(

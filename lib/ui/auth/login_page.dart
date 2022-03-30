@@ -75,8 +75,8 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (context) {
           return ErrorDialog(
-            title: 'Sign in failed',
-            e: e,
+            title: 'sign-in-failed'.tr,
+            message: '${(e as dynamic).message}'.tr,
           );
         },
       );

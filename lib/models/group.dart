@@ -17,18 +17,15 @@ class Group {
     required this.memberIds,
   });
 
-  // TODO fix group read (admin and memebers reference)
   factory Group.fromDocument(DocumentSnapshot doc) {
     doc as DocumentSnapshot<Map<String, dynamic>>;
-    //var a = doc.data()?['admin']?.get();
-    //var b = doc.data()?['members'];
     return Group(
       name: doc.data()?['name'] ?? '',
-      color: doc.data()?['color'],
-      icon: doc.data()?['icon'],
-      defaultCurrency: doc.data()?['defaultCurrency'],
-      adminId: '',
-      memberIds: [],
+      color: doc.data()?['color'] ?? '',
+      icon: doc.data()?['icon'] ?? '',
+      defaultCurrency: doc.data()?['defaultCurrency'] ?? '',
+      adminId: doc.data()?['admin'].id ?? '',
+      memberIds: (doc.data()?['members'] ?? []).map<String>((member) => member.id.toString()).toList() ?? [],
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/groups/who_are_you.dart';
 
 import '../wrapper.dart';
@@ -11,21 +12,23 @@ void main() {
     'WhoAreYou',
     () {
       late FakeFirebaseFirestore firestore;
-      late Stream<QuerySnapshot<Map<String, dynamic>>> group;
-
-      setUpAll(() async {
-        firestore = FakeFirebaseFirestore();
-      });
-
+      late Group group;
 
       setUp(() async {
-        await firestore.collection('groups').add({
+        firestore = FakeFirebaseFirestore();
+        await firestore.collection('users').doc('memberOne').set({'name': 'John'});
+        await firestore.collection('users').doc('memberTwo').set({'name': 'Doe'});
+        var memberOne = firestore.collection('users').doc('memberOne');
+        var memberTwo = firestore.collection('users').doc('memberTwo');
+        await firestore.collection('groups').doc('group').set({
           'name': 'test group',
           'icon': 'wallet',
           'color': 'orange',
-          //TODO add member list and group id
+          'admin': memberOne,
+          'members': [memberOne, memberTwo]
         });
-        group = firestore.collection('groups').where('name', isEqualTo: 'adminokTalalkozoja').snapshots();
+        var g = firestore.collection('groups').doc('group');
+        group = Group.fromDocument(await g.get());
       });
 
       testWidgets('WhoAreYou has Who are you header', (WidgetTester tester) async {
@@ -34,6 +37,19 @@ void main() {
         final textFinder = find.text('who-are-you');
         expect(textFinder, findsOneWidget);
       });
+
+      /*
+      testWidgets('WhoAreYou has member list', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, group: group));
+        await tester.pumpWidget(testWidget);
+        await tester.pump();
+
+        // TODO
+
+        final textFinder = find.text('who-are-you');
+        expect(textFinder, findsOneWidget);
+      });
+      */
 
       testWidgets('WhoAreYou has back button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, group: group));
