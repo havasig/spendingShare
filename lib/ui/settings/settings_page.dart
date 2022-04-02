@@ -48,8 +48,8 @@ class SettingsPage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              var group = await firestore.collection('groups').doc('BogfSst9NagxAHtnt5XJ').get();
-              Get.to(() => WhoAreYou(firestore: firestore, group: Group.fromDocument(group)));
+              var group = firestore.collection('groups').doc('BogfSst9NagxAHtnt5XJ').snapshots();
+              Get.to(() => WhoAreYou(firestore: firestore, group: group));
             },
             child: Text(
               'Who are you?',

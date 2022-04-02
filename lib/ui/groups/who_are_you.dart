@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/group.dart';
 import 'package:spending_share/models/user.dart';
@@ -15,11 +16,14 @@ import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
+import 'group_details_page.dart';
+
 class WhoAreYou extends StatelessWidget {
   const WhoAreYou({Key? key, required this.firestore, required this.group}) : super(key: key);
 
-  final Group group;
+  final Stream<DocumentSnapshot<Map<String, dynamic>>> group;
   final FirebaseFirestore firestore;
+
   CollectionReference get users => firestore.collection('users');
 
   @override
@@ -39,7 +43,32 @@ class WhoAreYou extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: ListView.builder(
+                child: StreamBuilder<DocumentSnapshot>(
+                    stream: group,
+                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Text('empty view');
+                      } else {
+                        List<dynamic> memberDocumentReferences = snapshot.data?.get('members');
+                        return Column(
+                            children: memberDocumentReferences.map((m) {
+                          DocumentReference member = m;
+                          return FutureBuilder(
+                            future: member.get(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done) {
+                                var b = User.fromDocument(snapshot.data! as DocumentSnapshot);
+                                return UserItem(user: b);
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          ); //UserItem(user: user);
+                        }).toList());
+                      }
+                    }),
+
+                /*ListView.builder(
                   itemCount: group.memberIds.length,
                   itemBuilder: (context, index) {
                     return FutureBuilder<DocumentSnapshot>(
@@ -62,7 +91,7 @@ class WhoAreYou extends StatelessWidget {
                       },
                     );
                   },
-                ),
+                ),*/
               ),
               const Spacer(),
               Text(
@@ -84,15 +113,7 @@ class WhoAreYou extends StatelessWidget {
               Button(
                 key: const Key('join_button'),
                 onPressed: () {
-                  // TODO remove
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const ErrorDialog(
-                          title: 'sign-up-failed',
-                          message: '',
-                        );
-                      });
+                  Get.to(() => GroupDetailsPage(firestore: firestore));
                 },
                 text: 'join'.tr,
               )

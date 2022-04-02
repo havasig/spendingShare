@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/groups/who_are_you.dart';
 
 import '../wrapper.dart';
@@ -12,7 +11,7 @@ void main() {
     'WhoAreYou',
     () {
       late FakeFirebaseFirestore firestore;
-      late Group group;
+      late Stream<DocumentSnapshot<Map<String, dynamic>>> group;
 
       setUp(() async {
         firestore = FakeFirebaseFirestore();
@@ -27,8 +26,7 @@ void main() {
           'admin': memberOne,
           'members': [memberOne, memberTwo]
         });
-        var g = firestore.collection('groups').doc('group');
-        group = Group.fromDocument(await g.get());
+        group = firestore.collection('groups').doc('group').snapshots();
       });
 
       testWidgets('WhoAreYou has Who are you header', (WidgetTester tester) async {
@@ -40,16 +38,17 @@ void main() {
 
       /*
       testWidgets('WhoAreYou has member list', (WidgetTester tester) async {
+        print('asd');
         var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, group: group));
         await tester.pumpWidget(testWidget);
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         // TODO
 
         final textFinder = find.text('who-are-you');
         expect(textFinder, findsOneWidget);
       });
-      */
+       */
 
       testWidgets('WhoAreYou has back button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, group: group));
