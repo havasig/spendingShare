@@ -21,7 +21,7 @@ import 'group_details_page.dart';
 class WhoAreYou extends StatelessWidget {
   WhoAreYou({Key? key, required this.firestore, required this.groupId}) : super(key: key);
 
-  final String groupId; //final Stream<DocumentSnapshot<Map<String, dynamic>>> groupId;
+  final String groupId;
   final FirebaseFirestore firestore;
   final List<String> memberFirebaseIds = [];
 
@@ -46,27 +46,16 @@ class WhoAreYou extends StatelessWidget {
                 child: StreamBuilder<List<DocumentSnapshot>>(
                     stream: firestore.collection('groups').doc(groupId).snapshots().switchMap((group) => CombineLatestStream.list(
                         group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()))),
-                    builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> groupSnapshot) {
-                      if (!groupSnapshot.hasData) {
-                        return const SizedBox.shrink();
-                      } else {
-                        List<Widget> memberItems = [];
-                        for (var element in groupSnapshot.data!) {
-                          var member = Member.fromDocument(element);
+                    builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> memberListSnapshot) {
+                      if (memberListSnapshot.hasData) {
+                        return Column(
+                            children: memberListSnapshot.data!.map((m) {
+                          var member = Member.fromDocument(m);
                           member.userFirebaseId != null ? memberFirebaseIds.add(member.userFirebaseId!) : null;
-                          memberItems.add(
-                            MemberItem(
-                                member: member,
-                                onClick: () {
-                                  onMemberItemTap(
-                                    member,
-                                    currentUser,
-                                    context,
-                                  );
-                                }),
-                          );
-                        }
-                        return Column(children: memberItems);
+                          return MemberItem(member: member, onClick: () => onMemberItemTap(member, currentUser, context));
+                        }).toList());
+                      } else {
+                        return const SizedBox.shrink();
                       }
                     }),
               ),
@@ -90,7 +79,7 @@ class WhoAreYou extends StatelessWidget {
               Button(
                 key: const Key('join_button'),
                 onPressed: () {
-                  Get.to(() => GroupDetailsPage(firestore: firestore));
+                  Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false));
                 },
                 text: 'join'.tr,
               )
@@ -123,7 +112,7 @@ class WhoAreYou extends StatelessWidget {
               ));
     } else {
       firestore.collection('members').doc(memberData.databaseId).update({'userFirebaseId': currentUser.userFirebaseId});
-      Get.to(() => GroupDetailsPage(firestore: firestore));
+      Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false));
     }
   }
 }

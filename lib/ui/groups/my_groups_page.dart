@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/src/transformers/switch_map.dart';
 import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
+import 'package:spending_share/ui/groups/group_details_page.dart';
 import 'package:spending_share/ui/groups/join_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/create_group_fab.dart';
@@ -22,16 +25,17 @@ class MyGroupsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var currentUserFirebaseId = FirebaseAuth.instance.currentUser!.uid;
-    Stream<QuerySnapshot<Object?>> me = firestore.collection('users').where('userFirebaseId', isEqualTo: currentUserFirebaseId).snapshots();
+    return StreamBuilder<List<DocumentSnapshot>>(
+        stream: firestore.collection('users').where('userFirebaseId', isEqualTo: currentUserFirebaseId).snapshots().switchMap((user) =>
+            CombineLatestStream.list(
+                user.docs.first['groups'].map<Stream<DocumentSnapshot>>((group) => (group as DocumentReference).snapshots()))),
+        builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> groupListSnapshot) {
+          if (groupListSnapshot.hasData && groupListSnapshot.data!.isNotEmpty) {
+            for (var g in groupListSnapshot.data!) {
+              Group.fromDocument(g);
+            }
 
-    return StreamBuilder<QuerySnapshot>(
-        stream: me,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData && snapshot.data!.docs.first['groups'].isNotEmpty) {
-            List<dynamic> groups = snapshot.data!.docs.first['groups'].map((doc) async {
-              var document = await (doc as DocumentReference).get();
-              return Group.fromDocument(document);
-            }).toList();
+            List<Group> groups = groupListSnapshot.data!.map((group) => Group.fromDocument(group)).toList();
 
             return HaveGroups(
               groups: groups,
@@ -119,7 +123,7 @@ class NoGroupsYet extends StatelessWidget {
 class HaveGroups extends StatelessWidget {
   const HaveGroups({Key? key, required this.groups, required this.firestore}) : super(key: key);
 
-  final List<dynamic> groups;
+  final List<Group> groups;
   final FirebaseFirestore firestore;
 
   @override
@@ -141,22 +145,13 @@ class HaveGroups extends StatelessWidget {
               alignment: WrapAlignment.start,
               runSpacing: 10,
               spacing: 15,
-              children: groups.map((group) {
-                return FutureBuilder(
-                  future: group as Future<Group>,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return GroupIcon(
-                        onTap: () {},
-                        group: snapshot.data as Group,
+              children: groups
+                  .map((group) => GroupIcon(
+                        onTap: () => Get.to(() => GroupDetailsPage(firestore: firestore)),
+                        group: group,
                         width: (MediaQuery.of(context).size.width - 197) / 8, //-padding*2 -iconWidth*4 -spacing*3
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                );
-              }).toList()),
+                      ))
+                  .toList()),
         ),
       ),
       floatingActionButton: const CreateGroupFab(),

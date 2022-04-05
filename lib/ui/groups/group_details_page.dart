@@ -4,14 +4,17 @@ import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 
 class GroupDetailsPage extends StatelessWidget {
-  const GroupDetailsPage({Key? key, required this.firestore}) : super(key: key);
+  const GroupDetailsPage({Key? key, required this.firestore, this.hasBack = true}) : super(key: key);
 
   final FirebaseFirestore firestore;
+  final bool hasBack;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SpendingShareAppBar(hasBack: false,),
+      appBar: SpendingShareAppBar(
+        hasBack: hasBack,
+      ),
       body: Column(
         children: [Text('my group page')],
       ),
