@@ -11,7 +11,7 @@ class GroupDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SpendingShareAppBar(),
+      appBar: SpendingShareAppBar(hasBack: false,),
       body: Column(
         children: [Text('my group page')],
       ),

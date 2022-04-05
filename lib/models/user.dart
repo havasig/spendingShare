@@ -1,32 +1,34 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class User {
-  String name;
+class SpendingShareUser {
   String color;
-  String icon;
   String defaultCurrency;
+  List<String>? groups = [];
+  String icon;
+  String name;
+  String userFirebaseId;
+  String databaseId;
 
-  User({
-    required this.name,
-    required this.defaultCurrency,
-    required this.color,
-    required this.icon,
+  SpendingShareUser({
+    this.color = '',
+    this.defaultCurrency = '',
+    this.groups,
+    this.icon = '',
+    this.name = '',
+    this.userFirebaseId = '',
+    this.databaseId = '',
   });
 
-  factory User.fromDocument(DocumentSnapshot doc) {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final String? currentUserFirebaseAuthId = auth.currentUser?.uid;
-
-
+  factory SpendingShareUser.fromDocument(DocumentSnapshot doc) {
     doc as DocumentSnapshot<Map<String, dynamic>>;
-    return User(
+    return SpendingShareUser(
+      databaseId: doc.id,
       name: doc.data()?['name'] ?? '',
       color: doc.data()?['color'] ?? '',
       icon: doc.data()?['icon'] ?? '',
       defaultCurrency: doc.data()?['defaultCurrency'] ?? '',
+      groups: [],
+      userFirebaseId: '',
     );
   }
 }

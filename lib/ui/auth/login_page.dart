@@ -6,6 +6,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/register_page.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
@@ -65,10 +67,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> signInWithEmailAndPassword() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      var credentials = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: 'havasi.gaabor@gmail.com', //_emailTextEditingController.text,
         password: 'password', //_passwordTextEditingController.text,
       );
+      SpendingShareUser user = Provider.of(context);
+      user.userFirebaseId = credentials.user!.uid;
       Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
@@ -179,6 +183,8 @@ class _LoginPageState extends State<LoginPage> {
                 buttonColor: ColorConstants.lightGray,
                 onPressed: () async {
                   await signInWithGoogle().then((value) {
+                    SpendingShareUser user = Provider.of(context);
+                    user.userFirebaseId = value.user!.uid;
                     Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
                   });
                 },

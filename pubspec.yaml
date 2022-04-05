@@ -24,11 +24,14 @@ dependencies:
   flutter_svg: ^1.0.3
   provider: ^6.0.2
   google_sign_in: ^5.2.4
+  rxdart: ^0.27.3
 
 dev_dependencies:
   mockito: ^5.1.0
   build_runner: ^2.1.7
   fake_cloud_firestore: ^1.2.2
+  google_sign_in_mocks: ^0.2.1
+  firebase_auth_mocks: ^0.8.3
 
   flutter_test:
     sdk: flutter

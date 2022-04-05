@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/utils/localization_service.dart';
@@ -21,9 +22,12 @@ void main() async {
   final firestore = FirebaseFirestore.instanceFor(app: app);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ApplicationState(),
-      builder: (context, _) => MyApp(firestore: firestore),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ApplicationState()),
+        Provider(create: (context) => SpendingShareUser()),
+      ],
+      child: MyApp(firestore: firestore),
     ),
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);

@@ -6,6 +6,7 @@ class ScrollViewPage extends StatelessWidget {
 
   final List dummyData = List.generate(10, (index) => '$index');
   final ScrollController _firstController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

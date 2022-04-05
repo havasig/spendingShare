@@ -5,6 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:provider/provider.dart';
+import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
@@ -82,11 +84,12 @@ class _RegisterPageState extends State<RegisterPage> {
     TextValidator.validatePassText(_passwordTextEditingController.value.text);
   }
 
-  Future<void> registerAccount(
-      String email, String displayName, String password, void Function(FirebaseAuthException e) errorCallback) async {
+  Future<void> registerAccount(String email, String password, void Function(FirebaseAuthException e) errorCallback) async {
     try {
-      var credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-      await credential.user!.updateDisplayName(displayName);
+      var credentials = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      SpendingShareUser user = Provider.of(context);
+      user.userFirebaseId = credentials.user!.uid;
+
       Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
@@ -166,7 +169,7 @@ class _RegisterPageState extends State<RegisterPage> {
             const Spacer(),
             Button(
               onPressed: () {
-                registerAccount('havasi.gaabor@gmail.com', 'displayName', 'password', (e) {});
+                registerAccount('havasi.gaabor@gmail.com', 'password', (e) {});
               },
               text: 'sign-up'.tr,
             ),

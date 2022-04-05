@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:spending_share/models/group.dart';
+import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/helpers/user_item.dart';
 import 'package:spending_share/ui/widgets/button.dart';
-import 'package:spending_share/ui/widgets/create_group_fab.dart';
 import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
-import 'package:spending_share/ui/widgets/dialogs/user_is_taken_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
@@ -19,16 +19,17 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'group_details_page.dart';
 
 class WhoAreYou extends StatelessWidget {
-  const WhoAreYou({Key? key, required this.firestore, required this.group}) : super(key: key);
+  WhoAreYou({Key? key, required this.firestore, required this.groupId}) : super(key: key);
 
-  final Stream<DocumentSnapshot<Map<String, dynamic>>> group;
+  final String groupId; //final Stream<DocumentSnapshot<Map<String, dynamic>>> groupId;
   final FirebaseFirestore firestore;
-
-  CollectionReference get users => firestore.collection('users');
+  final List<String> memberFirebaseIds = [];
 
   @override
   Widget build(BuildContext context) {
     FocusNode focusNode = FocusNode();
+    SpendingShareUser currentUser = Provider.of(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: SpendingShareAppBar(
@@ -39,59 +40,35 @@ class WhoAreYou extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(h(16)),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: StreamBuilder<DocumentSnapshot>(
-                    stream: group,
-                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (!snapshot.hasData) {
-                        return Text('empty view');
+                child: StreamBuilder<List<DocumentSnapshot>>(
+                    stream: firestore.collection('groups').doc(groupId).snapshots().switchMap((group) => CombineLatestStream.list(
+                        group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()))),
+                    builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> groupSnapshot) {
+                      if (!groupSnapshot.hasData) {
+                        return const SizedBox.shrink();
                       } else {
-                        List<dynamic> memberDocumentReferences = snapshot.data?.get('members');
-                        return Column(
-                            children: memberDocumentReferences.map((m) {
-                          DocumentReference member = m;
-                          return FutureBuilder(
-                            future: member.get(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                var b = User.fromDocument(snapshot.data! as DocumentSnapshot);
-                                return UserItem(user: b);
-                              } else {
-                                return const SizedBox.shrink();
-                              }
-                            },
-                          ); //UserItem(user: user);
-                        }).toList());
+                        List<Widget> memberItems = [];
+                        for (var element in groupSnapshot.data!) {
+                          var member = Member.fromDocument(element);
+                          member.userFirebaseId != null ? memberFirebaseIds.add(member.userFirebaseId!) : null;
+                          memberItems.add(
+                            MemberItem(
+                                member: member,
+                                onClick: () {
+                                  onMemberItemTap(
+                                    member,
+                                    currentUser,
+                                    context,
+                                  );
+                                }),
+                          );
+                        }
+                        return Column(children: memberItems);
                       }
                     }),
-
-                /*ListView.builder(
-                  itemCount: group.memberIds.length,
-                  itemBuilder: (context, index) {
-                    return FutureBuilder<DocumentSnapshot>(
-                      future: users.doc(group.memberIds[index]).get(),
-                      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if (snapshot.hasError) {
-                          return Text("Something went wrong");
-                        }
-
-                        if (snapshot.hasData && !snapshot.data!.exists) {
-                          return Text("Document does not exist");
-                        }
-
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          User user = User.fromDocument(snapshot.data!);
-                          return UserItem(user: user);
-                        }
-
-                        return Text("loading");
-                      },
-                    );
-                  },
-                ),*/
               ),
               const Spacer(),
               Text(
@@ -127,5 +104,26 @@ class WhoAreYou extends StatelessWidget {
         firestore: firestore,
       ),
     );
+  }
+
+  onMemberItemTap(Member memberData, SpendingShareUser currentUser, BuildContext context) {
+    if (memberFirebaseIds.contains(currentUser.userFirebaseId)) {
+      showDialog(
+          context: context,
+          builder: (_) => ErrorDialog(
+                title: 'sign-in-failed'.tr,
+                message: 'already-member-of-the-group'.tr,
+              ));
+    } else if (memberData.userFirebaseId != null) {
+      showDialog(
+          context: context,
+          builder: (_) => ErrorDialog(
+                title: 'sign-in-failed'.tr,
+                message: 'member-is-taken'.tr,
+              ));
+    } else {
+      firestore.collection('members').doc(memberData.databaseId).update({'userFirebaseId': currentUser.userFirebaseId});
+      Get.to(() => GroupDetailsPage(firestore: firestore));
+    }
   }
 }

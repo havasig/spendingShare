@@ -1,31 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Group {
-  String name;
-  String color;
-  String icon;
-  String defaultCurrency;
   String adminId;
-  List<String> memberIds;
+  List<String> categories;
+  String color;
+  String defaultCurrency;
+  String icon;
+  List<String> members;
+  String name;
+  List<String> transactions;
 
   Group({
-    required this.name,
-    required this.defaultCurrency,
-    required this.color,
-    required this.icon,
     required this.adminId,
-    required this.memberIds,
+    required this.categories,
+    required this.color,
+    required this.defaultCurrency,
+    required this.icon,
+    required this.members,
+    required this.name,
+    required this.transactions,
   });
 
   factory Group.fromDocument(DocumentSnapshot doc) {
     doc as DocumentSnapshot<Map<String, dynamic>>;
     return Group(
-      name: doc.data()?['name'] ?? '',
+      adminId: doc.data()?['adminId'] ?? '',
+      categories: [],
       color: doc.data()?['color'] ?? '',
-      icon: doc.data()?['icon'] ?? '',
       defaultCurrency: doc.data()?['defaultCurrency'] ?? '',
-      adminId: doc.data()?['admin'].id ?? '',
-      memberIds: (doc.data()?['members'] ?? []).map<String>((member) => member.id.toString()).toList() ?? [],
+      icon: doc.data()?['icon'] ?? '',
+      members: (doc.data()?['members'] ?? []).map<String>((member) => member.id.toString()).toList() ?? [],
+      name: doc.data()?['name'] ?? '',
+      transactions: [],
     );
   }
 }

@@ -44,7 +44,7 @@ class GroupIcon extends StatelessWidget {
               ),
             )),
         SizedBox(
-          width: width*2+30,
+          width: width * 2 + 30,
           child: Text(
             group.name,
             style: TextStyleConstants.body_2_medium,
