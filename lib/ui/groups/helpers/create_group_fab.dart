@@ -1,8 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 
+import '../create_group_page.dart';
+
 class CreateGroupFab extends StatelessWidget {
-  const CreateGroupFab({Key? key}) : super(key: key);
+  const CreateGroupFab({Key? key, required this.firestore}) : super(key: key);
+
+  final FirebaseFirestore firestore;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +19,7 @@ class CreateGroupFab extends StatelessWidget {
         tooltip: 'create_group',
         backgroundColor: ColorConstants.defaultOrange,
         splashColor: ColorConstants.lightGray,
-        onPressed: () {},
+        onPressed: () => Get.to(() => CreateGroupPage(firestore: firestore)),
         child: const Icon(Icons.add),
       ),
     );

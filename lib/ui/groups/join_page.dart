@@ -4,7 +4,7 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
-import 'package:spending_share/ui/widgets/create_group_fab.dart';
+import 'package:spending_share/ui/groups/helpers/create_group_fab.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
@@ -30,7 +30,7 @@ class JoinPage extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(h(8)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -67,7 +67,7 @@ class JoinPage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: const CreateGroupFab(),
+      floatingActionButton: CreateGroupFab(firestore: firestore),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),
         selectedIndex: 1,

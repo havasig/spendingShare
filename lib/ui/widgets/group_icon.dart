@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
+import 'package:spending_share/utils/screen_util_helper.dart';
 
 class GroupIcon extends StatelessWidget {
   final VoidCallback onTap;
@@ -34,7 +35,7 @@ class GroupIcon extends StatelessWidget {
                 borderRadius: BorderRadius.circular(1000),
                 onTap: onTap,
                 child: Padding(
-                  padding: EdgeInsets.all(width),
+                  padding: EdgeInsets.all(h(width)),
                   child: Icon(
                     globals.icons[group.icon] ?? Icons.group,
                     size: 30,

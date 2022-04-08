@@ -166,66 +166,6 @@ class _InputFieldState extends State<InputField> {
   }
 }
 
-class InputFieldPage extends StatefulWidget {
-  const InputFieldPage({Key? key}) : super(key: key);
-
-  @override
-  State<InputFieldPage> createState() => _InputFieldPageState();
-}
-
-class _InputFieldPageState extends State<InputFieldPage> {
-  @override
-  Widget build(BuildContext context) {
-    FocusNode focusNode1 = FocusNode();
-    FocusNode focusNode2 = FocusNode();
-    FocusNode focusNode3 = FocusNode();
-    FocusNode focusNode4 = FocusNode();
-    final formGlobalKey = GlobalKey<FormState>();
-
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Input Filed Page'),
-        ),
-        body: ListView(
-          children: [
-            const SizedBox(height: 50),
-            InputField(
-              focusNode: focusNode1,
-              onChanged: (s) {},
-              prefixIcon: const Icon(
-                Icons.mail,
-                color: ColorConstants.defaultOrange,
-              ),
-              labelText: 'Email address',
-              hintText: 'Your email',
-            ),
-            const SizedBox(height: 50),
-            InputField(
-              labelText: 'Label Text',
-              hintText: 'Hint Text',
-              focusNode: focusNode2,
-              isPasswordField: true,
-            ),
-            const SizedBox(height: 50),
-            InputField(
-              labelText: 'Label Text',
-              hintText: 'Hint Text',
-              focusNode: focusNode3,
-              enabled: false,
-              suffixIcon: Icon(
-                Icons.accessibility,
-                color: focusNode2.hasFocus ? ColorConstants.defaultOrange : ColorConstants.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 String validatePassword(String value) {
   if ((value.length < 5) && value.isNotEmpty) {
     return 'Password should contain more than 5 characters';

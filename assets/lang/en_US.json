@@ -33,6 +33,10 @@
   "close": "Close",
   "user-is-taken": "User is taken",
   "user-is-taken-text": "Someone already using this user. Choose yourserlf, or sort it out with your friends, who you are.",
-  "sign-up-failed": "Sign up failed"
+  "sign-up-failed": "Sign up failed",
+  "selected_currency": "Selected currency",
+  "group_color": "Group color",
+  "group_logo": "Group logo",
+  "create_group": "Create group"
 
 }

@@ -8,9 +8,9 @@ import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/group_details_page.dart';
+import 'package:spending_share/ui/groups/helpers/create_group_fab.dart';
 import 'package:spending_share/ui/groups/join_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
-import 'package:spending_share/ui/widgets/create_group_fab.dart';
 import 'package:spending_share/ui/widgets/group_icon.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
@@ -68,7 +68,7 @@ class NoGroupsYet extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(h(8)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -110,7 +110,7 @@ class NoGroupsYet extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: const CreateGroupFab(),
+      floatingActionButton: CreateGroupFab(firestore: firestore),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),
         selectedIndex: 1,
@@ -138,7 +138,7 @@ class HaveGroups extends StatelessWidget {
         onForward: () => Get.to(() => JoinPage(firestore: firestore)),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(h(16)),
         child: Container(
           alignment: Alignment.topLeft,
           child: Wrap(
@@ -154,7 +154,7 @@ class HaveGroups extends StatelessWidget {
                   .toList()),
         ),
       ),
-      floatingActionButton: const CreateGroupFab(),
+      floatingActionButton: CreateGroupFab(firestore: firestore),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),
         selectedIndex: 1,
