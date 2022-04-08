@@ -18,3 +18,5 @@ Map<String, MaterialColor> colors = {
   'purple': Colors.purple,
   'blueGrey': Colors.blueGrey,
 };
+
+late Map<String, dynamic> currencies;

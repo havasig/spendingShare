@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
+import 'package:spending_share/utils/config/environment.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/localization_service.dart';
 
 import 'firebase_options.dart';
@@ -15,6 +20,8 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalizationService.loadAllTranslations();
+  await initializeEnvironment();
+  await getCurrencies();
   final app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -31,6 +38,21 @@ void main() async {
     ),
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+}
+
+Future<void> initializeEnvironment() async {
+  const String environment = String.fromEnvironment(
+    'ENVIRONMENT',
+    defaultValue: Environment.DEV,
+  );
+  Environment().initConfig(environment);
+}
+
+Future<void> getCurrencies() async {
+  String uri = '${Environment().config.currencyConverterbaseUrl}/currency/list?api_key=${Environment().config.currencyConverterApiKey}';
+  var response = await http.get(Uri.parse(uri));
+  Map<String, dynamic> curMap = json.decode(response.body);
+  globals.currencies = curMap['currencies'];
 }
 
 class MyApp extends StatelessWidget {
