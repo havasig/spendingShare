@@ -52,7 +52,7 @@ Future<void> getCurrencies() async {
   String uri = '${Environment().config.currencyConverterbaseUrl}/currency/list?api_key=${Environment().config.currencyConverterApiKey}';
   var response = await http.get(Uri.parse(uri));
   Map<String, dynamic> curMap = json.decode(response.body);
-  globals.currencies = curMap['currencies'];
+  globals.currencies.addAll(curMap['currencies']);
 }
 
 class MyApp extends StatelessWidget {

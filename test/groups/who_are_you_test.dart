@@ -57,7 +57,7 @@ void main() {
       testWidgets('WhoAreYou has none of these text', (WidgetTester tester) async {
         var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group'));
         await tester.pumpWidget(testWidget);
-        final textFinder = find.text('none-of-these');
+        final textFinder = find.text('none_of_these');
         expect(textFinder, findsOneWidget);
       });
 

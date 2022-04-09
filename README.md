@@ -21,7 +21,7 @@ A new Flutter project.
 	
 - User
 	- id: String (userFirebaseId)
-	- defaultCurrency: String
+	- currency: String
 	- color: String
 	- name: String
 	- icon: String

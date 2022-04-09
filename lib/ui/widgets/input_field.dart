@@ -5,47 +5,38 @@ class InputField extends StatefulWidget {
   final String labelText;
   final String hintText;
   final String? initialValue;
-  final String? errorText;
   final Color color;
   final Color focusColor;
   final Color errorColor;
   Color labelColor;
-  Widget? suffixIcon;
   final Icon? prefixIcon;
   final bool enabled;
-  bool hasGlow;
   bool isPasswordField;
   final FocusNode? focusNode;
   final TextCapitalization textCapitalization;
   final TextInputType textInputType;
   final TextEditingController? textEditingController;
-  final TextAlign textAlign;
-  final Function(String)? onChanged;
-  final Function(String)? onCompleted;
   bool? obscureText;
+  final String? Function(String?)? validator;
 
   InputField({
     Key? key,
+    required this.focusNode,
+    this.validator,
+    this.initialValue,
+    this.prefixIcon,
+    this.textEditingController,
     this.hintText = '',
     this.labelText = '',
-    this.initialValue,
-    this.errorText,
+    this.enabled = true,
+    this.isPasswordField = false,
+    this.textInputType = TextInputType.text,
+    // TODO remove all these?
     this.color = ColorConstants.white,
     this.focusColor = ColorConstants.defaultOrange,
     this.errorColor = Colors.red,
     this.labelColor = Colors.white,
-    this.suffixIcon,
-    this.prefixIcon,
-    this.hasGlow = false,
-    this.enabled = true,
-    this.isPasswordField = false,
     this.textCapitalization = TextCapitalization.none,
-    @required this.focusNode,
-    this.textEditingController,
-    this.textAlign = TextAlign.start,
-    this.onChanged,
-    this.onCompleted,
-    this.textInputType = TextInputType.text,
   }) : super(key: key);
 
   @override
@@ -60,115 +51,87 @@ class _InputFieldState extends State<InputField> {
     widget.obscureText = widget.isPasswordField;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Container(
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-            color: widget.hasGlow ? ColorConstants.defaultOrange.withOpacity(0.2) : Colors.transparent,
-            spreadRadius: 4,
-            blurRadius: 10,
-          )
-        ]),
-        child: Focus(
-          onFocusChange: (hasFocus) {
-            setState(() {
-              if (hasFocus) {
-                widget.labelColor = widget.focusColor;
-                passVisibilityColor = widget.focusColor;
-                if (widget.suffixIcon is Icon) {
-                  widget.suffixIcon = Icon((widget.suffixIcon as Icon).icon, color: widget.focusColor);
-                }
-                widget.hasGlow = true;
-              } else {
-                widget.labelColor = widget.color;
-                passVisibilityColor = widget.color;
-                if (widget.suffixIcon is Icon) {
-                  widget.suffixIcon = Icon((widget.suffixIcon as Icon).icon, color: widget.color);
-                }
-                widget.hasGlow = false;
-              }
-            });
-          },
-          child: TextFormField(
-            initialValue: widget.initialValue,
-            textAlign: widget.textAlign,
-            textCapitalization: widget.textCapitalization,
-            controller: widget.textEditingController,
-            obscureText: widget.obscureText!,
-            enabled: widget.enabled,
-            cursorColor: widget.focusColor,
-            focusNode: widget.focusNode,
-            keyboardType: widget.textInputType,
-            onChanged: (String str) {
-              widget.onChanged?.call(str);
-            },
-            style: TextStyle(color: widget.enabled ? null : ColorConstants.darkGray),
-            decoration: InputDecoration(
-              alignLabelWithHint: true,
-              fillColor: ColorConstants.darkGray,
-              filled: true,
-              suffixIcon: widget.isPasswordField
-                  ? IconButton(
-                      color: passVisibilityColor,
-                      icon: Icon(widget.obscureText! ? Icons.visibility_off : Icons.visibility),
-                      onPressed: () {
-                        setState(() {
-                          widget.obscureText = !widget.obscureText!;
-                        });
-                      },
-                    )
-                  : widget.suffixIcon,
-              prefixIcon: widget.isPasswordField
-                  ? const Icon(
-                      Icons.lock,
-                      color: ColorConstants.defaultOrange,
-                    )
-                  : widget.prefixIcon,
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(
-                  color: widget.errorColor,
-                ),
+      child: Focus(
+        onFocusChange: (hasFocus) {
+          setState(() {
+            if (hasFocus) {
+              widget.labelColor = widget.focusColor;
+              passVisibilityColor = widget.focusColor;
+            } else {
+              widget.labelColor = widget.color;
+              passVisibilityColor = widget.color;
+            }
+          });
+        },
+        child: TextFormField(
+          validator: widget.validator,
+          initialValue: widget.initialValue,
+          textCapitalization: widget.textCapitalization,
+          controller: widget.textEditingController,
+          obscureText: widget.obscureText!,
+          enabled: widget.enabled,
+          cursorColor: widget.focusColor,
+          focusNode: widget.focusNode,
+          keyboardType: widget.textInputType,
+          style: TextStyle(color: widget.enabled ? null : ColorConstants.darkGray),
+          decoration: InputDecoration(
+            alignLabelWithHint: true,
+            fillColor: ColorConstants.darkGray,
+            filled: true,
+            suffixIcon: widget.isPasswordField
+                ? IconButton(
+                    color: passVisibilityColor,
+                    icon: Icon(widget.obscureText! ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        widget.obscureText = !widget.obscureText!;
+                      });
+                    },
+                  )
+                : null,
+            prefixIcon: widget.isPasswordField
+                ? const Icon(
+                    Icons.lock,
+                    color: ColorConstants.defaultOrange,
+                  )
+                : widget.prefixIcon,
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: BorderSide(
+                color: widget.errorColor,
               ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(
-                  color: widget.focusColor,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(
-                  color: widget.focusColor,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(
-                  color: widget.color,
-                ),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: const BorderSide(
-                  color: Colors.grey,
-                ),
-              ),
-              labelText: widget.labelText,
-              labelStyle: TextStyle(color: widget.focusNode!.hasFocus ? widget.focusColor : widget.color),
-              hintText: widget.hintText,
-              errorText: widget.errorText,
-              focusColor: widget.color,
             ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: BorderSide(
+                color: widget.focusColor,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: BorderSide(
+                color: widget.focusColor,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: BorderSide(
+                color: widget.color,
+              ),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: const BorderSide(
+                color: Colors.grey,
+              ),
+            ),
+            labelText: widget.labelText,
+            labelStyle: TextStyle(color: widget.focusNode!.hasFocus ? widget.focusColor : widget.color),
+            hintText: widget.hintText,
+            focusColor: widget.color,
           ),
         ),
       ),
     );
   }
-}
-
-String validatePassword(String value) {
-  if ((value.length < 5) && value.isNotEmpty) {
-    return 'Password should contain more than 5 characters';
-  }
-  return '';
 }

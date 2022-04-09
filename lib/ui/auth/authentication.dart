@@ -20,13 +20,23 @@ class Authentication extends StatelessWidget {
   final ApplicationLoginState loginState;
   final FirebaseFirestore firestore;
 
+  static loadUser(BuildContext context, String firebaseUId, FirebaseFirestore firestore) async {
+    SpendingShareUser user = Provider.of(context, listen: false);
+    user.userFirebaseId = firebaseUId;
+    QuerySnapshot<Map<String, dynamic>> firestoreUser =
+        await firestore.collection('users').where('userFirebaseId', isEqualTo: user.userFirebaseId).get();
+    user.name = firestoreUser.docs.first['name'];
+    user.color = firestoreUser.docs.first['color'];
+    user.currency = firestoreUser.docs.first['currency'];
+    user.icon = firestoreUser.docs.first['icon'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(builder: (context, appState, _) {
       switch (loginState) {
         case ApplicationLoginState.loggedIn:
-          SpendingShareUser user = Provider.of(context);
-          user.userFirebaseId = FirebaseAuth.instance.currentUser!.uid;
+          loadUser(context, FirebaseAuth.instance.currentUser!.uid, firestore);
           return MyGroupsPage(firestore: firestore);
         case ApplicationLoginState.loggedOut:
           return LoginPage(firestore: firestore);

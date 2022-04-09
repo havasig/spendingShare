@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SpendingShareUser {
   String color;
-  String defaultCurrency;
+  String currency;
   List<String>? groups = [];
   String icon;
   String name;
@@ -11,7 +11,7 @@ class SpendingShareUser {
 
   SpendingShareUser({
     this.color = '',
-    this.defaultCurrency = '',
+    this.currency = '',
     this.groups,
     this.icon = '',
     this.name = '',
@@ -26,7 +26,7 @@ class SpendingShareUser {
       name: doc.data()?['name'] ?? '',
       color: doc.data()?['color'] ?? '',
       icon: doc.data()?['icon'] ?? '',
-      defaultCurrency: doc.data()?['defaultCurrency'] ?? '',
+      currency: doc.data()?['currency'] ?? '',
       groups: [],
       userFirebaseId: '',
     );

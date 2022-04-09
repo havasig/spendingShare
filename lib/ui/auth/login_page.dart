@@ -8,6 +8,7 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/models/user.dart';
+import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/auth/register_page.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
@@ -36,170 +37,147 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode _passwordFocusNode = FocusNode();
   final _emailTextEditingController = TextEditingController();
   final _passwordTextEditingController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(debugLabel: '_LoginFormState');
 
   @override
-  void initState() {
-    super.initState();
-    _emailFocusNode.addListener(_onEmailFocusChange);
-    _passwordFocusNode.addListener(_onPassWordFocusChange);
-  }
-
-  void _onEmailFocusChange() {
-    setState(() {
-      emailHadFocus = true;
-    });
-  }
-
-  void _onPassWordFocusChange() {
-    setState(() {
-      passwordHadFocus = true;
-    });
-  }
-
-  String? get _errorText {
-    // TODO fix validators
-    TextValidator.validateEmptyText(_emailTextEditingController.value.text);
-    TextValidator.validateEmailText(_emailTextEditingController.value.text);
-
-    TextValidator.validateEmptyText(_passwordTextEditingController.value.text);
-    TextValidator.validatePassText(_passwordTextEditingController.value.text);
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Padding(
+          padding: EdgeInsets.all(h(16)),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                children: [
+                  SizedBox(height: h(16)),
+                  Text(
+                    'login'.tr,
+                    style: TextStyleConstants.h_3,
+                  ),
+                  SizedBox(height: h(16)),
+                  InputField(
+                    validator: TextValidator.validateEmailText,
+                    key: const Key('email_input'),
+                    focusNode: _emailFocusNode,
+                    textEditingController: _emailTextEditingController,
+                    prefixIcon: const Icon(
+                      Icons.mail,
+                      color: ColorConstants.defaultOrange,
+                    ),
+                    labelText: 'email'.tr,
+                    hintText: 'your_email'.tr,
+                  ),
+                  SizedBox(height: h(16)),
+                  InputField(
+                    validator: TextValidator.validatePasswordText,
+                    key: const Key('password_input'),
+                    focusNode: _passwordFocusNode,
+                    textEditingController: _passwordTextEditingController,
+                    isPasswordField: true,
+                    labelText: 'password'.tr,
+                    hintText: 'your_password'.tr,
+                  ),
+                  SizedBox(height: h(16)),
+                  Button(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        signInWithEmailAndPassword();
+                      }
+                    },
+                    text: 'login'.tr,
+                  ),
+                  SizedBox(height: h(16)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'no_account'.tr,
+                        style: TextStyleConstants.body_2_medium,
+                      ),
+                      TextButton(
+                        key: const Key('registration'),
+                        onPressed: () {
+                          Get.to(() => RegisterPage(firestore: widget.firestore));
+                        },
+                        child: Text('registration_exclamation'.tr,
+                            style: TextStyleConstants.body_2_medium.copyWith(
+                              color: ColorConstants.defaultOrange,
+                              decoration: TextDecoration.underline,
+                              decorationThickness: 2,
+                            )),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: h(16)),
+                  TextButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const ForgotPasswordDialog();
+                          });
+                    },
+                    child: Text(
+                      'forgot_password'.tr,
+                      style: TextStyleConstants.body_2_medium.copyWith(
+                        color: ColorConstants.defaultOrange,
+                        decoration: TextDecoration.underline,
+                        decorationThickness: 2,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: h(16)),
+                  Button(
+                    textColor: ColorConstants.white.withOpacity(0.8),
+                    buttonColor: ColorConstants.lightGray,
+                    onPressed: () async {
+                      await signInWithGoogle().then((value) {
+                        SpendingShareUser user = Provider.of(context);
+                        user.userFirebaseId = value.user!.uid;
+                        Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
+                      });
+                    },
+                    text: 'login_with_google'.tr,
+                    prefixWidget: SvgPicture.asset('assets/graphics/icons/google_logo.svg'),
+                    suffixWidget: Icon(
+                      Icons.arrow_forward_ios,
+                      color: ColorConstants.white.withOpacity(0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> signInWithEmailAndPassword() async {
     try {
       var credentials = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: 'havasi.gaabor@gmail.com', //_emailTextEditingController.text,
-        password: 'password', //_passwordTextEditingController.text,
+        email: _emailTextEditingController.text,
+        password: _passwordTextEditingController.text,
       );
-      SpendingShareUser user = Provider.of(context);
-      user.userFirebaseId = credentials.user!.uid;
+
+      Authentication.loadUser(context, credentials.user!.uid, widget.firestore);
+
       Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
     } on FirebaseAuthException catch (e) {
       showDialog<void>(
         context: context,
         builder: (context) {
           return ErrorDialog(
-            title: 'sign-in-failed'.tr,
+            title: 'sign_in_failed'.tr,
             message: '${(e as dynamic).message}'.tr,
           );
         },
       );
     }
-  }
-
-  final _formKey = GlobalKey<FormState>(debugLabel: '_LoginFormState');
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(h(16)),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const Spacer(),
-              Text(
-                'login'.tr,
-                style: TextStyleConstants.h_3,
-              ),
-              const Spacer(),
-              InputField(
-                key: const Key('email_input'),
-                focusNode: _emailFocusNode,
-                textEditingController: _emailTextEditingController,
-                onChanged: (text) => setState(() {}),
-                prefixIcon: const Icon(
-                  Icons.mail,
-                  color: ColorConstants.defaultOrange,
-                ),
-                labelText: 'email'.tr,
-                hintText: 'your-email'.tr,
-                errorText: emailHadFocus ? _errorText : null,
-              ),
-              const Spacer(),
-              InputField(
-                key: const Key('password_input'),
-                focusNode: _passwordFocusNode,
-                textEditingController: _passwordTextEditingController,
-                isPasswordField: true,
-                labelText: 'password'.tr,
-                hintText: 'your-password'.tr,
-                onChanged: (text) => setState(() {}),
-                errorText: passwordHadFocus ? _errorText : null,
-              ),
-              const Spacer(),
-              Button(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    signInWithEmailAndPassword();
-                  }
-                },
-                text: 'login'.tr,
-              ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'no-account'.tr,
-                    style: TextStyleConstants.body_2_medium,
-                  ),
-                  TextButton(
-                    key: const Key('registration'),
-                    onPressed: () {
-                      Get.to(() => RegisterPage(firestore: widget.firestore));
-                    },
-                    child: Text('registration-exclamation'.tr,
-                        style: TextStyleConstants.body_2_medium.copyWith(
-                          color: ColorConstants.defaultOrange,
-                          decoration: TextDecoration.underline,
-                          decorationThickness: 2,
-                        )),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const ForgotPasswordDialog();
-                      });
-                },
-                child: Text(
-                  'forgot-password'.tr,
-                  style: TextStyleConstants.body_2_medium.copyWith(
-                    color: ColorConstants.defaultOrange,
-                    decoration: TextDecoration.underline,
-                    decorationThickness: 2,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Button(
-                textColor: ColorConstants.white.withOpacity(0.8),
-                buttonColor: ColorConstants.lightGray,
-                onPressed: () async {
-                  await signInWithGoogle().then((value) {
-                    SpendingShareUser user = Provider.of(context);
-                    user.userFirebaseId = value.user!.uid;
-                    Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
-                  });
-                },
-                text: 'login-with-google'.tr,
-                prefixWidget: SvgPicture.asset('assets/graphics/icons/google_logo.svg'),
-                suffixWidget: Icon(
-                  Icons.arrow_forward_ios,
-                  color: ColorConstants.white.withOpacity(0.8),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Future<UserCredential> signInWithGoogle() async {

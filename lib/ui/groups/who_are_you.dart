@@ -61,7 +61,7 @@ class WhoAreYou extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                'none-of-these'.tr,
+                'none_of_these'.tr,
                 style: TextStyleConstants.sub_1,
               ),
               SizedBox(height: h(16)),
@@ -100,15 +100,15 @@ class WhoAreYou extends StatelessWidget {
       showDialog(
           context: context,
           builder: (_) => ErrorDialog(
-                title: 'sign-in-failed'.tr,
-                message: 'already-member-of-the-group'.tr,
+                title: 'sign_in_failed'.tr,
+                message: 'already_member_of_the_group'.tr,
               ));
     } else if (memberData.userFirebaseId != null) {
       showDialog(
           context: context,
           builder: (_) => ErrorDialog(
-                title: 'sign-in-failed'.tr,
-                message: 'member-is-taken'.tr,
+                title: 'sign_in_failed'.tr,
+                message: 'member_is_taken'.tr,
               ));
     } else {
       firestore.collection('members').doc(memberData.databaseId).update({'userFirebaseId': currentUser.userFirebaseId});

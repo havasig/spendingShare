@@ -7,8 +7,6 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 class GroupIcon extends StatelessWidget {
   final VoidCallback onTap;
   final Group group;
-  final int circleShade = 500;
-  final int iconShade = 100;
   final double width;
 
   const GroupIcon({
@@ -28,7 +26,7 @@ class GroupIcon extends StatelessWidget {
             type: MaterialType.transparency,
             child: Ink(
               decoration: BoxDecoration(
-                color: globals.colors[group.color]?[circleShade] ?? Colors.orange[circleShade],
+                color: globals.colors[group.color]?[globals.circleShade] ?? Colors.orange[globals.circleShade],
                 shape: BoxShape.circle,
               ),
               child: InkWell(
@@ -39,7 +37,7 @@ class GroupIcon extends StatelessWidget {
                   child: Icon(
                     globals.icons[group.icon] ?? Icons.group,
                     size: 30,
-                    color: globals.colors[group.color]?[iconShade] ?? Colors.orange[iconShade],
+                    color: globals.colors[group.color]?[globals.iconShade] ?? Colors.orange[globals.iconShade],
                   ),
                 ),
               ),
