@@ -29,7 +29,7 @@ class CreateGroupChangeNotifier extends ChangeNotifier {
 
   final List<String> _members = [];
 
-  get members => _members;
+  List<String> get members => _members;
 
   addMember(String memberName) {
     _members.add(memberName);
@@ -61,5 +61,15 @@ class CreateGroupChangeNotifier extends ChangeNotifier {
     _iconName = iconName;
     _icon = iconData;
     notifyListeners();
+  }
+
+  bool validateFirstPage() {
+    if (_name?.isEmpty ?? true) return false;
+    if (_currency?.isEmpty ?? true) return false;
+    if (_colorName?.isEmpty ?? true) return false;
+    if (_color == null) return false;
+    if (_iconName?.isEmpty ?? true) return false;
+    if (_icon == null) return false;
+    return true;
   }
 }

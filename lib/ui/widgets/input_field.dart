@@ -16,7 +16,7 @@ class InputField extends StatefulWidget {
   final TextCapitalization textCapitalization;
   final TextInputType textInputType;
   final TextEditingController? textEditingController;
-  bool? obscureText;
+  bool obscureText = false;
   final String? Function(String?)? validator;
 
   InputField({
@@ -48,7 +48,6 @@ class _InputFieldState extends State<InputField> {
 
   @override
   Widget build(BuildContext context) {
-    widget.obscureText = widget.isPasswordField;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Focus(
@@ -68,7 +67,7 @@ class _InputFieldState extends State<InputField> {
           initialValue: widget.initialValue,
           textCapitalization: widget.textCapitalization,
           controller: widget.textEditingController,
-          obscureText: widget.obscureText!,
+          obscureText: widget.obscureText,
           enabled: widget.enabled,
           cursorColor: widget.focusColor,
           focusNode: widget.focusNode,
@@ -81,10 +80,10 @@ class _InputFieldState extends State<InputField> {
             suffixIcon: widget.isPasswordField
                 ? IconButton(
                     color: passVisibilityColor,
-                    icon: Icon(widget.obscureText! ? Icons.visibility_off : Icons.visibility),
+                    icon: Icon(widget.obscureText ? Icons.visibility_off : Icons.visibility),
                     onPressed: () {
                       setState(() {
-                        widget.obscureText = !widget.obscureText!;
+                        widget.obscureText = !widget.obscureText;
                       });
                     },
                   )

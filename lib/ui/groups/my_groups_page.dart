@@ -59,7 +59,7 @@ class NoGroupsYet extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: SpendingShareAppBar(
         hasBack: false,
-        titleText: 'my-groups'.tr,
+        titleText: 'my_groups'.tr,
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -134,7 +134,7 @@ class HaveGroups extends StatelessWidget {
         hasBack: false,
         hasForward: true,
         forwardText: 'join'.tr,
-        titleText: 'my-groups'.tr,
+        titleText: 'my_groups'.tr,
         onForward: () => Get.to(() => JoinPage(firestore: firestore)),
       ),
       body: Padding(

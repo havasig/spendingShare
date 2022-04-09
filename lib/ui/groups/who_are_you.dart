@@ -14,6 +14,7 @@ import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 import 'group_details_page.dart';
@@ -27,6 +28,7 @@ class WhoAreYou extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    dynamic color;
     FocusNode focusNode = FocusNode();
     SpendingShareUser currentUser = Provider.of(context);
 
@@ -44,15 +46,22 @@ class WhoAreYou extends StatelessWidget {
             children: [
               Expanded(
                 child: StreamBuilder<List<DocumentSnapshot>>(
-                    stream: firestore.collection('groups').doc(groupId).snapshots().switchMap((group) => CombineLatestStream.list(
-                        group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()))),
+                    stream: firestore.collection('groups').doc(groupId).snapshots().switchMap((group) {
+                      color = globals.colors[group.data()!['color']];
+                      return CombineLatestStream.list(
+                          group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()));
+                    }),
                     builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> memberListSnapshot) {
                       if (memberListSnapshot.hasData) {
                         return Column(
                             children: memberListSnapshot.data!.map((m) {
                           var member = Member.fromDocument(m);
                           member.userFirebaseId != null ? memberFirebaseIds.add(member.userFirebaseId!) : null;
-                          return MemberItem(member: member, onClick: () => onMemberItemTap(member, currentUser, context));
+                          return MemberItem(
+                            member: member,
+                            onClick: () => onMemberItemTap(member, currentUser, context),
+                            color: color,
+                          );
                         }).toList());
                       } else {
                         return const SizedBox.shrink();

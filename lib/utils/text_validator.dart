@@ -18,4 +18,10 @@ class TextValidator {
   static String? validateNameText(String? text) {
     return 'TODO';
   }
+
+  static String? validateGroupNameText(String? text) {
+    //TODO kell ide barmi mas validacio?
+    if (text?.isEmpty ?? true) return 'cant_be_empty'.tr;
+    return null;
+  }
 }

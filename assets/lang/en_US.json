@@ -36,12 +36,14 @@
   "sign_up_failed": "Sign up failed",
   "sign_in_failed": "Sign in failed",
   "selected_currency": "Selected currency",
+  "group_name": "Group name",
   "group_color": "Group color",
   "group_icon": "Group icon",
   "create_group": "Create group",
   "member_name": "Member name",
+  "add_member": "Add member",
   "invalid_email": "Email is invalid",
   "password_is_too_short": "Password is too short",
-  "cant_be_empty": "Can\\'t be empty",
+  "cant_be_empty": "Can't be empty",
   "not_matching_passwords": "The two passwords are not the same"
 }

@@ -28,7 +28,6 @@ class CreateGroupMembersPage extends StatefulWidget {
 
 class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
   final FocusNode _memberNameFocusNode = FocusNode();
-  final bool _memberNameHadFocus = false;
   final TextEditingController _memberNameTextEditingController = TextEditingController();
 
   @override
@@ -51,13 +50,15 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: const ScrollPhysics(),
-                      itemCount: widget.createGroupChangeNotifier.members.length,
+                      itemCount: createGroupChangeNotifier.members.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(4),
                           child: MemberItem(
-                            member: Member(name: widget.createGroupChangeNotifier.members[index]),
+                            member: Member(name: createGroupChangeNotifier.members[index]),
                             onClick: () {},
+                            onDelete: index == 0 ? null : () => createGroupChangeNotifier.removeMember(index),
+                            color: createGroupChangeNotifier.color,
                           ),
                         );
                       },
@@ -95,7 +96,9 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
               Button(
                 key: const Key('create_group_button'),
                 onPressed: () {
-                  Get.offAll(() => GroupDetailsPage(firestore: widget.firestore, hasBack: false));
+                  if (widget.createGroupChangeNotifier.members.isNotEmpty) {
+                    Get.offAll(() => GroupDetailsPage(firestore: widget.firestore, hasBack: false));
+                  }
                 },
                 text: 'create_group'.tr,
               ),

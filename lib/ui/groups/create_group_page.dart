@@ -14,6 +14,7 @@ import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
+import 'package:spending_share/utils/text_validator.dart';
 
 import 'helpers/select_color.dart';
 import 'helpers/select_icon.dart';
@@ -30,6 +31,7 @@ class CreateGroupPage extends StatefulWidget {
 class _CreateGroupPageState extends State<CreateGroupPage> {
   final FocusNode _groupNameFocusNode = FocusNode();
   final TextEditingController _groupNameTextEditingController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(debugLabel: '_CreateGroupFormState');
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       currentUser.icon,
       globals.icons[currentUser.icon],
     );
+    _createGroupChangeNotifier.addMember(currentUser.name);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -53,15 +56,20 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             child: Column(
               children: [
                 SizedBox(height: h(6)),
-                InputField(
-                  key: const Key('group_name_input'),
-                  focusNode: _groupNameFocusNode,
-                  textEditingController: _groupNameTextEditingController,
-                  labelText: 'name'.tr,
-                  hintText: 'group_name'.tr,
-                  prefixIcon: const Icon(
-                    Icons.group,
-                    color: ColorConstants.defaultOrange,
+                Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: InputField(
+                    validator: TextValidator.validateGroupNameText,
+                    key: const Key('group_name_input'),
+                    focusNode: _groupNameFocusNode,
+                    textEditingController: _groupNameTextEditingController,
+                    labelText: 'name'.tr,
+                    hintText: 'group_name'.tr,
+                    prefixIcon: const Icon(
+                      Icons.group,
+                      color: ColorConstants.defaultOrange,
+                    ),
                   ),
                 ),
                 SelectCurrency(defaultCurrency: currentUser.currency),
@@ -69,10 +77,15 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 SelectIcon(defaultIcon: currentUser.icon),
                 const Spacer(),
                 Button(
-                  onPressed: () => Get.to(() => CreateGroupMembersPage(
-                        firestore: widget.firestore,
-                        createGroupChangeNotifier: _createGroupChangeNotifier,
-                      )),
+                  onPressed: () {
+                    _createGroupChangeNotifier.setName(_groupNameTextEditingController.text);
+                    if (_formKey.currentState!.validate() && _createGroupChangeNotifier.validateFirstPage()) {
+                      Get.to(() => CreateGroupMembersPage(
+                            firestore: widget.firestore,
+                            createGroupChangeNotifier: _createGroupChangeNotifier,
+                          ));
+                    }
+                  },
                   text: 'next'.tr,
                 ),
               ],
