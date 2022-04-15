@@ -38,7 +38,7 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: SpendingShareAppBar(
-          titleText: 'members'.tr,
+          titleText: 'members'.tr
         ),
         body: Padding(
           padding: EdgeInsets.all(h(16)),
@@ -119,6 +119,8 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                         'transactions': [],
                       });
 
+
+
                       SpendingShareUser user = Provider.of(context, listen: false);
 
                       DocumentSnapshot<Map<String, dynamic>> userSnapshot =
@@ -132,7 +134,7 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                           .doc(user.databaseId)
                           .set({'groups': newGroupReferenceList}, SetOptions(merge: true));
 
-                      Get.offAll(() => GroupDetailsPage(firestore: widget.firestore, hasBack: false));
+                      Get.offAll(() => GroupDetailsPage(firestore: widget.firestore, hasBack: false, groupId: groupReference.id));
                     } catch (e) {
                       showDialog(
                         context: context,

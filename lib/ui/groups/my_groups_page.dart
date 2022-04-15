@@ -11,7 +11,7 @@ import 'package:spending_share/ui/groups/group_details_page.dart';
 import 'package:spending_share/ui/groups/helpers/create_group_fab.dart';
 import 'package:spending_share/ui/groups/join_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
-import 'package:spending_share/ui/widgets/group_icon.dart';
+import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
@@ -35,10 +35,8 @@ class MyGroupsPage extends StatelessWidget {
               Group.fromDocument(g);
             }
 
-            List<Group> groups = groupListSnapshot.data!.map((group) => Group.fromDocument(group)).toList();
-
             return HaveGroups(
-              groups: groups,
+              groups: groupListSnapshot.data!,
               firestore: firestore,
             );
           }
@@ -123,7 +121,7 @@ class NoGroupsYet extends StatelessWidget {
 class HaveGroups extends StatelessWidget {
   const HaveGroups({Key? key, required this.groups, required this.firestore}) : super(key: key);
 
-  final List<Group> groups;
+  final List<DocumentSnapshot> groups;
   final FirebaseFirestore firestore;
 
   @override
@@ -145,13 +143,16 @@ class HaveGroups extends StatelessWidget {
               alignment: WrapAlignment.start,
               runSpacing: 10,
               spacing: 15,
-              children: groups
-                  .map((group) => GroupIcon(
-                        onTap: () => Get.to(() => GroupDetailsPage(firestore: firestore)),
-                        group: group,
-                        width: (MediaQuery.of(context).size.width - 197) / 8, //-padding*2 -iconWidth*4 -spacing*3
-                      ))
-                  .toList()),
+              children: groups.map((group) {
+                Group g = Group.fromDocument(group);
+                return CircleIconButton(
+                  onTap: () => Get.to(() => GroupDetailsPage(firestore: firestore, groupId: group.id)),
+                  width: (MediaQuery.of(context).size.width - 197) / 8, //-padding*2 -iconWidth*4 -spacing*3
+                  color: g.color,
+                  name: g.name,
+                  icon: g.icon,
+                );
+              }).toList()),
         ),
       ),
       floatingActionButton: CreateGroupFab(firestore: firestore),

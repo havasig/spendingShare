@@ -46,5 +46,14 @@
   "password_is_too_short": "Password is too short",
   "cant_be_empty": "Can't be empty",
   "not_matching_passwords": "The two passwords are not the same",
-  "group_create_failed": "Group creation failed, try again later"
+  "group_create_failed": "Group creation failed, try again later",
+  "members": "Members",
+  "debts": "Debts",
+  "categories": "Categories",
+  "transactions": "Transactions",
+  "something_went_wrong": "Something went wrong",
+  "document_does_not_exists": "Document does not exists",
+  "show_all_transactions": "Show all transactions",
+  "show_all_statistics": "Show all statistics",
+  "add_transaction": "Add transaction"
 }

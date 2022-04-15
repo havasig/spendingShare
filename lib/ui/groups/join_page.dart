@@ -21,7 +21,7 @@ class JoinPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: SpendingShareAppBar(
-        titleText: 'join-group'.tr,
+        titleText: 'join-group'.tr
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),

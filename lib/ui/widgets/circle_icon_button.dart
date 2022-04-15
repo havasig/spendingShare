@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
-class GroupIcon extends StatelessWidget {
+class CircleIconButton extends StatelessWidget {
   final VoidCallback onTap;
-  final Group group;
+  final String color;
+  final String icon;
+  final String? name;
   final double width;
 
-  const GroupIcon({
+  const CircleIconButton({
     Key? key,
     required this.onTap,
-    required this.group,
+    required this.color,
+    required this.icon,
+    this.name,
     required this.width,
   }) : super(key: key);
 
@@ -26,7 +29,7 @@ class GroupIcon extends StatelessWidget {
             type: MaterialType.transparency,
             child: Ink(
               decoration: BoxDecoration(
-                color: globals.colors[group.color]?[globals.circleShade] ?? Colors.orange[globals.circleShade],
+                color: globals.colors[color]?[globals.circleShade] ?? Colors.orange[globals.circleShade],
                 shape: BoxShape.circle,
               ),
               child: InkWell(
@@ -35,21 +38,22 @@ class GroupIcon extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(h(width)),
                   child: Icon(
-                    globals.icons[group.icon] ?? Icons.group,
+                    globals.icons[icon] ?? Icons.group,
                     size: 30,
-                    color: globals.colors[group.color]?[globals.iconShade] ?? Colors.orange[globals.iconShade],
+                    color: globals.colors[color]?[globals.iconShade] ?? Colors.orange[globals.iconShade],
                   ),
                 ),
               ),
             )),
-        Container(
-          alignment: Alignment.center,
-          width: width * 2 + 30,
-          child: Text(
-            group.name,
-            style: TextStyleConstants.body_2_medium,
-          ),
-        )
+        if (name != null)
+          Container(
+            alignment: Alignment.center,
+            width: width * 2 + 30,
+            child: Text(
+              name!,
+              style: TextStyleConstants.body_2_medium,
+            ),
+          )
       ],
     );
   }

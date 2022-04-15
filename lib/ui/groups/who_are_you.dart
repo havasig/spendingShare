@@ -88,7 +88,7 @@ class WhoAreYou extends StatelessWidget {
               Button(
                 key: const Key('join_button'),
                 onPressed: () {
-                  Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false));
+                  Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false, groupId: groupId));
                 },
                 text: 'join'.tr,
               )
@@ -121,7 +121,7 @@ class WhoAreYou extends StatelessWidget {
               ));
     } else {
       firestore.collection('members').doc(memberData.databaseId).update({'userFirebaseId': currentUser.userFirebaseId});
-      Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false));
+      Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false, groupId: groupId));
     }
   }
 }
