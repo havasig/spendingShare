@@ -29,6 +29,7 @@ class Authentication extends StatelessWidget {
     user.color = firestoreUser.docs.first['color'];
     user.currency = firestoreUser.docs.first['currency'];
     user.icon = firestoreUser.docs.first['icon'];
+    user.databaseId = firestoreUser.docs.first.id;
   }
 
   @override

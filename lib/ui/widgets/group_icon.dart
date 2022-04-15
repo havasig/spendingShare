@@ -20,7 +20,7 @@ class GroupIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Material(
             type: MaterialType.transparency,
@@ -42,7 +42,8 @@ class GroupIcon extends StatelessWidget {
                 ),
               ),
             )),
-        SizedBox(
+        Container(
+          alignment: Alignment.center,
           width: width * 2 + 30,
           child: Text(
             group.name,

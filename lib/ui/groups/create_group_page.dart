@@ -37,6 +37,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   Widget build(BuildContext context) {
     SpendingShareUser currentUser = Provider.of(context);
     CreateGroupChangeNotifier _createGroupChangeNotifier = CreateGroupChangeNotifier(
+      currentUser.userFirebaseId,
       currentUser.currency,
       currentUser.color,
       globals.colors[currentUser.color],

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CreateGroupChangeNotifier extends ChangeNotifier {
-  CreateGroupChangeNotifier(this._currency, this._colorName, this._color, this._iconName, this._icon);
+  CreateGroupChangeNotifier(this._adminId, this._currency, this._colorName, this._color, this._iconName, this._icon);
+
+  final String _adminId;
+
+  get adminId => _adminId;
 
   String? _name;
 
@@ -30,6 +34,21 @@ class CreateGroupChangeNotifier extends ChangeNotifier {
   final List<String> _members = [];
 
   List<String> get members => _members;
+
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
 
   addMember(String memberName) {
     _members.add(memberName);

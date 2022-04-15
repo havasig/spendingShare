@@ -45,5 +45,6 @@
   "invalid_email": "Email is invalid",
   "password_is_too_short": "Password is too short",
   "cant_be_empty": "Can't be empty",
-  "not_matching_passwords": "The two passwords are not the same"
+  "not_matching_passwords": "The two passwords are not the same",
+  "group_create_failed": "Group creation failed, try again later"
 }

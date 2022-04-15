@@ -12,23 +12,23 @@ class SpendingShareUser {
   SpendingShareUser({
     this.color = '',
     this.currency = '',
-    this.groups,
     this.icon = '',
     this.name = '',
     this.userFirebaseId = '',
     this.databaseId = '',
+    this.groups,
   });
 
   factory SpendingShareUser.fromDocument(DocumentSnapshot doc) {
     doc as DocumentSnapshot<Map<String, dynamic>>;
     return SpendingShareUser(
       databaseId: doc.id,
-      name: doc.data()?['name'] ?? '',
-      color: doc.data()?['color'] ?? '',
-      icon: doc.data()?['icon'] ?? '',
-      currency: doc.data()?['currency'] ?? '',
+      name: doc.data()?['name'],
+      color: doc.data()?['color'],
+      icon: doc.data()?['icon'],
+      currency: doc.data()?['currency'],
+      userFirebaseId: doc.data()?['userFirebaseId'],
       groups: [],
-      userFirebaseId: '',
     );
   }
 }
