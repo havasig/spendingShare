@@ -55,5 +55,8 @@
   "document_does_not_exists": "Document does not exists",
   "show_all_transactions": "Show all transactions",
   "show_all_statistics": "Show all statistics",
+  "there_are_no_debts": "There are no debts in this group. Everyone is free to leave:)",
+  "there_are_no_transactions": "There are no transactions in this group. Add your first transaction with the plus button.",
+  "there_are_no_statistics": "There are no transactions in this group yet. Add your first transaction with the plus button, and inspect statistics later-",
   "add_transaction": "Add transaction"
 }

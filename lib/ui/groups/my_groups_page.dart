@@ -7,8 +7,8 @@ import 'package:rxdart/src/transformers/switch_map.dart';
 import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/ui/groups/group_details_page.dart';
-import 'package:spending_share/ui/groups/helpers/create_group_fab.dart';
+import 'package:spending_share/ui/groups/details/group_details_page.dart';
+import 'package:spending_share/ui/groups/create/create_group_fab.dart';
 import 'package:spending_share/ui/groups/join_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
@@ -71,17 +71,17 @@ class NoGroupsYet extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'no-groups'.tr,
+                      'no_groups'.tr,
                       style: TextStyleConstants.body_2_medium,
                     ),
                     SizedBox(height: h(8)),
                     Text(
-                      'you-are-not-member'.tr,
+                      'you_are_not_member'.tr,
                       style: TextStyleConstants.sub_1,
                     ),
                     SizedBox(height: h(16)),
                     Text(
-                      'paste-code-here'.tr,
+                      'paste_code_here'.tr,
                       style: TextStyleConstants.sub_1,
                     ),
                     SizedBox(height: h(16)),

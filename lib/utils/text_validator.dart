@@ -16,7 +16,7 @@ class TextValidator {
   }
 
   static String? validateNameText(String? text) {
-    return 'TODO';
+    return null; // TODO kell valamire validálni?
   }
 
   static String? validateGroupNameText(String? text) {

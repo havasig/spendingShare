@@ -35,21 +35,6 @@ class CreateGroupChangeNotifier extends ChangeNotifier {
 
   List<String> get members => _members;
 
-  bool _disposed = false;
-
-  @override
-  void dispose() {
-    _disposed = true;
-    super.dispose();
-  }
-
-  @override
-  void notifyListeners() {
-    if (!_disposed) {
-      super.notifyListeners();
-    }
-  }
-
   addMember(String memberName) {
     _members.add(memberName);
     notifyListeners();

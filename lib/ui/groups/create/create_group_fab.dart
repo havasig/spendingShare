@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 
-import '../create_group_page.dart';
+import 'create_group_page.dart';
 
 class CreateGroupFab extends StatelessWidget {
   const CreateGroupFab({Key? key, required this.firestore}) : super(key: key);

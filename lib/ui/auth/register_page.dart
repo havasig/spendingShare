@@ -47,7 +47,6 @@ class _RegisterPageState extends State<RegisterPage> {
         padding: EdgeInsets.all(h(16)),
         child: Form(
           key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: SingleChildScrollView(
             child: Column(
               children: [

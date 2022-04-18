@@ -7,8 +7,8 @@ import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/ui/groups/helpers/create_group_change_notifier.dart';
-import 'package:spending_share/ui/groups/helpers/user_item.dart';
+import 'package:spending_share/ui/groups/create/create_group_change_notifier.dart';
+import 'package:spending_share/ui/groups/helpers/member_item.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
@@ -16,7 +16,7 @@ import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
-import 'group_details_page.dart';
+import '../details/group_details_page.dart';
 
 class CreateGroupMembersPage extends StatefulWidget {
   const CreateGroupMembersPage({Key? key, required this.firestore, required this.createGroupChangeNotifier}) : super(key: key);
@@ -117,6 +117,7 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                         'members': memberReferences,
                         'categories': [],
                         'transactions': [],
+                        'debts': [],
                       });
 
 

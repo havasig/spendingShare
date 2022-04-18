@@ -5,13 +5,17 @@ import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/my_groups_page.dart';
 import 'package:spending_share/ui/settings/settings_page.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class SpendingShareBottomNavigationBar extends StatefulWidget {
-  const SpendingShareBottomNavigationBar({Key? key, required this.selectedIndex, required this.firestore}) : super(key: key);
+  const SpendingShareBottomNavigationBar(
+      {Key? key, required this.selectedIndex, required this.firestore, this.color = 'orange'})
+      : super(key: key);
 
   final int selectedIndex;
   final FirebaseFirestore firestore;
+  final String color;
 
   @override
   _SpendingShareBottomNavigationBarState createState() => _SpendingShareBottomNavigationBarState();
@@ -44,7 +48,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
               children: [
                 Icon(
                   Icons.bar_chart,
-                  color: widget.selectedIndex == 0 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
+                  color: widget.selectedIndex == 0 ? globals.colors[widget.color] : ColorConstants.white.withOpacity(0.6),
                 ),
                 const SizedBox(
                   height: 4,
@@ -53,7 +57,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
                   "statistics".tr,
                   style: TextStyleConstants.sub_1.copyWith(
                     fontSize: 10,
-                    color: widget.selectedIndex == 0 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
+                    color: widget.selectedIndex == 0 ? globals.colors[widget.color] : ColorConstants.white.withOpacity(0.6),
                   ),
                 ),
               ],
@@ -68,7 +72,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
               children: [
                 Icon(
                   Icons.group,
-                  color: widget.selectedIndex == 1 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
+                  color: widget.selectedIndex == 1 ? globals.colors[widget.color] : ColorConstants.white.withOpacity(0.6),
                 ),
                 const SizedBox(
                   height: 4,
@@ -77,7 +81,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
                   'groups'.tr,
                   style: TextStyleConstants.sub_1.copyWith(
                     fontSize: 10,
-                    color: widget.selectedIndex == 1 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
+                    color: widget.selectedIndex == 1 ? globals.colors[widget.color] : ColorConstants.white.withOpacity(0.6),
                   ),
                 ),
               ],
@@ -92,7 +96,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
               children: [
                 Icon(
                   Icons.settings,
-                  color: widget.selectedIndex == 2 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
+                  color: widget.selectedIndex == 2 ? globals.colors[widget.color] : ColorConstants.white.withOpacity(0.6),
                 ),
                 const SizedBox(
                   height: 4,
@@ -101,7 +105,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
                   "settings".tr,
                   style: TextStyleConstants.sub_1.copyWith(
                     fontSize: 10,
-                    color: widget.selectedIndex == 2 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
+                    color: widget.selectedIndex == 2 ? globals.colors[widget.color] : ColorConstants.white.withOpacity(0.6),
                   ),
                 ),
               ],
@@ -116,7 +120,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
               children: [
                 Icon(
                   Icons.account_circle,
-                  color: widget.selectedIndex == 3 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
+                  color: widget.selectedIndex == 3 ? globals.colors[widget.color] : ColorConstants.white.withOpacity(0.6),
                 ),
                 const SizedBox(
                   height: 4,
@@ -125,7 +129,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
                   "profile".tr,
                   style: TextStyleConstants.sub_1.copyWith(
                     fontSize: 10,
-                    color: widget.selectedIndex == 3 ? ColorConstants.defaultOrange : ColorConstants.white.withOpacity(0.6),
+                    color: widget.selectedIndex == 3 ? globals.colors[widget.color] : ColorConstants.white.withOpacity(0.6),
                   ),
                 ),
               ],

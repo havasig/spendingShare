@@ -39,7 +39,7 @@ class CircleIconButton extends StatelessWidget {
                   padding: EdgeInsets.all(h(width)),
                   child: Icon(
                     globals.icons[icon] ?? Icons.group,
-                    size: 30,
+                    size: h(width),
                     color: globals.colors[color]?[globals.iconShade] ?? Colors.orange[globals.iconShade],
                   ),
                 ),
@@ -48,7 +48,7 @@ class CircleIconButton extends StatelessWidget {
         if (name != null)
           Container(
             alignment: Alignment.center,
-            width: width * 2 + 30,
+            width: width * 3,
             child: Text(
               name!,
               style: TextStyleConstants.body_2_medium,

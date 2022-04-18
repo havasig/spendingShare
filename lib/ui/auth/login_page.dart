@@ -50,7 +50,6 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
                   SizedBox(height: h(16)),

@@ -32,7 +32,7 @@ void main() {
       testWidgets('MyGroups has you are not member text', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final textFinder = find.text('you-are-not-member');
+        final textFinder = find.text('you_are_not_member');
         expect(textFinder, findsOneWidget);
       });
 
