@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:spending_share/models/split_by_type.dart';
-import 'package:spending_share/models/transaction_type.dart';
+import 'package:spending_share/models/enums/split_by_type.dart';
+import 'package:spending_share/models/enums/transaction_type.dart';
 
 class Transaction {
   String? name;
@@ -10,8 +10,8 @@ class Transaction {
   String? exchangeRate;
   DocumentReference from;
   SplitByType splitByType;
-  List<DocumentReference>? splitWeights = [];
-  List<dynamic> to = [];
+  List<DocumentReference>? splitWeights;
+  List<dynamic> to;
   TransactionType type;
   double value;
   String currency;
@@ -36,7 +36,7 @@ class Transaction {
     return Transaction(
       name: doc.data()?['name'],
       databaseId: doc.id,
-      to: doc.data()?['to'] ?? [],
+      to: doc.data()?['to'],
       splitWeights: [],
       splitByType: SplitByType.values.firstWhere((e) => e.toString() == doc.data()?['splitByType']),
       type: TransactionType.values.firstWhere((e) => e.toString() == doc.data()?['type']),

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class SpendingShareUser {
   String color;
   String currency;
-  List<String>? groups = [];
+  List<DocumentReference> groups;
   String icon;
   String name;
   String userFirebaseId;
@@ -16,7 +16,7 @@ class SpendingShareUser {
     this.name = '',
     this.userFirebaseId = '',
     this.databaseId = '',
-    this.groups,
+    required this.groups,
   });
 
   factory SpendingShareUser.fromDocument(DocumentSnapshot doc) {
@@ -28,7 +28,7 @@ class SpendingShareUser {
       icon: doc.data()?['icon'],
       currency: doc.data()?['currency'],
       userFirebaseId: doc.data()?['userFirebaseId'],
-      groups: [],
+      groups: doc.data()?['groups'],
     );
   }
 }

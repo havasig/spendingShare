@@ -6,8 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/groups/create/create_group_members_page.dart';
-import 'package:spending_share/ui/groups/create/create_group_change_notifier.dart';
 import 'package:spending_share/ui/groups/create/select_currency.dart';
+import 'package:spending_share/ui/helpers/change_notifiers/create_group_change_notifier.dart';
+import 'package:spending_share/ui/helpers/change_notifiers/currency_change_notifier.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
@@ -72,7 +73,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                     ),
                   ),
                 ),
-                SelectCurrency(defaultCurrency: currentUser.currency),
+                ChangeNotifierProvider(
+                  create: (context) => _createGroupChangeNotifier as CreateChangeNotifier,
+                  child: SelectCurrency(currency: currentUser.currency),
+                ),
                 SelectColor(defaultColor: currentUser.color),
                 SelectIcon(defaultIcon: currentUser.icon),
                 const Spacer(),

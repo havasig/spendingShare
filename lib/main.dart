@@ -32,7 +32,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ApplicationState()),
-        Provider(create: (context) => SpendingShareUser()),
+        Provider(create: (context) => SpendingShareUser(groups: [])),
       ],
       child: MyApp(firestore: firestore),
     ),

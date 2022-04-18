@@ -1,37 +1,26 @@
 import 'package:flutter/material.dart';
 
-class CreateGroupChangeNotifier extends ChangeNotifier {
-  CreateGroupChangeNotifier(this._adminId, this._currency, this._colorName, this._color, this._iconName, this._icon);
+import 'currency_change_notifier.dart';
+
+class CreateGroupChangeNotifier extends CreateChangeNotifier {
+  CreateGroupChangeNotifier(this._adminId, this._colorName, _currency, this._color, this._iconName, this._icon) : super(_currency);
 
   final String _adminId;
+  String? _colorName;
+  MaterialColor? _color;
+  String? _iconName;
+  IconData? _icon;
+  final List<String> _members = [];
 
   get adminId => _adminId;
 
-  String? _name;
-
-  get name => _name;
-
-  String? _currency;
-
-  get currency => _currency;
-
-  String? _colorName;
-
   get colorName => _colorName;
-
-  MaterialColor? _color;
 
   get color => _color;
 
-  String? _iconName;
-
   get iconName => _iconName;
 
-  IconData? _icon;
-
   get icon => _icon;
-
-  final List<String> _members = [];
 
   List<String> get members => _members;
 
@@ -42,16 +31,6 @@ class CreateGroupChangeNotifier extends ChangeNotifier {
 
   removeMember(int index) {
     members.removeAt(index);
-    notifyListeners();
-  }
-
-  setName(String name) {
-    _name = name;
-    notifyListeners();
-  }
-
-  setCurrency(String currency) {
-    _currency = currency;
     notifyListeners();
   }
 
@@ -68,12 +47,12 @@ class CreateGroupChangeNotifier extends ChangeNotifier {
   }
 
   bool validateFirstPage() {
-    if (_name?.isEmpty ?? true) return false;
-    if (_currency?.isEmpty ?? true) return false;
+    if (name?.isEmpty ?? true) return false;
     if (_colorName?.isEmpty ?? true) return false;
     if (_color == null) return false;
     if (_iconName?.isEmpty ?? true) return false;
     if (_icon == null) return false;
+    if (currency == null) return false;
     return true;
   }
 }

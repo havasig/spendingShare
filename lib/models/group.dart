@@ -3,21 +3,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Group {
   String adminId;
   String databaseId;
-  List<String> categories;
+  List<dynamic> categories;
   String color;
-  String defaultCurrency;
+  String currency;
   String icon;
-  List<String> members;
+  List<dynamic> members;
   String name;
-  List<String> transactions;
-  List<String> debts;
+  List<dynamic> transactions;
+  List<dynamic> debts;
 
   Group({
     required this.databaseId,
     required this.adminId,
     required this.categories,
     required this.color,
-    required this.defaultCurrency,
+    required this.currency,
     required this.icon,
     required this.members,
     required this.name,
@@ -29,15 +29,16 @@ class Group {
     doc as DocumentSnapshot<Map<String, dynamic>>;
     return Group(
       databaseId: doc.id,
-      adminId: doc.data()?['adminId'] ?? '',
-      categories: (doc.data()?['categories'] ?? []).map<String>((categories) => categories.id.toString()).toList() ?? [],
-      color: doc.data()?['color'] ?? '',
-      defaultCurrency: doc.data()?['defaultCurrency'] ?? '',
-      icon: doc.data()?['icon'] ?? '',
-      members: (doc.data()?['members'] ?? []).map<String>((member) => member.id.toString()).toList() ?? [],
-      name: doc.data()?['name'] ?? '',
-      transactions: (doc.data()?['transactions'] ?? []).map<String>((transactions) => transactions.id.toString()).toList() ?? [],
-      debts: (doc.data()?['debts'] ?? []).map<String>((debts) => debts.id.toString()).toList() ?? [],
+      // TODO need?
+      adminId: doc.data()?['adminId'],
+      categories: doc.data()?['categories'],
+      color: doc.data()?['color'],
+      currency: doc.data()?['currency'],
+      icon: doc.data()?['icon'],
+      members: doc.data()?['members'],
+      name: doc.data()?['name'],
+      transactions: doc.data()?['transactions'],
+      debts: doc.data()?['debts'],
     );
   }
 }

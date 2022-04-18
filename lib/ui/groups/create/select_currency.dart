@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
+import 'package:spending_share/ui/helpers/change_notifiers/currency_change_notifier.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
-import 'create_group_change_notifier.dart';
-
 class SelectCurrency extends StatefulWidget {
-  SelectCurrency({Key? key, required this.defaultCurrency}) : super(key: key);
+  const SelectCurrency({Key? key, required this.currency}) : super(key: key);
 
-  final String defaultCurrency;
+  final String currency;
 
   @override
   State<SelectCurrency> createState() => _SelectCurrencyState();
@@ -21,7 +20,7 @@ class _SelectCurrencyState extends State<SelectCurrency> {
 
   @override
   void initState() {
-    _dropdownValue = globals.currencies.keys.contains(widget.defaultCurrency) ? widget.defaultCurrency : 'USD';
+    _dropdownValue = globals.currencies.keys.contains(widget.currency) ? widget.currency : 'USD';
     super.initState();
   }
 
@@ -41,7 +40,7 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                 Radius.circular(10),
               ),
             ),
-            child: Consumer<CreateGroupChangeNotifier>(builder: (_, createGroupChangeNotifier, __) {
+            child: Consumer<CreateChangeNotifier>(builder: (_, createChangeNotifier, __) {
               return DropdownButton<String>(
                 value: _dropdownValue,
                 dropdownColor: ColorConstants.darkGray,
@@ -54,7 +53,7 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                 underline: Container(height: 0),
                 onChanged: (String? newValue) {
                   setState(() {
-                    createGroupChangeNotifier.setCurrency(newValue!);
+                    createChangeNotifier.setCurrency(newValue!);
                     _dropdownValue = newValue;
                   });
                 },

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:spending_share/models/member.dart';
-import 'package:spending_share/ui/groups/helpers/on_future_build_error.dart';
+import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 
 

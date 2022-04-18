@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/groups/details/transactions/transaction_item.dart';
-import 'package:spending_share/ui/groups/helpers/on_future_build_error.dart';
+import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 

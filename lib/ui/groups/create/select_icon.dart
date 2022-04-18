@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
-import 'create_group_change_notifier.dart';
+import '../../helpers/change_notifiers/create_group_change_notifier.dart';
 
 class SelectIcon extends StatefulWidget {
   const SelectIcon({Key? key, required this.defaultIcon}) : super(key: key);

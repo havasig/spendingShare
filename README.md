@@ -47,7 +47,8 @@ A new Flutter project.
   - category: Category
   - exchangeRate: Double
   - splitByType: SplitByType
-  - splitWeigths: SplitWeight
+  - splitWeights: SplitWeight
+  - createdBy: Member
 	
 - SplitWeight
   - member: Member

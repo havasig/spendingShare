@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/debt.dart';
-import 'package:spending_share/ui/groups/helpers/on_future_build_error.dart';
+import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 
 import 'debt_item.dart';
 

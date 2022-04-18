@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
-import 'package:spending_share/models/transaction_type.dart';
-import 'package:spending_share/ui/groups/helpers/on_future_build_error.dart';
+import 'package:spending_share/models/enums/transaction_type.dart';
+import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 

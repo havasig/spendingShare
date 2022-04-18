@@ -16,7 +16,7 @@ class Debt {
   factory Debt.fromDocument(DocumentSnapshot doc) {
     doc as DocumentSnapshot<Map<String, dynamic>>;
     return Debt(
-      databaseId: doc.id,
+      databaseId: doc.id, // TODO need?
       from: doc.data()?['from'],
       to: doc.data()?['to'],
       value: double.parse(doc.data()!['value'].toString()),

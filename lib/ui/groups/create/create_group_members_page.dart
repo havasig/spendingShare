@@ -7,8 +7,8 @@ import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/ui/groups/create/create_group_change_notifier.dart';
-import 'package:spending_share/ui/groups/helpers/member_item.dart';
+import 'package:spending_share/ui/helpers/change_notifiers/create_group_change_notifier.dart';
+import 'package:spending_share/ui/helpers/member_item.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
@@ -37,9 +37,7 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: SpendingShareAppBar(
-          titleText: 'members'.tr
-        ),
+        appBar: SpendingShareAppBar(titleText: 'members'.tr),
         body: Padding(
           padding: EdgeInsets.all(h(16)),
           child: Column(
@@ -108,19 +106,24 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                         }));
                       }
 
+                      // TODO add default categories
+                      List<DocumentReference> categoryReferences = [];
+                      categoryReferences.add(await widget.firestore.collection('categories').add({
+                        'name': 'other'.tr,
+                        'transactions': [],
+                      }));
+
                       DocumentReference groupReference = await widget.firestore.collection('groups').add({
                         'adminId': widget.createGroupChangeNotifier.adminId,
                         'name': widget.createGroupChangeNotifier.name,
                         'color': widget.createGroupChangeNotifier.colorName,
-                        'defaultCurrency': widget.createGroupChangeNotifier.currency,
+                        'currency': widget.createGroupChangeNotifier.currency,
                         'icon': widget.createGroupChangeNotifier.iconName,
                         'members': memberReferences,
-                        'categories': [],
+                        'categories': categoryReferences,
                         'transactions': [],
                         'debts': [],
                       });
-
-
 
                       SpendingShareUser user = Provider.of(context, listen: false);
 

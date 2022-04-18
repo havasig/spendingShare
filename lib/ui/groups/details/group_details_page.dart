@@ -8,7 +8,7 @@ import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/groups/details/add_transaction_fab.dart';
 import 'package:spending_share/ui/groups/details/statistics/statistics.dart';
 import 'package:spending_share/ui/groups/details/transactions/transactions_list.dart';
-import 'package:spending_share/ui/groups/helpers/on_future_build_error.dart';
+import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
@@ -50,8 +50,9 @@ class GroupDetailsPage extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text('members'.tr),
                     ),
-                    SizedBox(
-                      height: h(100),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      height: h(120),
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -101,7 +102,7 @@ class GroupDetailsPage extends StatelessWidget {
                                       //-padding*2 -iconWidth*4 -spacing*3
                                       color: group['color'],
                                       name: category.name,
-                                      icon: category.icon,
+                                      icon: category.icon ?? group['icon'],
                                     );
                                   }
                                   return OnFutureBuildError(snapshot);
@@ -121,7 +122,7 @@ class GroupDetailsPage extends StatelessWidget {
                     ),
                     DebtsList(
                       group['debts'],
-                      currency: group['defaultCurrency'],
+                      currency: group['currency'],
                       color: group['color'],
                       icon: group['icon'],
                     ),
@@ -156,12 +157,12 @@ class GroupDetailsPage extends StatelessWidget {
                 ),
               ),
             ),
-            floatingActionButton: AddTransactionFab(firestore: firestore, color: group['color']),
-            bottomNavigationBar: SpendingShareBottomNavigationBar(
+            floatingActionButton: CreateTransactionFab(
               firestore: firestore,
-              selectedIndex: 1,
-              color: group['color']
+              color: group['color'],
+              currency: group['currency'],
             ),
+            bottomNavigationBar: SpendingShareBottomNavigationBar(firestore: firestore, selectedIndex: 1, color: group['color']),
           );
         }
 
