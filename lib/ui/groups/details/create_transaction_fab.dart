@@ -6,11 +6,12 @@ import 'package:spending_share/ui/transactions/create_transaction_page.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 
 class CreateTransactionFab extends StatelessWidget {
-  const CreateTransactionFab({Key? key, required this.firestore, required this.color, required this.currency}) : super(key: key);
+  const CreateTransactionFab({Key? key, required this.firestore, required this.color, required this.currency, required this.groupId}) : super(key: key);
 
   final FirebaseFirestore firestore;
   final String color;
   final String currency;
+  final String groupId;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class CreateTransactionFab extends StatelessWidget {
               firestore: firestore,
               color: color,
               currency: currency,
+              groupId: groupId,
             )),
         child: const Icon(Icons.add),
       ),

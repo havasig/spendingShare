@@ -75,7 +75,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 ),
                 ChangeNotifierProvider(
                   create: (context) => _createGroupChangeNotifier as CreateChangeNotifier,
-                  child: SelectCurrency(currency: currentUser.currency),
+                  child: SelectCurrency(currency: currentUser.currency, color: currentUser.color),
                 ),
                 SelectColor(defaultColor: currentUser.color),
                 SelectIcon(defaultIcon: currentUser.icon),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:spending_share/models/category.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/enums/split_by_type.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
@@ -9,10 +8,10 @@ import 'currency_change_notifier.dart';
 class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   CreateTransactionChangeNotifier(_currency) : super(_currency);
 
-  TransactionType? _type;
-  Category? _category;
-  Member? _member;
-  Timestamp? _date;
+  TransactionType _type = TransactionType.expense;
+  DocumentReference? _category;
+  DocumentReference? _member;
+  DateTime? _date = DateTime.now();
   double? _value;
   Member? _from;
   final List<Member> _to = [];
@@ -45,18 +44,18 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
-  setCategory(Category category) {
+  setCategory(DocumentReference category) {
     _category = category;
     notifyListeners();
   }
 
-  setMember(Member member) {
+  setMember(DocumentReference member) {
     _member = member;
     notifyListeners();
   }
 
-  setDate(Timestamp timestamp) {
-    _date = timestamp;
+  setDate(DateTime date) {
+    _date = date;
     notifyListeners();
   }
 

@@ -5,7 +5,7 @@ import 'package:spending_share/utils/loading_indicator.dart';
 
 class OnFutureBuildError extends StatelessWidget {
   const OnFutureBuildError(this.snapshot, {Key? key}) : super(key: key);
-  final AsyncSnapshot<DocumentSnapshot<Object?>> snapshot;
+  final AsyncSnapshot<dynamic> snapshot;
   @override
   Widget build(BuildContext context) {
     if (snapshot.hasError) {

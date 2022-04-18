@@ -76,7 +76,7 @@ class NoGroupsYet extends StatelessWidget {
                     ),
                     SizedBox(height: h(8)),
                     Text(
-                      'you_are_not_member'.tr,
+                      'you_are_not_a_member'.tr,
                       style: TextStyleConstants.sub_1,
                     ),
                     SizedBox(height: h(16)),

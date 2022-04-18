@@ -5,7 +5,7 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/category.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
-import 'package:spending_share/ui/groups/details/add_transaction_fab.dart';
+import 'package:spending_share/ui/groups/details/create_transaction_fab.dart';
 import 'package:spending_share/ui/groups/details/statistics/statistics.dart';
 import 'package:spending_share/ui/groups/details/transactions/transactions_list.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
@@ -161,6 +161,7 @@ class GroupDetailsPage extends StatelessWidget {
               firestore: firestore,
               color: group['color'],
               currency: group['currency'],
+              groupId: groupId,
             ),
             bottomNavigationBar: SpendingShareBottomNavigationBar(firestore: firestore, selectedIndex: 1, color: group['color']),
           );

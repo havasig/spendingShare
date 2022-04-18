@@ -7,9 +7,10 @@ import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class SelectCurrency extends StatefulWidget {
-  const SelectCurrency({Key? key, required this.currency}) : super(key: key);
+  const SelectCurrency({Key? key, required this.currency, required this.color}) : super(key: key);
 
   final String currency;
+  final String color;
 
   @override
   State<SelectCurrency> createState() => _SelectCurrencyState();
@@ -35,7 +36,7 @@ class _SelectCurrencyState extends State<SelectCurrency> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: h(6)),
             decoration: BoxDecoration(
-              border: Border.all(color: ColorConstants.defaultOrange),
+              border: Border.all(color: globals.colors[widget.color]!),
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
               ),
@@ -46,9 +47,9 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                 dropdownColor: ColorConstants.darkGray,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 elevation: 6,
-                icon: const Icon(
+                icon: Icon(
                   Icons.keyboard_arrow_down_outlined,
-                  color: ColorConstants.defaultOrange,
+                  color: globals.colors[widget.color]!,
                 ),
                 underline: Container(height: 0),
                 onChanged: (String? newValue) {
@@ -70,7 +71,7 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                     value: key,
                     child: Text(
                       key,
-                      style: _dropdownValue == key ? const TextStyle(color: ColorConstants.defaultOrange) : null,
+                      style: _dropdownValue == key ? TextStyle(color: globals.colors[widget.color]!) : null,
                     ),
                   );
                 }).toList(),

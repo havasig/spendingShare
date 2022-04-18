@@ -59,5 +59,14 @@
   "there_are_no_transactions": "There are no transactions in this group. Add your first transaction with the plus button.",
   "there_are_no_statistics": "There are no transactions in this group yet. Add your first transaction with the plus button, and inspect statistics later-",
   "add_transaction": "Add transaction",
-  "other": "Other"
+  "other": "Other",
+  "expense": "Expense",
+  "transfer": "Transfer",
+  "income": "Income",
+  "type": "Type",
+  "category" : "Category",
+  "no_category_found" : "No category found. Please create least one to create a transaction.",
+  "paid" : "Paid",
+  "gave" : "Gave",
+  "date": "Date"
 }
