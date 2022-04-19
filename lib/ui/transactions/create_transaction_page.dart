@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:rxdart/src/transformers/switch_map.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
@@ -11,12 +10,16 @@ import 'package:spending_share/ui/groups/create/select_currency.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/currency_change_notifier.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
+import 'package:spending_share/ui/transactions/expense/add_expense.dart';
 import 'package:spending_share/ui/transactions/member_dropdown.dart';
 import 'package:spending_share/ui/transactions/transaction_dropdown.dart';
+import 'package:spending_share/ui/transactions/transfer/transfer_to.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
+
+import 'income/add_income.dart';
 
 class CreateTransactionPage extends StatefulWidget {
   const CreateTransactionPage({Key? key, required this.firestore, required this.color, required this.currency, required this.groupId})
@@ -36,17 +39,25 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
   Widget build(BuildContext context) {
     SpendingShareUser currentUser = Provider.of(context);
     CreateTransactionChangeNotifier _createTransactionChangeNotifier = CreateTransactionChangeNotifier(widget.currency);
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: SpendingShareAppBar(titleText: 'add_transaction'.tr),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: h(16)),
-          child: ChangeNotifierProvider(
-            create: (context) => _createTransactionChangeNotifier,
-            child: Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
-              return Column(
+    return ChangeNotifierProvider(
+      create: (context) => _createTransactionChangeNotifier,
+      child: Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
+        return GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: SpendingShareAppBar(
+                titleText: 'add_transaction'.tr,
+                hasForward: true,
+                forwardText: 'join'.tr,
+                onForward: () {
+                  Get.to(() => AddExpense(firestore: widget.firestore));
+                  Get.to(() => TransferTo(firestore: widget.firestore));
+                  Get.to(() => AddIncome(firestore: widget.firestore));
+                }),
+            body: Padding(
+              padding: EdgeInsets.symmetric(horizontal: h(16)),
+              child: Column(
                 children: [
                   ChangeNotifierProvider(
                       create: (context) => _createTransactionChangeNotifier as CreateChangeNotifier,
@@ -157,16 +168,16 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                     ],
                   ),
                 ],
-              );
-            }),
+              ),
+            ),
+            bottomNavigationBar: SpendingShareBottomNavigationBar(
+              selectedIndex: 1,
+              firestore: widget.firestore,
+              color: widget.color,
+            ),
           ),
-        ),
-        bottomNavigationBar: SpendingShareBottomNavigationBar(
-          selectedIndex: 1,
-          firestore: widget.firestore,
-          color: widget.color,
-        ),
-      ),
+        );
+      }),
     );
   }
 }

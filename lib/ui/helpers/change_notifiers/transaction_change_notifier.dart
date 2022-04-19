@@ -59,7 +59,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
-  setValue(double value) {
+  setValue(double? value) {
     _value = value;
     notifyListeners();
   }

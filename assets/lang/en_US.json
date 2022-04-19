@@ -68,5 +68,7 @@
   "no_category_found" : "No category found. Please create least one to create a transaction.",
   "paid" : "Paid",
   "gave" : "Gave",
-  "date": "Date"
+  "date": "Date",
+  "format_error": "Format error",
+  "value_must_be_greater_than_zero": "Value must be greater than zero"
 }
