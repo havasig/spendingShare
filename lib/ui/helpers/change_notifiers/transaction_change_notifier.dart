@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/enums/split_by_type.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
@@ -12,14 +13,13 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   DocumentReference? _category;
   DocumentReference? _member;
   DateTime? _date = DateTime.now();
-  double? _value;
-  Member? _from;
+  String? _value;
   final List<Member> _to = [];
   double? _exchangeRate;
   SplitByType? _splitByType;
   String? _splitByWeights;
 
-  get type => _type;
+  TransactionType get type => _type;
 
   get category => _category;
 
@@ -27,9 +27,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   get date => _date;
 
-  get value => _value;
-
-  get from => _from;
+  String? get value => _value;
 
   get to => _to;
 
@@ -59,13 +57,8 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
-  setValue(double? value) {
+  setValue(String? value) {
     _value = value;
-    notifyListeners();
-  }
-
-  setFrom(Member from) {
-    _from = from;
     notifyListeners();
   }
 
@@ -83,13 +76,75 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   // TODO set split by weights
 
-  bool validateFirstPage() {
-    if (_type == null) return false;
-    if (currency == null) return false;
-    if (_category == null) return false;
-    if (_from == null && _to.isEmpty) return false;
-    if (_date == null) return false;
-    if (_value == null && _value! <= 0) return false;
+  bool isValidExpense() {
+    if (_type != TransactionType.expense) {
+      setValue('invalid_type'.tr);
+      return false;
+    }
+    if (currency == null) {
+      setValue('currency_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_category == null) {
+      setValue('category_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_member == null) {
+      setValue('member_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_date == null) {
+      setValue('date_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_value == null || double.tryParse(_value!) == null || double.tryParse(_value!)! <= 0) {
+      setValue('invalid_value'.tr);
+      return false;
+    }
+    return true;
+  }
+
+  bool isValidTransfer() {
+    if (_type != TransactionType.transfer) {
+      setValue('invalid_type'.tr);
+      return false;
+    }
+    if (currency == null) {
+      setValue('currency_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_member == null) {
+      setValue('member_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_date == null) {
+      setValue('date_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_value == null || double.tryParse(_value!) == null || double.tryParse(_value!)! <= 0) {
+      setValue('invalid_value'.tr);
+      return false;
+    }
+    return true;
+  }
+
+  bool isValidIncome() {
+    if (_type != TransactionType.income) {
+      setValue('invalid_type'.tr);
+      return false;
+    }
+    if (currency == null) {
+      setValue('currency_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_date == null) {
+      setValue('date_cannot_be_empty'.tr);
+      return false;
+    }
+    if (_value == null || double.tryParse(_value!) == null || double.tryParse(_value!)! <= 0) {
+      setValue('invalid_value'.tr);
+      return false;
+    }
     return true;
   }
 

@@ -29,7 +29,7 @@ class _TransactionMemberDropdownState extends State<TransactionMemberDropdown> {
   }
 
   String getTitle(CreateTransactionChangeNotifier createTransactionChangeNotifier) {
-    return ('member'.tr + ' ' + (createTransactionChangeNotifier.type as TransactionType).name.toString().tr);
+    return ('member'.tr + ' ' + (createTransactionChangeNotifier.type).name.toString().tr);
   }
 
   @override
@@ -37,6 +37,7 @@ class _TransactionMemberDropdownState extends State<TransactionMemberDropdown> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: h(8)),
       child: Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
+        createTransactionChangeNotifier.setMember(widget.options.entries.first.value);
         return Row(
           children: [
             Text('member'.tr),

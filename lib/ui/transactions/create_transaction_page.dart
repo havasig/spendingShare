@@ -10,6 +10,7 @@ import 'package:spending_share/ui/groups/create/select_currency.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/currency_change_notifier.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
+import 'package:spending_share/ui/transactions/calculator.dart';
 import 'package:spending_share/ui/transactions/expense/add_expense.dart';
 import 'package:spending_share/ui/transactions/member_dropdown.dart';
 import 'package:spending_share/ui/transactions/transaction_dropdown.dart';
@@ -49,19 +50,28 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
             appBar: SpendingShareAppBar(
                 titleText: 'add_transaction'.tr,
                 hasForward: true,
-                forwardText: 'join'.tr,
+                forwardText: 'next'.tr,
                 onForward: () {
-                  Get.to(() => AddExpense(firestore: widget.firestore));
-                  Get.to(() => TransferTo(firestore: widget.firestore));
-                  Get.to(() => AddIncome(firestore: widget.firestore));
+                  switch (createTransactionChangeNotifier.type) {
+                    case TransactionType.expense:
+                      if (createTransactionChangeNotifier.isValidExpense()) Get.to(() => AddExpense(firestore: widget.firestore));
+                      break;
+                    case TransactionType.transfer:
+                      if (createTransactionChangeNotifier.isValidTransfer()) Get.to(() => TransferTo(firestore: widget.firestore));
+                      break;
+                    case TransactionType.income:
+                      if (createTransactionChangeNotifier.isValidIncome()) Get.to(() => AddIncome(firestore: widget.firestore));
+                      break;
+                  }
                 }),
             body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: h(16)),
+              padding: EdgeInsets.fromLTRB(h(16), 0, h(16), h(16)),
               child: Column(
                 children: [
                   ChangeNotifierProvider(
-                      create: (context) => _createTransactionChangeNotifier as CreateChangeNotifier,
-                      child: SelectCurrency(currency: currentUser.currency, color: widget.color)),
+                    create: (context) => _createTransactionChangeNotifier as CreateChangeNotifier,
+                    child: SelectCurrency(currency: currentUser.currency, color: widget.color),
+                  ),
                   CreateTransactionDropdown(
                     defaultValue: 'expense'.tr,
                     options: {
@@ -89,6 +99,7 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                                 category as DocumentSnapshot<Map<String, dynamic>>;
                                 options.addAll({category.data()!['name']: category.reference});
                               }
+                              _createTransactionChangeNotifier.setCategory(options.entries.first.value);
                               return CreateTransactionDropdown(
                                 title: 'category'.tr,
                                 options: options,
@@ -124,7 +135,7 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                                 color: widget.color,
                               );
                             } else if (memberListSnapshot.hasData && memberListSnapshot.data!.isEmpty) {
-                              return Text('no_category_found'.tr);
+                              return Text('no_member_found'.tr);
                             } else {
                               return OnFutureBuildError(memberListSnapshot);
                             }
@@ -167,6 +178,8 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                       ),
                     ],
                   ),
+                  const Spacer(),
+                  Calculator(color: widget.color),
                 ],
               ),
             ),
