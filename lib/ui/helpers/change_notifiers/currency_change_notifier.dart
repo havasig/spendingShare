@@ -25,6 +25,5 @@ class CreateChangeNotifier extends ChangeNotifier {
 
   setName(String name) {
     _name = name;
-    notifyListeners();
   }
 }

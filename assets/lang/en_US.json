@@ -87,5 +87,8 @@
   "transfer_from": "Transfer from",
   "exchange_rate": "Exchange rate",
   "save_transfer": "Save transfer",
-  "transaction_creation_failed": "Transaction creation failed"
+  "transaction_creation_failed": "Transaction creation failed",
+  "income_name": "Income name",
+  "received_from": "Received form",
+  "got": "Got"
 }

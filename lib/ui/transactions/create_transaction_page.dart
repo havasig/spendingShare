@@ -127,32 +127,28 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                           }
                         })
                     : const SizedBox.shrink(),
-                createTransactionChangeNotifier.type == TransactionType.expense ||
-                        createTransactionChangeNotifier.type == TransactionType.transfer
-                    ? StreamBuilder<List<DocumentSnapshot>>(
-                        stream: widget.firestore.collection('groups').doc(widget.groupId).snapshots().switchMap((group) {
-                          return CombineLatestStream.list(group
-                              .data()!['members']
-                              .map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()));
-                        }),
-                        builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> memberListSnapshot) {
-                          if (memberListSnapshot.hasData && memberListSnapshot.data!.isNotEmpty) {
-                            Map<String, dynamic> options = {};
-                            for (var member in memberListSnapshot.data!) {
-                              member as DocumentSnapshot<Map<String, dynamic>>;
-                              options.addAll({member.data()!['name']: member.reference});
-                            }
-                            return TransactionMemberDropdown(
-                              options: options,
-                              color: widget.color,
-                            );
-                          } else if (memberListSnapshot.hasData && memberListSnapshot.data!.isEmpty) {
-                            return Text('no_member_found'.tr);
-                          } else {
-                            return OnFutureBuildError(memberListSnapshot);
-                          }
-                        })
-                    : const SizedBox.shrink(),
+                StreamBuilder<List<DocumentSnapshot>>(
+                    stream: widget.firestore.collection('groups').doc(widget.groupId).snapshots().switchMap((group) {
+                      return CombineLatestStream.list(
+                          group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()));
+                    }),
+                    builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> memberListSnapshot) {
+                      if (memberListSnapshot.hasData && memberListSnapshot.data!.isNotEmpty) {
+                        Map<String, dynamic> options = {};
+                        for (var member in memberListSnapshot.data!) {
+                          member as DocumentSnapshot<Map<String, dynamic>>;
+                          options.addAll({member.data()!['name']: member.reference});
+                        }
+                        return TransactionMemberDropdown(
+                          options: options,
+                          color: widget.color,
+                        );
+                      } else if (memberListSnapshot.hasData && memberListSnapshot.data!.isEmpty) {
+                        return Text('no_member_found'.tr);
+                      } else {
+                        return OnFutureBuildError(memberListSnapshot);
+                      }
+                    }),
                 Row(
                   children: [
                     Text('date'.tr),

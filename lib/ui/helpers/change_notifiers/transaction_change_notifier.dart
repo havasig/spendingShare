@@ -163,6 +163,10 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
       setValue('date_cannot_be_empty'.tr);
       return false;
     }
+    if (_member == null) {
+      setValue('member_cannot_be_empty'.tr);
+      return false;
+    }
     if (_value == null || double.tryParse(_value!) == null || double.tryParse(_value!)! <= 0) {
       setValue('invalid_value'.tr);
       return false;

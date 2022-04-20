@@ -154,6 +154,10 @@ class _CalculatorState extends State<Calculator> {
 
   void equalPressed(CreateTransactionChangeNotifier createTransactionChangeNotifier) {
     try {
+      if(userInput == '') {
+        createTransactionChangeNotifier.setValue('');
+        return;
+      }
       String finalUserInput = userInput.replaceAll('x', '*').replaceAll('÷', '/');
       Parser p = Parser();
       Expression exp = p.parse(finalUserInput);
