@@ -28,7 +28,7 @@ class WhoAreYou extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    dynamic color;
+    late String color;
     FocusNode focusNode = FocusNode();
     SpendingShareUser currentUser = Provider.of(context);
 
@@ -47,7 +47,7 @@ class WhoAreYou extends StatelessWidget {
               Expanded(
                 child: StreamBuilder<List<DocumentSnapshot>>(
                     stream: firestore.collection('groups').doc(groupId).snapshots().switchMap((group) {
-                      color = globals.colors[group.data()!['color']];
+                      color = group.data()!['color'];
                       return CombineLatestStream.list(
                           group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()));
                     }),

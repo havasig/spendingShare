@@ -81,5 +81,11 @@
   "date_cannot_be_empty": "Date cannot be empty",
   "currency_cannot_be_empty": "Currency cannot be empty",
   "member_cannot_be_empty": "Member cannot be empty",
-  "category_cannot_be_empty": "Category cannot be empty"
+  "category_cannot_be_empty": "Category cannot be empty",
+  "add_transfer": "Add transfer",
+  "transfer_name": "Transfer name",
+  "transfer_from": "Transfer from",
+  "exchange_rate": "Exchange rate",
+  "save_transfer": "Save transfer",
+  "transaction_creation_failed": "Transaction creation failed"
 }

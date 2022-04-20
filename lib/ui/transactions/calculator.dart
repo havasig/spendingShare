@@ -171,7 +171,6 @@ class _CalculatorState extends State<Calculator> {
       }
     } on Exception {
       createTransactionChangeNotifier.setValue('format_error'.tr);
-      createTransactionChangeNotifier.setValue(null);
     }
   }
 }

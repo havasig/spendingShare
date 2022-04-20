@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
+import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
 import 'package:spending_share/utils/config/environment.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/localization_service.dart';
@@ -32,6 +33,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ApplicationState()),
+        ChangeNotifierProvider(create: (context) => CreateTransactionChangeNotifier()),
         Provider(create: (context) => SpendingShareUser(groups: [])),
       ],
       child: MyApp(firestore: firestore),

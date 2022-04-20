@@ -58,7 +58,7 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                             member: Member(name: createGroupChangeNotifier.members[index]),
                             onClick: () {},
                             onDelete: index == 0 ? null : () => createGroupChangeNotifier.removeMember(index),
-                            color: createGroupChangeNotifier.color,
+                            color: createGroupChangeNotifier.colorName,
                           ),
                         );
                       },

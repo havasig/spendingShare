@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spending_share/models/member.dart';
+import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
@@ -9,7 +10,7 @@ class MemberItem extends StatelessWidget {
   final Member member;
   final Function onClick;
   final VoidCallback? onDelete;
-  final MaterialColor color;
+  final String color;
 
   @override
   Widget build(BuildContext context) {
@@ -17,28 +18,31 @@ class MemberItem extends StatelessWidget {
         onTap: () {
           onClick.call();
         },
-        child: Padding(
-          padding: EdgeInsets.only(bottom: h(12)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: color[globals.circleShade],
-                    child: Text(member.name[0], style: TextStyle(color: color[globals.iconShade])),
-                  ),
-                  SizedBox(width: w(8)),
-                  Text(member.name),
-                ],
-              ),
-              onDelete != null
-                  ? IconButton(
-                      onPressed: onDelete,
-                      icon: const Icon(Icons.close),
-                    )
-                  : const SizedBox.shrink(),
-            ],
+        child: Container(
+          color: ColorConstants.backgroundBlack,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: h(12)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: globals.colors[color]![globals.circleShade],
+                      child: Text(member.name[0], style: TextStyle(color: globals.colors[color]![globals.iconShade])),
+                    ),
+                    SizedBox(width: w(8)),
+                    Text(member.name),
+                  ],
+                ),
+                onDelete != null
+                    ? IconButton(
+                        onPressed: onDelete,
+                        icon: const Icon(Icons.close),
+                      )
+                    : const SizedBox.shrink(),
+              ],
+            ),
           ),
         ));
   }

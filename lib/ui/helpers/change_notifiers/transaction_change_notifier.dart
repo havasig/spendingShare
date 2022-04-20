@@ -1,41 +1,60 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/enums/split_by_type.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
 
 import 'currency_change_notifier.dart';
 
 class CreateTransactionChangeNotifier extends CreateChangeNotifier {
-  CreateTransactionChangeNotifier(_currency) : super(_currency);
+  CreateTransactionChangeNotifier() : super(null);
 
   TransactionType _type = TransactionType.expense;
   DocumentReference? _category;
   DocumentReference? _member;
-  DateTime? _date = DateTime.now();
+  DateTime _date = DateTime.now();
   String? _value;
-  final List<Member> _to = [];
-  double? _exchangeRate;
+  final List<DocumentReference> _to = [];
   SplitByType? _splitByType;
   String? _splitByWeights;
+  String? _groupId;
+  String? _color;
+  String? _groupIcon;
 
   TransactionType get type => _type;
 
-  get category => _category;
+  DocumentReference? get category => _category;
 
-  get member => _member;
+  String? get groupId => _groupId;
 
-  get date => _date;
+  String? get color => _color;
+
+  String? get groupIcon => _groupIcon;
+
+  DocumentReference? get member => _member;
+
+  DateTime get date => _date;
 
   String? get value => _value;
 
-  get to => _to;
-
-  get exchangeRate => _exchangeRate;
+  List<DocumentReference> get to => _to;
 
   get splitByType => _splitByType;
 
   get splitByWeights => _splitByWeights;
+
+  setGroupId(String groupId) {
+    _groupId = groupId;
+  }
+
+  setColor(String color) {
+    _color = color;
+  }
+
+  setGroupIcon(String groupIcon) {
+    _groupIcon = groupIcon;
+  }
 
   setType(TransactionType type) {
     _type = type;
@@ -44,12 +63,10 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   setCategory(DocumentReference category) {
     _category = category;
-    notifyListeners();
   }
 
   setMember(DocumentReference member) {
     _member = member;
-    notifyListeners();
   }
 
   setDate(DateTime date) {
@@ -62,13 +79,18 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
-  setExchangeRate(double exchangeRate) {
-    _exchangeRate = exchangeRate;
+  setSplitByType(SplitByType splitByType) {
+    _splitByType = splitByType;
     notifyListeners();
   }
 
-  setSplitByType(SplitByType splitByType) {
-    _splitByType = splitByType;
+  clearTo() {
+    _to.clear();
+    notifyListeners();
+  }
+
+  addTo(DocumentReference member) {
+    _to.add(member);
     notifyListeners();
   }
 
@@ -148,9 +170,18 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     return true;
   }
 
-  bool validateSecondPage() {
-    if (name == null) return false;
-    if (_to.isEmpty) return false;
-    return true;
+  clear() {
+    _type = TransactionType.expense;
+    _category = null;
+    _member = null;
+    _date = DateTime.now();
+    _value = null;
+    _to.clear();
+    _splitByType = null;
+    _splitByWeights = null;
+    _groupId = null;
+    _groupIcon = null;
+    setCurrency(null);
+    setExchangeRate(null);
   }
 }
