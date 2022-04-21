@@ -7,9 +7,10 @@ import 'package:spending_share/utils/globals.dart' as globals;
 import '../../utils/screen_util_helper.dart';
 
 class Calculator extends StatefulWidget {
-  const Calculator({Key? key, required this.color}) : super(key: key);
+  const Calculator({Key? key, required this.color, required this.onEqualPressed}) : super(key: key);
 
   final String color;
+  final Function(String) onEqualPressed;
 
   @override
   _CalculatorState createState() => _CalculatorState();
@@ -35,14 +36,7 @@ class _CalculatorState extends State<Calculator> {
               alignment: Alignment.centerRight,
               child: Text(
                 userInput,
-                style: const TextStyle(fontSize: 18),
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerRight,
-              child: Text(
-                createTransactionChangeNotifier.value ?? '',
-                style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             )
           ]),
@@ -62,7 +56,6 @@ class _CalculatorState extends State<Calculator> {
                     buttontapped: () {
                       setState(() {
                         userInput = '';
-                        createTransactionChangeNotifier.setValue('0');
                       });
                     },
                     buttonText: buttons[index],
@@ -112,18 +105,17 @@ class _CalculatorState extends State<Calculator> {
                 }
                 // Equal_to Button
                 else if (index == 18) {
-                  return Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
-                    return MyButton(
+                  return MyButton(
                       buttontapped: () {
                         setState(() {
-                          equalPressed(createTransactionChangeNotifier);
+                          widget.onEqualPressed(userInput);
+                          userInput = '';
                         });
                       },
                       buttonText: buttons[index],
                       color: globals.colors[widget.color]![equalOpacity],
                       textColor: Colors.white,
                     );
-                  });
                 }
 
                 //  other buttons
@@ -150,32 +142,6 @@ class _CalculatorState extends State<Calculator> {
       return true;
     }
     return false;
-  }
-
-  void equalPressed(CreateTransactionChangeNotifier createTransactionChangeNotifier) {
-    try {
-      if(userInput == '') {
-        createTransactionChangeNotifier.setValue('');
-        return;
-      }
-      String finalUserInput = userInput.replaceAll('x', '*').replaceAll('÷', '/');
-      Parser p = Parser();
-      Expression exp = p.parse(finalUserInput);
-      ContextModel cm = ContextModel();
-      double eval = exp.evaluate(EvaluationType.REAL, cm);
-
-      if (eval < 0) {
-        createTransactionChangeNotifier.setValue('value_must_be_greater_than_zero'.tr);
-      } else {
-        if (eval.floor() == eval) {
-          createTransactionChangeNotifier.setValue(eval.toInt().toString());
-        } else {
-          createTransactionChangeNotifier.setValue(eval.toString());
-        }
-      }
-    } on Exception {
-      createTransactionChangeNotifier.setValue('format_error'.tr);
-    }
   }
 }
 

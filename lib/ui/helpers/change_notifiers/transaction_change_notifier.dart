@@ -1,9 +1,12 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:math_expressions/math_expressions.dart';
 import 'package:spending_share/models/enums/split_by_type.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
+import 'package:spending_share/utils/number_helper.dart';
 
 import 'currency_change_notifier.dart';
 
@@ -14,14 +17,16 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   DocumentReference? _category;
   DocumentReference? _member;
   DateTime _date = DateTime.now();
-  String? _value;
-  final Set<DocumentReference> _to = {};
+  String _value = '';
+  final Map<DocumentReference, String> _to = {};
   SplitByType? _splitByType;
   String? _splitByWeights;
   String? _groupId;
   final Set<DocumentReference> _allMembers = {};
+  final Set<DocumentReference> _editedAmountMembers = {};
   String? _color;
   String? _groupIcon;
+  DocumentReference? _selectedMember;
 
   TransactionType get type => _type;
 
@@ -37,10 +42,15 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   DateTime get date => _date;
 
-  String? get value => _value;
+  String get value => _value;
 
-  Set<DocumentReference> get to => _to;
+  Map<DocumentReference, String> get to => _to;
+
   Set<DocumentReference> get allMembers => _allMembers;
+
+  Set<DocumentReference> get editedAmountMembers => _editedAmountMembers;
+
+  DocumentReference? get selectedMember => _selectedMember;
 
   get splitByType => _splitByType;
 
@@ -49,15 +59,22 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   setGroupId(String groupId) {
     _groupId = groupId;
   }
+
   setAllMembers(List<DocumentReference> allMembers) {
     _allMembers.clear();
     _allMembers.addAll(allMembers);
   }
+
   clearAllMembers() {
     _allMembers.clear();
   }
+
   addToAllMembers(DocumentReference item) {
     _allMembers.add(item);
+  }
+
+  addEditedAmount(DocumentReference item) {
+    _editedAmountMembers.add(item);
   }
 
   setColor(String color) {
@@ -85,7 +102,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     _date = date;
   }
 
-  setValue(String? value) {
+  setValue(String value) {
     _value = value;
     notifyListeners();
   }
@@ -94,13 +111,102 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     _to.clear();
   }
 
-  addTo(DocumentReference member) {
-    _to.add(member);
+  clearEditedAmount() {
+    _editedAmountMembers.clear();
+  }
+
+  addTo(DocumentReference member, String value) {
+    _to[member] = value;
     notifyListeners();
   }
 
-  removeFromTo(DocumentReference member) {
-    _to.remove(member);
+  recalculateToEqualAdd(DocumentReference member) {
+    _to[member] = '1';
+    int payingCount = _to.entries.where((element) => element.value != '0').length;
+
+    _to.forEach((key, value) {
+      if (value != '0') {
+        _to[key] = (double.parse(_value) / payingCount).toString();
+      }
+    });
+    notifyListeners();
+  }
+
+  recalculateToEqualRemove(DocumentReference member) {
+    _to[member] = '0';
+    int payingCount = _to.entries.where((element) {
+      return element.value != '0';
+    }).length;
+    _to.forEach((key, value) {
+      if (value != '0') {
+        _to[key] = (double.parse(_value) / payingCount).toString();
+      }
+    });
+    notifyListeners();
+  }
+
+  setSelectedValue(String newValue) {
+    if (double.tryParse(_value) == null) throw Exception('Shit gets real');
+    if (_selectedMember != null) {
+      try {
+        if (newValue == '') {
+          _to[_selectedMember!] = '0';
+          return;
+        }
+        String finalUserInput = newValue.replaceAll('x', '*').replaceAll('÷', '/');
+        Parser p = Parser();
+        Expression exp = p.parse(finalUserInput);
+        ContextModel cm = ContextModel();
+        double eval = exp.evaluate(EvaluationType.REAL, cm);
+
+        if (eval < 0) {
+          _to[_selectedMember!] = 'value_must_be_greater_than_zero'.tr;
+        } else {
+          _to[_selectedMember!] = formatNumberString(eval.toString());
+          _editedAmountMembers.add(_selectedMember!);
+          double alreadyEditedSum = 0;
+          int toNotNull = 0;
+          for (var element in _editedAmountMembers) {
+            alreadyEditedSum += double.tryParse(_to[element] ?? '') ?? 0;
+          }
+          _to.forEach((key, value) {
+            if (!_editedAmountMembers.contains(key) && to[key] != '0') toNotNull++;
+          });
+
+          if (alreadyEditedSum >= double.tryParse(_value)!) {
+            _value = alreadyEditedSum.toString();
+            _to.forEach((key, value) {
+              if (!_editedAmountMembers.contains(key)) _to[key] = '0';
+            });
+          } else if (toNotNull == 0) {
+            var result = 0.0;
+            _to.forEach((key, value) {
+              result += double.parse(value);
+            });
+            _value = result.toString();
+          } else {
+            double eachPay = (double.tryParse(_value)! - alreadyEditedSum) / toNotNull;
+            _to.forEach((key, value) {
+              if (!_editedAmountMembers.contains(key) && _to[key] != '0') _to[key] = eachPay.toString();
+            });
+          }
+        }
+      } on Exception {
+        _to[_selectedMember!] = 'format_error'.tr;
+      }
+    }
+    _to;
+    _editedAmountMembers;
+    notifyListeners();
+  }
+
+  updateTo(DocumentReference member, String value) {
+    _to.update(member, (_) => value);
+    notifyListeners();
+  }
+
+  setSelectedMember(DocumentReference newMember) {
+    _selectedMember = newMember;
     notifyListeners();
   }
 
@@ -132,7 +238,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
       setValue('date_cannot_be_empty'.tr);
       return false;
     }
-    if (_value == null || double.tryParse(_value!) == null || double.tryParse(_value!)! <= 0) {
+    if (_value == '' || double.tryParse(_value) == null || double.tryParse(_value)! <= 0) {
       setValue('invalid_value'.tr);
       return false;
     }
@@ -156,7 +262,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
       setValue('date_cannot_be_empty'.tr);
       return false;
     }
-    if (_value == null || double.tryParse(_value!) == null || double.tryParse(_value!)! <= 0) {
+    if (_value == '' || double.tryParse(_value) == null || double.tryParse(_value)! <= 0) {
       setValue('invalid_value'.tr);
       return false;
     }
@@ -180,7 +286,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
       setValue('member_cannot_be_empty'.tr);
       return false;
     }
-    if (_value == null || double.tryParse(_value!) == null || double.tryParse(_value!)! <= 0) {
+    if (_value == '' || double.tryParse(_value) == null || double.tryParse(_value)! <= 0) {
       setValue('invalid_value'.tr);
       return false;
     }
@@ -192,7 +298,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     _category = null;
     _member = null;
     _date = DateTime.now();
-    _value = null;
+    _value = '';
     _to.clear();
     _allMembers.clear();
     _splitByType = null;

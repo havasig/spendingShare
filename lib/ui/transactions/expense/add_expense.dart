@@ -13,6 +13,7 @@ import '../../../models/member.dart';
 import '../../../models/user.dart';
 import '../../../utils/screen_util_helper.dart';
 import '../../../utils/text_validator.dart';
+import '../../constants/color_constants.dart';
 import '../../groups/details/group_details_page.dart';
 import '../../helpers/change_notifiers/transaction_change_notifier.dart';
 import '../../helpers/member_item.dart';
@@ -26,6 +27,8 @@ import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../../widgets/spending_share_bottom_navigation_bar.dart';
 import '../../widgets/tab.dart';
+import '../calculator.dart';
+import 'amount_user_row.dart';
 
 class AddExpense extends StatelessWidget {
   const AddExpense({Key? key, required this.firestore}) : super(key: key);
@@ -38,6 +41,7 @@ class AddExpense extends StatelessWidget {
     TextEditingController textEditingController = TextEditingController();
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
@@ -94,7 +98,7 @@ class AddExpense extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          createTransactionChangeNotifier.value! + ' ' + createTransactionChangeNotifier.currency,
+                          createTransactionChangeNotifier.value + ' ' + createTransactionChangeNotifier.currency,
                           style: TextStyleConstants.value(createTransactionChangeNotifier.color),
                         ),
                         SizedBox(height: h(16)),
@@ -128,7 +132,7 @@ class AddExpense extends StatelessWidget {
                                   createTransactionChangeNotifier.defaultCurrency),
                             ],
                           ),
-                          Text((createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value!)!)
+                          Text((createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value)!)
                                   .toString() +
                               ' ' +
                               createTransactionChangeNotifier.defaultCurrency),
@@ -136,67 +140,91 @@ class AddExpense extends StatelessWidget {
                       ),
                     ],
                   ),
-                Button(
-                  onPressed: () => showBarModalBottomSheet(
-                    expand: true,
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) => Container(),
-                  ),
-                ),
                 SizedBox(
                     height: h(300),
                     child: TabNavigation(color: createTransactionChangeNotifier.color!, tabs: [
                       SpendingShareTab(
-                          'equally'.tr,
-                          Expanded(
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const ScrollPhysics(),
-                                itemCount: createTransactionChangeNotifier.allMembers.length,
-                                itemBuilder: (context, index) {
-                                  return EquallyUserRow(
-                                    memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
-                                    color: createTransactionChangeNotifier.color!,
-                                  );
-                                }),
-
-                            /*
-                            child: StreamBuilder<List<DocumentSnapshot>>(
-                                stream: CombineLatestStream.list(
-                                    createTransactionChangeNotifier.allMembers.map<Stream<DocumentSnapshot>>((member) => member.snapshots())),
-                                builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> memberListSnapshot) {
-                                  if (memberListSnapshot.hasData) {
-                                    return Column(
-                                        children: memberListSnapshot.data!.map((m) {
-                                      var member = Member.fromDocument(m);
-                                      return EquallyUserRow(member: m, color: createTransactionChangeNotifier.color!);
-                                    }).toList());
-                                  } else {
-                                    return const SizedBox.shrink();
-                                  }
-                                }),
-
-                             */
-
-                            /*ListView.builder(
-                                shrinkWrap: true,
-                                physics: const ScrollPhysics(),
-                                itemCount: createTransactionChangeNotifier.,
-                                itemBuilder: (context, index) {
-                                  return Text('asd');
-                                }),
-
-                               */
-                          ),
-                          onSelect: (context) => showBarModalBottomSheet(
-                                expand: true,
-                                context: context,
-                                backgroundColor: Colors.transparent,
-                                builder: (context) => Container(),
-                              )),
-                      SpendingShareTab('amounts'.tr, Text('asd')),
-                      SpendingShareTab('weights'.tr, Text('asd')),
+                        'equally'.tr,
+                        ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: createTransactionChangeNotifier.allMembers.length,
+                          itemBuilder: (context, index) {
+                            return EquallyUserRow(
+                              memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+                              color: createTransactionChangeNotifier.color!,
+                            );
+                          },
+                          separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                        ),
+                      ),
+                      SpendingShareTab(
+                        'amounts'.tr,
+                        Container(),
+                        onSelect: (context) => showBarModalBottomSheet(
+                          expand: true,
+                          context: context,
+                          backgroundColor: ColorConstants.green,
+                          builder: (context) {
+                            return Container(
+                              color: ColorConstants.backgroundBlack,
+                              padding: EdgeInsets.all(h(16)),
+                              child: TabNavigation(initIndex: 1, color: createTransactionChangeNotifier.color!, tabs: [
+                                SpendingShareTab(
+                                  'equally'.tr,
+                                  ListView.separated(
+                                    shrinkWrap: true,
+                                    itemCount: createTransactionChangeNotifier.allMembers.length,
+                                    itemBuilder: (context, index) {
+                                      return EquallyUserRow(
+                                        memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+                                        color: createTransactionChangeNotifier.color!,
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                                  ),
+                                ),
+                                SpendingShareTab(
+                                  'amounts'.tr,
+                                  Column(
+                                    children: [
+                                      ListView.separated(
+                                        shrinkWrap: true,
+                                        itemCount: createTransactionChangeNotifier.allMembers.length,
+                                        itemBuilder: (context, index) {
+                                          return AmountUserRow(
+                                            memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+                                            color: createTransactionChangeNotifier.color!,
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                                      ),
+                                      Calculator(
+                                          color: createTransactionChangeNotifier.color!,
+                                          onEqualPressed: (String userInput) {
+                                              createTransactionChangeNotifier.setSelectedValue(userInput);
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                                SpendingShareTab(
+                                  'weights'.tr,
+                                  Container(),
+                                ),
+                              ]),
+                            );
+                          },
+                        ),
+                      ),
+                      SpendingShareTab(
+                        'weights'.tr,
+                        Container(),
+                        onSelect: (context) => showBarModalBottomSheet(
+                          expand: true,
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => Container(),
+                        ),
+                      ),
                     ])),
                 const Spacer(),
                 Button(
@@ -216,7 +244,7 @@ class AddExpense extends StatelessWidget {
                           'name': createTransactionChangeNotifier.name,
                           'to': createTransactionChangeNotifier.member,
                           'type': createTransactionChangeNotifier.type.toString(),
-                          'value': double.parse(createTransactionChangeNotifier.value!),
+                          'value': double.parse(createTransactionChangeNotifier.value),
                         });
 
                         var groupId = createTransactionChangeNotifier.groupId!;

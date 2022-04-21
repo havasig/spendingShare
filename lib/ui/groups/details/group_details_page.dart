@@ -76,7 +76,7 @@ class GroupDetailsPage extends StatelessWidget {
                               },
                             );
                           },
-                          separatorBuilder: (context, index) => const SizedBox(width: 10)),
+                          separatorBuilder: (context, index) => SizedBox(width: h(10))),
                     ),
                     Divider(
                       thickness: 1,

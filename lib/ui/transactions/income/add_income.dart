@@ -101,7 +101,7 @@ class AddIncome extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          createTransactionChangeNotifier.value! + ' ' + createTransactionChangeNotifier.currency,
+                          createTransactionChangeNotifier.value + ' ' + createTransactionChangeNotifier.currency,
                           style: TextStyleConstants.value(createTransactionChangeNotifier.color),
                         ),
                         SizedBox(height: h(16)),
@@ -135,7 +135,7 @@ class AddIncome extends StatelessWidget {
                                   createTransactionChangeNotifier.defaultCurrency),
                             ],
                           ),
-                          Text((createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value!)!)
+                          Text((createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value)!)
                                   .toString() +
                               ' ' +
                               createTransactionChangeNotifier.defaultCurrency),
@@ -161,7 +161,7 @@ class AddIncome extends StatelessWidget {
                           'name': createTransactionChangeNotifier.name,
                           'to': createTransactionChangeNotifier.member,
                           'type': createTransactionChangeNotifier.type.toString(),
-                          'value': double.parse(createTransactionChangeNotifier.value!),
+                          'value': double.parse(createTransactionChangeNotifier.value),
                         });
 
                         var groupId = createTransactionChangeNotifier.groupId!;

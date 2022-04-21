@@ -47,7 +47,7 @@ class TransferTo extends StatelessWidget {
                             member: member,
                             onClick: () {
                               createTransactionChangeNotifier.clearTo();
-                              createTransactionChangeNotifier.addTo(m.reference);
+                              createTransactionChangeNotifier.addTo(m.reference, createTransactionChangeNotifier.value);
                               Get.to(() => AddTransfer(firestore: firestore));
                             },
                             color: createTransactionChangeNotifier.color!,

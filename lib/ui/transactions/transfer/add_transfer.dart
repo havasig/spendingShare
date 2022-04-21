@@ -92,7 +92,7 @@ class AddTransfer extends StatelessWidget {
                       children: [
                         Text('transfer_to'.tr),
                         FutureBuilder<DocumentSnapshot>(
-                          future: createTransactionChangeNotifier.to.first.get(),
+                          future: createTransactionChangeNotifier.to.entries.first.key.get(),
                           builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                             if (snapshot.connectionState == ConnectionState.done) {
                               var member = Member.fromDocument(snapshot.data!);
@@ -117,7 +117,7 @@ class AddTransfer extends StatelessWidget {
                 ),
                 SizedBox(height: h(16)),
                 Text(
-                  createTransactionChangeNotifier.value! + ' ' + createTransactionChangeNotifier.currency,
+                  createTransactionChangeNotifier.value + ' ' + createTransactionChangeNotifier.currency,
                   style: TextStyleConstants.value(createTransactionChangeNotifier.color),
                 ),
                 SizedBox(height: h(16)),
@@ -152,7 +152,7 @@ class AddTransfer extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                  (createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value!)!)
+                                  (createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value)!)
                                           .toString() +
                                       ' ' +
                                       createTransactionChangeNotifier.defaultCurrency),
@@ -179,9 +179,10 @@ class AddTransfer extends StatelessWidget {
                           'exchangeRate': createTransactionChangeNotifier.exchangeRate,
                           'from': createTransactionChangeNotifier.member,
                           'name': createTransactionChangeNotifier.name,
-                          'to': createTransactionChangeNotifier.to,
+                          'to': createTransactionChangeNotifier.to.keys.toList(),
+                          'toValues': createTransactionChangeNotifier.to.values.toList(),
                           'type': createTransactionChangeNotifier.type.toString(),
-                          'value': double.parse(createTransactionChangeNotifier.value!),
+                          'value': double.parse(createTransactionChangeNotifier.value),
                         });
 
                         var groupId = createTransactionChangeNotifier.groupId!;
@@ -200,8 +201,7 @@ class AddTransfer extends StatelessWidget {
                           context: context,
                           builder: (context) {
                             return ErrorDialog(
-                              title: 'transaction_creation_failed'.tr,
-                              message: '${(e as dynamic).message}'.tr,
+                              title: 'transaction_creation_failed'.tr, message: e.toString(), // TODO '${(e as dynamic).message}'.tr,
                             );
                           },
                         );
