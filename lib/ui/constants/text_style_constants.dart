@@ -1,8 +1,18 @@
 import 'package:flutter/cupertino.dart';
 
 import 'color_constants.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
+
 
 class TextStyleConstants {
+  static TextStyle value(color) {
+    return TextStyle(
+      color: globals.colors[color],
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
   static final h_1 = TextStyle(
     fontSize: 48,
     fontFamily: 'Nunito',

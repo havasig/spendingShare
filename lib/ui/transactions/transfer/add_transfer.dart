@@ -17,6 +17,7 @@ import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
+import '../../constants/text_style_constants.dart';
 import '../../helpers/on_future_build_error.dart';
 
 class AddTransfer extends StatelessWidget {
@@ -29,7 +30,6 @@ class AddTransfer extends StatelessWidget {
     FocusNode focusNode = FocusNode();
     TextEditingController textEditingController = TextEditingController();
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -92,7 +92,7 @@ class AddTransfer extends StatelessWidget {
                       children: [
                         Text('transfer_to'.tr),
                         FutureBuilder<DocumentSnapshot>(
-                          future: createTransactionChangeNotifier.to[0].get(),
+                          future: createTransactionChangeNotifier.to.first.get(),
                           builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                             if (snapshot.connectionState == ConnectionState.done) {
                               var member = Member.fromDocument(snapshot.data!);
@@ -118,11 +118,7 @@ class AddTransfer extends StatelessWidget {
                 SizedBox(height: h(16)),
                 Text(
                   createTransactionChangeNotifier.value! + ' ' + createTransactionChangeNotifier.currency,
-                  style: TextStyle(
-                    color: globals.colors[createTransactionChangeNotifier.color],
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyleConstants.value(createTransactionChangeNotifier.color),
                 ),
                 SizedBox(height: h(16)),
                 Row(

@@ -25,6 +25,7 @@ dependencies:
   google_sign_in: ^5.2.4
   rxdart: ^0.27.3
   syncfusion_flutter_datepicker: ^20.1.48
+  modal_bottom_sheet: ^2.0.1
 
 dev_dependencies:
   mockito: ^5.1.0

@@ -64,11 +64,11 @@
   "transfer": "Transfer",
   "income": "Income",
   "type": "Type",
-  "category" : "Category",
-  "no_category_found" : "No category found. Please create least one to create a transaction.",
+  "category": "Category",
+  "no_category_found": "No category found. Please create least one to create a transaction.",
   "no_member_found": "No member found. How is this possible? What did you do???",
-  "paid" : "Paid",
-  "gave" : "Gave",
+  "paid": "Paid",
+  "gave": "Gave",
   "date": "Date",
   "next": "Next",
   "member": "Member",
@@ -90,5 +90,9 @@
   "transaction_creation_failed": "Transaction creation failed",
   "income_name": "Income name",
   "received_from": "Received form",
-  "got": "Got"
+  "got": "Got",
+  "expense_name": "Expense name",
+  "equally": "Equally",
+  "amounts": "Amounts",
+  "weights": "Weights"
 }

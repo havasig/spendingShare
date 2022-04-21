@@ -62,10 +62,19 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
               titleText: 'add_transaction'.tr,
               hasForward: true,
               forwardText: 'next'.tr,
-              onForward: () {
+              onForward: () async {
                 switch (createTransactionChangeNotifier.type) {
                   case TransactionType.expense:
-                    if (createTransactionChangeNotifier.isValidExpense()) Get.to(() => AddExpense(firestore: widget.firestore));
+                    if (createTransactionChangeNotifier.isValidExpense()) {
+                      var group = await widget.firestore.collection('groups').doc(createTransactionChangeNotifier.groupId).get();
+                      createTransactionChangeNotifier.clearAllMembers();
+                      createTransactionChangeNotifier.clearTo();
+                      for(var member in group.data()!['members']) {
+                      createTransactionChangeNotifier.addToAllMembers(member);
+                      createTransactionChangeNotifier.addTo(member);
+                      }
+                      Get.to(() => AddExpense(firestore: widget.firestore));
+                    }
                     break;
                   case TransactionType.transfer:
                     if (createTransactionChangeNotifier.isValidTransfer()) Get.to(() => TransferTo(firestore: widget.firestore));

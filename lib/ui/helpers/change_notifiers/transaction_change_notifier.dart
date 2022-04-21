@@ -15,10 +15,11 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   DocumentReference? _member;
   DateTime _date = DateTime.now();
   String? _value;
-  final List<DocumentReference> _to = [];
+  final Set<DocumentReference> _to = {};
   SplitByType? _splitByType;
   String? _splitByWeights;
   String? _groupId;
+  final Set<DocumentReference> _allMembers = {};
   String? _color;
   String? _groupIcon;
 
@@ -38,7 +39,8 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   String? get value => _value;
 
-  List<DocumentReference> get to => _to;
+  Set<DocumentReference> get to => _to;
+  Set<DocumentReference> get allMembers => _allMembers;
 
   get splitByType => _splitByType;
 
@@ -46,6 +48,16 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   setGroupId(String groupId) {
     _groupId = groupId;
+  }
+  setAllMembers(List<DocumentReference> allMembers) {
+    _allMembers.clear();
+    _allMembers.addAll(allMembers);
+  }
+  clearAllMembers() {
+    _allMembers.clear();
+  }
+  addToAllMembers(DocumentReference item) {
+    _allMembers.add(item);
   }
 
   setColor(String color) {
@@ -71,7 +83,6 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   setDate(DateTime date) {
     _date = date;
-    notifyListeners();
   }
 
   setValue(String? value) {
@@ -79,14 +90,8 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
-  setSplitByType(SplitByType splitByType) {
-    _splitByType = splitByType;
-    notifyListeners();
-  }
-
   clearTo() {
     _to.clear();
-    notifyListeners();
   }
 
   addTo(DocumentReference member) {
@@ -94,7 +99,15 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
-  // TODO set 'to'
+  removeFromTo(DocumentReference member) {
+    _to.remove(member);
+    notifyListeners();
+  }
+
+  setSplitByType(SplitByType splitByType) {
+    _splitByType = splitByType;
+    notifyListeners();
+  }
 
   // TODO set split by weights
 
@@ -181,6 +194,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     _date = DateTime.now();
     _value = null;
     _to.clear();
+    _allMembers.clear();
     _splitByType = null;
     _splitByWeights = null;
     _groupId = null;

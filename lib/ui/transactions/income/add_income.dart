@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:spending_share/ui/constants/text_style_constants.dart';
 
 import '../../../models/member.dart';
 import '../../../models/user.dart';
@@ -101,11 +102,7 @@ class AddIncome extends StatelessWidget {
                       children: [
                         Text(
                           createTransactionChangeNotifier.value! + ' ' + createTransactionChangeNotifier.currency,
-                          style: TextStyle(
-                            color: globals.colors[createTransactionChangeNotifier.color],
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyleConstants.value(createTransactionChangeNotifier.color),
                         ),
                         SizedBox(height: h(16)),
                         Row(
