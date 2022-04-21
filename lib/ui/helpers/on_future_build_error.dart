@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/utils/loading_indicator.dart';
@@ -6,6 +5,7 @@ import 'package:spending_share/utils/loading_indicator.dart';
 class OnFutureBuildError extends StatelessWidget {
   const OnFutureBuildError(this.snapshot, {Key? key}) : super(key: key);
   final AsyncSnapshot<dynamic> snapshot;
+
   @override
   Widget build(BuildContext context) {
     if (snapshot.hasError) {

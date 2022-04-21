@@ -74,7 +74,7 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                       createTransactionChangeNotifier.clearTo();
                       createTransactionChangeNotifier.clearEditedAmount();
                       String valuePerMember =
-                      (double.parse(createTransactionChangeNotifier.value) / group.data()!['members'].length).toString();
+                          (double.parse(createTransactionChangeNotifier.value) / group.data()!['members'].length).toString();
                       for (var member in group.data()!['members']) {
                         createTransactionChangeNotifier.addToAllMembers(member);
                         createTransactionChangeNotifier.addTo(member, valuePerMember);
@@ -114,34 +114,34 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                 ),
                 createTransactionChangeNotifier.type == TransactionType.expense
                     ? StreamBuilder<List<DocumentSnapshot>>(
-                    stream: widget.firestore.collection('groups').doc(widget.groupId).snapshots().switchMap((group) {
-                      createTransactionChangeNotifier.setGroupIcon(group.data()!['icon']);
-                      return CombineLatestStream.list(group
-                          .data()!['categories']
-                          .map<Stream<DocumentSnapshot>>((category) => (category as DocumentReference).snapshots()));
-                    }),
-                    builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> categoryListSnapshot) {
-                      if (categoryListSnapshot.hasData && categoryListSnapshot.data!.isNotEmpty) {
-                        Map<String, dynamic> options = {};
-                        for (var category in categoryListSnapshot.data!) {
-                          category as DocumentSnapshot<Map<String, dynamic>>;
-                          options.addAll({category.data()!['name']: category.reference});
-                        }
-                        createTransactionChangeNotifier.setCategory(options.entries.first.value);
-                        return CreateTransactionDropdown(
-                          title: 'category'.tr,
-                          options: options,
-                          color: widget.color,
-                          onSelect: (value) {
-                            createTransactionChangeNotifier.setCategory(value);
-                          },
-                        );
-                      } else if (!categoryListSnapshot.hasData) {
-                        return Text('no_category_found'.tr);
-                      } else {
-                        return OnFutureBuildError(categoryListSnapshot);
-                      }
-                    })
+                        stream: widget.firestore.collection('groups').doc(widget.groupId).snapshots().switchMap((group) {
+                          createTransactionChangeNotifier.setGroupIcon(group.data()!['icon']);
+                          return CombineLatestStream.list(group
+                              .data()!['categories']
+                              .map<Stream<DocumentSnapshot>>((category) => (category as DocumentReference).snapshots()));
+                        }),
+                        builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> categoryListSnapshot) {
+                          if (categoryListSnapshot.hasData && categoryListSnapshot.data!.isNotEmpty) {
+                            Map<String, dynamic> options = {};
+                            for (var category in categoryListSnapshot.data!) {
+                              category as DocumentSnapshot<Map<String, dynamic>>;
+                              options.addAll({category.data()!['name']: category.reference});
+                            }
+                            createTransactionChangeNotifier.setCategory(options.entries.first.value);
+                            return CreateTransactionDropdown(
+                              title: 'category'.tr,
+                              options: options,
+                              color: widget.color,
+                              onSelect: (value) {
+                                createTransactionChangeNotifier.setCategory(value);
+                              },
+                            );
+                          } else if (!categoryListSnapshot.hasData) {
+                            return Text('no_category_found'.tr);
+                          } else {
+                            return OnFutureBuildError(categoryListSnapshot);
+                          }
+                        })
                     : const SizedBox.shrink(),
                 StreamBuilder<List<DocumentSnapshot>>(
                     stream: widget.firestore.collection('groups').doc(widget.groupId).snapshots().switchMap((group) {
@@ -205,13 +205,13 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                 SizedBox(height: h(16)),
                 createTransactionChangeNotifier.value.isNotEmpty && double.tryParse(createTransactionChangeNotifier.value) != null
                     ? Text(
-                  formatNumberString(createTransactionChangeNotifier.value) + ' ' + createTransactionChangeNotifier.currency,
-                  style: TextStyleConstants.value(createTransactionChangeNotifier.color).copyWith(fontSize: 30),
-                )
+                        formatNumberString(createTransactionChangeNotifier.value) + ' ' + createTransactionChangeNotifier.currency,
+                        style: TextStyleConstants.value(createTransactionChangeNotifier.color).copyWith(fontSize: 30),
+                      )
                     : Text(
-                    createTransactionChangeNotifier.value,
-                    style: TextStyleConstants.value(createTransactionChangeNotifier.color).copyWith(fontSize: 30),
-                ),
+                        createTransactionChangeNotifier.value,
+                        style: TextStyleConstants.value(createTransactionChangeNotifier.color).copyWith(fontSize: 30),
+                      ),
                 const Spacer(),
                 Calculator(
                   color: widget.color,

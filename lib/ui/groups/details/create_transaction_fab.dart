@@ -6,7 +6,8 @@ import 'package:spending_share/ui/transactions/create_transaction_page.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 
 class CreateTransactionFab extends StatelessWidget {
-  const CreateTransactionFab({Key? key, required this.firestore, required this.color, required this.currency, required this.groupId}) : super(key: key);
+  const CreateTransactionFab({Key? key, required this.firestore, required this.color, required this.currency, required this.groupId})
+      : super(key: key);
 
   final FirebaseFirestore firestore;
   final String color;

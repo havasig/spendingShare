@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
+
 import '../../utils/screen_util_helper.dart';
 
 class Calculator extends StatefulWidget {
@@ -106,16 +105,16 @@ class _CalculatorState extends State<Calculator> {
                 // Equal_to Button
                 else if (index == 18) {
                   return MyButton(
-                      buttontapped: () {
-                        setState(() {
-                          widget.onEqualPressed(userInput);
-                          userInput = '';
-                        });
-                      },
-                      buttonText: buttons[index],
-                      color: globals.colors[widget.color]![equalOpacity],
-                      textColor: Colors.white,
-                    );
+                    buttontapped: () {
+                      setState(() {
+                        widget.onEqualPressed(userInput);
+                        userInput = '';
+                      });
+                    },
+                    buttonText: buttons[index],
+                    color: globals.colors[widget.color]![equalOpacity],
+                    textColor: Colors.white,
+                  );
                 }
 
                 //  other buttons

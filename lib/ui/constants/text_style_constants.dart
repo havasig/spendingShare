@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
-
-import 'color_constants.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 
+import 'color_constants.dart';
 
 class TextStyleConstants {
   static TextStyle value(color) {

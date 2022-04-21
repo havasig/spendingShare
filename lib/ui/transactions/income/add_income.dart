@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../../../models/member.dart';
 import '../../../models/user.dart';
@@ -17,8 +18,6 @@ import '../../widgets/circle_icon_button.dart';
 import '../../widgets/dialogs/error_dialog.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/spending_share_appbar.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
-
 import '../../widgets/spending_share_bottom_navigation_bar.dart';
 
 class AddIncome extends StatelessWidget {

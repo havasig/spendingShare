@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/currency_change_notifier.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../utils/config/environment.dart';
 

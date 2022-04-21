@@ -7,8 +7,8 @@ import 'package:rxdart/src/transformers/switch_map.dart';
 import 'package:spending_share/models/group.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/ui/groups/details/group_details_page.dart';
 import 'package:spending_share/ui/groups/create/create_group_fab.dart';
+import 'package:spending_share/ui/groups/details/group_details_page.dart';
 import 'package:spending_share/ui/groups/join_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
@@ -147,7 +147,8 @@ class HaveGroups extends StatelessWidget {
                 Group g = Group.fromDocument(group);
                 return CircleIconButton(
                   onTap: () => Get.to(() => GroupDetailsPage(firestore: firestore, groupId: group.id)),
-                  width: (MediaQuery.of(context).size.width - 197) / 8, //-padding*2 -iconWidth*4 -spacing*3
+                  width: (MediaQuery.of(context).size.width - 197) / 8,
+                  //-padding*2 -iconWidth*4 -spacing*3
                   color: g.color,
                   name: g.name,
                   icon: g.icon,

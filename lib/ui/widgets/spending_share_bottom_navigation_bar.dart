@@ -9,8 +9,7 @@ import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class SpendingShareBottomNavigationBar extends StatefulWidget {
-  const SpendingShareBottomNavigationBar(
-      {Key? key, required this.selectedIndex, required this.firestore, this.color = 'orange'})
+  const SpendingShareBottomNavigationBar({Key? key, required this.selectedIndex, required this.firestore, this.color = 'orange'})
       : super(key: key);
 
   final int selectedIndex;

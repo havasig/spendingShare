@@ -1,5 +1,3 @@
-
-
 String formatNumberString(String value) {
   double doubleValue = double.parse(value);
   if (doubleValue.floor() == doubleValue) return doubleValue.toInt().toString();

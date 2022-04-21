@@ -16,7 +16,7 @@ class DebtsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(debts.isEmpty) return Text('there_are_no_debts'.tr);
+    if (debts.isEmpty) return Text('there_are_no_debts'.tr);
     return Column(
       children: debts
           .map<Widget>(

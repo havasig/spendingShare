@@ -151,11 +151,10 @@ class AddTransfer extends StatelessWidget {
                                       createTransactionChangeNotifier.defaultCurrency),
                                 ],
                               ),
-                              Text(
-                                  (createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value)!)
-                                          .toString() +
-                                      ' ' +
-                                      createTransactionChangeNotifier.defaultCurrency),
+                              Text((createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value)!)
+                                      .toString() +
+                                  ' ' +
+                                  createTransactionChangeNotifier.defaultCurrency),
                             ],
                           ),
                         ],

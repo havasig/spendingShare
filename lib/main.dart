@@ -76,11 +76,9 @@ class MyApp extends StatelessWidget {
       builder: () => GetMaterialApp(
         title: 'Speding Share',
         theme: ThemeData(
-
             bottomSheetTheme: const BottomSheetThemeData(
               backgroundColor: ColorConstants.backgroundBlack,
               modalBackgroundColor: ColorConstants.backgroundBlack,
-
             ),
             fontFamily: 'Nunito',
             brightness: Brightness.dark,

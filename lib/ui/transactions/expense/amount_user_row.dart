@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../../../models/member.dart';
 import '../../../utils/number_helper.dart';
 import '../../../utils/screen_util_helper.dart';
 import '../../helpers/change_notifiers/transaction_change_notifier.dart';
-
-import 'package:spending_share/utils/globals.dart' as globals;
-
 import '../../helpers/on_future_build_error.dart';
 
 class AmountUserRow extends StatefulWidget {

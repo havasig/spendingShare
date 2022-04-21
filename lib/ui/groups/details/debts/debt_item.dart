@@ -4,7 +4,6 @@ import 'package:spending_share/models/member.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 
-
 class DebtItem extends StatelessWidget {
   const DebtItem({
     Key? key,
@@ -46,7 +45,10 @@ class DebtItem extends StatelessWidget {
                   Column(
                     children: [
                       Text(member.name),
-                      if (value.floor() == value) Text(value.toInt().toString() + ' ' + currency) else Text(value.toString() + ' ' + currency),
+                      if (value.floor() == value)
+                        Text(value.toInt().toString() + ' ' + currency)
+                      else
+                        Text(value.toString() + ' ' + currency),
                     ],
                   )
                 ],

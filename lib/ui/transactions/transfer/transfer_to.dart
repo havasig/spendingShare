@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:spending_share/models/member.dart';
+import 'package:spending_share/ui/helpers/member_item.dart';
 import 'package:spending_share/ui/transactions/transfer/add_transfer.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:provider/provider.dart';
-import 'package:spending_share/models/member.dart';
-import 'package:spending_share/ui/helpers/member_item.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 import '../../../models/user.dart';

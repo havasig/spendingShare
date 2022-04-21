@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../../../models/member.dart';
 import '../../../utils/number_helper.dart';
 import '../../helpers/change_notifiers/transaction_change_notifier.dart';
-
-import 'package:spending_share/utils/globals.dart' as globals;
-
 import '../../helpers/on_future_build_error.dart';
-import 'package:collection/collection.dart';
 
 class EquallyUserRow extends StatefulWidget {
   const EquallyUserRow({Key? key, required this.memberReference, required this.color}) : super(key: key);
@@ -28,9 +25,7 @@ class _EquallyUserRowState extends State<EquallyUserRow> {
   Widget build(BuildContext context) {
     return Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
       bool isChecked =
-          createTransactionChangeNotifier.to.entries
-              .firstWhere((element) => element.key == widget.memberReference)
-              .value != '0';
+          createTransactionChangeNotifier.to.entries.firstWhere((element) => element.key == widget.memberReference).value != '0';
       return FutureBuilder<DocumentSnapshot>(
         future: widget.memberReference.get(),
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {

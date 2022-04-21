@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/transactions/expense/equally_user_row.dart';
 import 'package:spending_share/ui/widgets/tab_navigation.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../../../models/member.dart';
 import '../../../models/user.dart';
@@ -16,15 +16,12 @@ import '../../../utils/text_validator.dart';
 import '../../constants/color_constants.dart';
 import '../../groups/details/group_details_page.dart';
 import '../../helpers/change_notifiers/transaction_change_notifier.dart';
-import '../../helpers/member_item.dart';
 import '../../helpers/on_future_build_error.dart';
 import '../../widgets/button.dart';
 import '../../widgets/circle_icon_button.dart';
 import '../../widgets/dialogs/error_dialog.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/spending_share_appbar.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
-
 import '../../widgets/spending_share_bottom_navigation_bar.dart';
 import '../../widgets/tab.dart';
 import '../calculator.dart';
@@ -201,7 +198,7 @@ class AddExpense extends StatelessWidget {
                                       Calculator(
                                           color: createTransactionChangeNotifier.color!,
                                           onEqualPressed: (String userInput) {
-                                              createTransactionChangeNotifier.setSelectedValue(userInput);
+                                            createTransactionChangeNotifier.setSelectedValue(userInput);
                                           }),
                                     ],
                                   ),
