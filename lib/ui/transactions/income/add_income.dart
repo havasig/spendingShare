@@ -152,6 +152,7 @@ class AddIncome extends StatelessWidget {
                         DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
 
                         await firestore.collection('transactions').add({
+                          'category': createTransactionChangeNotifier.category, // TODO select income category automatically (?)
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
                           'date': createTransactionChangeNotifier.date,

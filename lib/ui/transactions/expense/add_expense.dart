@@ -233,13 +233,15 @@ class AddExpense extends StatelessWidget {
                         DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
 
                         await firestore.collection('transactions').add({
+                          'category': createTransactionChangeNotifier.category,
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
                           'date': createTransactionChangeNotifier.date,
                           'exchangeRate': createTransactionChangeNotifier.exchangeRate,
-                          'from': 'fromTextEditingController.text',
+                          'from': createTransactionChangeNotifier.member,
                           'name': createTransactionChangeNotifier.name,
-                          'to': createTransactionChangeNotifier.member,
+                          'to': createTransactionChangeNotifier.to.keys.toList(),
+                          'toValues': createTransactionChangeNotifier.to.values.toList(),
                           'type': createTransactionChangeNotifier.type.toString(),
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });
