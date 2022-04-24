@@ -37,7 +37,9 @@ class _TransactionMemberDropdownState extends State<TransactionMemberDropdown> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: h(8)),
       child: Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
-        createTransactionChangeNotifier.setMember(widget.options.entries.first.value);
+        createTransactionChangeNotifier.member == null
+            ? createTransactionChangeNotifier.setMember(widget.options.entries.first.value)
+            : null;
         return Row(
           children: [
             Text('member'.tr),

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
-import 'package:spending_share/ui/groups/details/transactions/transaction_item.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
+import 'package:spending_share/ui/helpers/transaction_row_item.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 
@@ -27,7 +27,7 @@ class TransactionsList extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   var transaction = spending_share_transaction.Transaction.fromDocument(snapshot.data!);
-                  return TransactionItem(
+                  return TransactionRowItem(
                     transaction,
                     color: color,
                     icon: icon,

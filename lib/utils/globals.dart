@@ -8,7 +8,7 @@ Map<String, IconData> icons = {
   'science': Icons.wb_sunny,
   'wallet': Icons.account_balance_wallet,
   'add': Icons.add,
-  'w': Icons.directions_run,
+  'money': Icons.attach_money,
   'e': Icons.gavel,
   'r': Icons.wb_sunny,
   't': Icons.account_balance_wallet,

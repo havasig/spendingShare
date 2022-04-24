@@ -166,12 +166,11 @@ class AddTransfer extends StatelessWidget {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       createTransactionChangeNotifier.setName(textEditingController.text);
-                      try {
+                      //try {
                         SpendingShareUser user = Provider.of(context, listen: false);
                         DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
 
-                        await firestore.collection('transactions').add({
-                          'category': createTransactionChangeNotifier.category,
+                        DocumentReference transferReference = await firestore.collection('transactions').add({
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
                           'date': createTransactionChangeNotifier.date,
@@ -184,6 +183,17 @@ class AddTransfer extends StatelessWidget {
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });
 
+                        DocumentSnapshot<Map<String, dynamic>> groupSnapshot =
+                            await firestore.collection('groups').doc(createTransactionChangeNotifier.groupId).get();
+
+                        List<dynamic> newTransactionReferenceList = groupSnapshot.data()!['transactions'];
+                        newTransactionReferenceList.add(transferReference);
+
+                        await firestore
+                            .collection('groups')
+                            .doc(createTransactionChangeNotifier.groupId)
+                            .set({'transactions': newTransactionReferenceList}, SetOptions(merge: true));
+
                         var groupId = createTransactionChangeNotifier.groupId!;
                         createTransactionChangeNotifier.clear();
 
@@ -192,7 +202,7 @@ class AddTransfer extends StatelessWidget {
                               hasBack: false,
                               groupId: groupId,
                             ));
-                      } catch (e) {
+                      /*} catch (e) {
                         if (kDebugMode) {
                           print(e);
                         }
@@ -204,7 +214,7 @@ class AddTransfer extends StatelessWidget {
                             );
                           },
                         );
-                      }
+                      }*/
                     }
                   },
                   text: 'save_transfer'.tr,

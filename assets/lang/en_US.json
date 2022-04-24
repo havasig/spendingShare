@@ -94,5 +94,7 @@
   "expense_name": "Expense name",
   "equally": "Equally",
   "amounts": "Amounts",
-  "weights": "Weights"
+  "weights": "Weights",
+  "paid_for": "paid for"
+
 }

@@ -21,7 +21,6 @@ class TransferTo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SpendingShareUser currentUser = Provider.of(context);
     return Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
       return Scaffold(
         appBar: SpendingShareAppBar(titleText: 'transfer_to'.tr),
@@ -40,7 +39,7 @@ class TransferTo extends StatelessWidget {
                         child: Column(
                             children: memberListSnapshot.data!.map((m) {
                           var member = Member.fromDocument(m);
-                          if (member.userFirebaseId != null && member.userFirebaseId == currentUser.userFirebaseId) {
+                          if (createTransactionChangeNotifier.member?.id == m.id) {
                             return const SizedBox.shrink();
                           }
                           return MemberItem(

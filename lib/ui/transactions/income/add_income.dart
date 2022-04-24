@@ -151,7 +151,7 @@ class AddIncome extends StatelessWidget {
                         SpendingShareUser user = Provider.of(context, listen: false);
                         DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
 
-                        await firestore.collection('transactions').add({
+                        DocumentReference incomeReference = await firestore.collection('transactions').add({
                           'category': createTransactionChangeNotifier.category, // TODO select income category automatically (?)
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
@@ -163,6 +163,17 @@ class AddIncome extends StatelessWidget {
                           'type': createTransactionChangeNotifier.type.toString(),
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });
+
+                        DocumentSnapshot<Map<String, dynamic>> groupSnapshot =
+                            await firestore.collection('groups').doc(createTransactionChangeNotifier.groupId).get();
+
+                        List<dynamic> newTransactionReferenceList = groupSnapshot.data()!['transactions'];
+                        newTransactionReferenceList.add(incomeReference);
+
+                        await firestore
+                            .collection('groups')
+                            .doc(createTransactionChangeNotifier.groupId)
+                            .set({'transactions': newTransactionReferenceList}, SetOptions(merge: true));
 
                         var groupId = createTransactionChangeNotifier.groupId!;
                         createTransactionChangeNotifier.clear();

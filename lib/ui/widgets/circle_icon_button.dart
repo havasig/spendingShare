@@ -6,7 +6,7 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 class CircleIconButton extends StatelessWidget {
   final VoidCallback onTap;
   final String color;
-  final String icon;
+  final String? icon;
   final String? name;
   final double width;
 
@@ -14,7 +14,7 @@ class CircleIconButton extends StatelessWidget {
     Key? key,
     required this.onTap,
     required this.color,
-    required this.icon,
+    this.icon,
     this.name,
     required this.width,
   }) : super(key: key);

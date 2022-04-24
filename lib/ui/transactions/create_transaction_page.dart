@@ -127,7 +127,9 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                               category as DocumentSnapshot<Map<String, dynamic>>;
                               options.addAll({category.data()!['name']: category.reference});
                             }
-                            createTransactionChangeNotifier.setCategory(options.entries.first.value);
+                            createTransactionChangeNotifier.category == null
+                                ? createTransactionChangeNotifier.setCategory(options.entries.first.value)
+                                : null;
                             return CreateTransactionDropdown(
                               title: 'category'.tr,
                               options: options,

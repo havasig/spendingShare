@@ -232,7 +232,9 @@ class AddExpense extends StatelessWidget {
                         SpendingShareUser user = Provider.of(context, listen: false);
                         DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
 
-                        await firestore.collection('transactions').add({
+                        createTransactionChangeNotifier.to.removeWhere((key, value) => value == '0');
+
+                        DocumentReference expenseReference = await firestore.collection('transactions').add({
                           'category': createTransactionChangeNotifier.category,
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
@@ -245,6 +247,28 @@ class AddExpense extends StatelessWidget {
                           'type': createTransactionChangeNotifier.type.toString(),
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });
+
+                        DocumentSnapshot<Map<String, dynamic>> categorySnapshot =
+                            await firestore.collection('categories').doc(createTransactionChangeNotifier.category?.id).get();
+
+                        List<dynamic> newExpenseReferenceList = categorySnapshot.data()!['transactions'];
+                        newExpenseReferenceList.add(expenseReference);
+
+                        await firestore
+                            .collection('categories')
+                            .doc(createTransactionChangeNotifier.category?.id)
+                            .set({'transactions': newExpenseReferenceList}, SetOptions(merge: true));
+
+                        DocumentSnapshot<Map<String, dynamic>> groupSnapshot =
+                            await firestore.collection('groups').doc(createTransactionChangeNotifier.groupId).get();
+
+                        List<dynamic> newTransactionReferenceList = groupSnapshot.data()!['transactions'];
+                        newTransactionReferenceList.add(expenseReference);
+
+                        await firestore
+                            .collection('groups')
+                            .doc(createTransactionChangeNotifier.groupId)
+                            .set({'transactions': newTransactionReferenceList}, SetOptions(merge: true));
 
                         var groupId = createTransactionChangeNotifier.groupId!;
                         createTransactionChangeNotifier.clear();

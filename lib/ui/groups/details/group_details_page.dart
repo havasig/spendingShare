@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/category.dart';
 import 'package:spending_share/models/member.dart';
+import 'package:spending_share/ui/categories/categroy_details.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/groups/details/create_transaction_fab.dart';
 import 'package:spending_share/ui/groups/details/statistics/statistics.dart';
@@ -91,13 +92,17 @@ class GroupDetailsPage extends StatelessWidget {
                       child: Wrap(
                         children: group['categories']
                             .map<Widget>(
-                              (category) => FutureBuilder<DocumentSnapshot>(
-                                future: category.get(),
+                              (c) => FutureBuilder<DocumentSnapshot>(
+                                future: c.get(),
                                 builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                                   if (snapshot.connectionState == ConnectionState.done) {
                                     var category = Category.fromDocument(snapshot.data!);
                                     return CircleIconButton(
-                                      onTap: () {},
+                                      onTap: () => Get.to(() => CategoryDetails(
+                                            firestore: firestore,
+                                            category: category,
+                                            color: group['color'],
+                                          )),
                                       width: (MediaQuery.of(context).size.width - 197) / 8,
                                       //-padding*2 -iconWidth*4 -spacing*3
                                       color: group['color'],
