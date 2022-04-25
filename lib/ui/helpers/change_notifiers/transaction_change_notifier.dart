@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spending_share/models/enums/split_by_type.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
@@ -145,7 +146,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
-  setSelectedValue(double newValue) {
+  setSelectedAmount(double newValue) {
     if (double.tryParse(_value) == null) throw Exception('Shit gets real');
     if (_selectedMember != null) {
       _to[_selectedMember!] = _to[_selectedMember!]!.withItem1(formatNumberString(newValue.toString()));
@@ -176,22 +177,8 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
           if (!_editedAmountMembers.contains(key) && _to[key]?.item1 != '0') _to[key] = value.withItem1(eachPay.toString());
         });
       }
-
-      //update weights
-      Map<DocumentReference, int> values = {};
-      _to.forEach((key, value) {
-        values[key] = (double.parse(value.item1) * pow(10, globals.decimals)).toInt();
-      });
-      int gcd = findGCD(values.values);
-      if(gcd == 0) {
-        _to.forEach((key, value) {
-          _to[key] = value.withItem2('0');
-        });
-      } else {
-      _to.forEach((key, value) {
-        _to[key] = value.withItem2((values[key]! / gcd).toString());
-      });
-      }
+      calculateMinimalWeights();
+      print('stop');
     }
     notifyListeners();
   }
@@ -206,7 +193,37 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     return result;
   }
 
-  setSelectedWeight(String newValue) {}
+  setSelectedWeight(double newWeight) {
+    if (_selectedMember != null) {
+      _to[_selectedMember!] = _to[_selectedMember!]!.withItem2(formatNumberString(newWeight.toString()));
+
+      double sumWeights = 0.0;
+      _to.forEach((key, value) {
+        sumWeights += double.parse(value.item2);
+      });
+      _to.forEach((key, value) {
+        _to[key] = value.withItem1(((double.parse(_value) / sumWeights) * double.parse(value.item2)).toString());
+      });
+    }
+    notifyListeners();
+  }
+
+  calculateMinimalWeights() {
+    Map<DocumentReference, int> values = {};
+    _to.forEach((key, value) {
+      values[key] = (double.parse(value.item1) * pow(10, globals.decimals)).toInt();
+    });
+    int gcd = findGCD(values.values);
+    if (gcd == 0) {
+      _to.forEach((key, value) {
+        _to[key] = value.withItem2('0');
+      });
+    } else {
+      _to.forEach((key, value) {
+        _to[key] = value.withItem2((values[key]! / gcd).toString());
+      });
+    }
+  }
 
   setSelectedMember(DocumentReference newMember) {
     _selectedMember = newMember;

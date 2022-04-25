@@ -37,7 +37,6 @@ class DebtItem extends StatelessWidget {
               return Row(
                 children: [
                   CircleIconButton(
-                    onTap: () {},
                     width: 20,
                     color: color,
                     icon: member.icon ?? icon,
@@ -57,7 +56,7 @@ class DebtItem extends StatelessWidget {
             return OnFutureBuildError(snapshot);
           },
         ),
-        Icon(Icons.arrow_forward_outlined),
+        const Icon(Icons.arrow_forward_outlined),
         FutureBuilder<DocumentSnapshot>(
           future: to.get(),
           builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -67,7 +66,6 @@ class DebtItem extends StatelessWidget {
                 children: [
                   Text(member.name),
                   CircleIconButton(
-                    onTap: () {},
                     width: 20,
                     color: color,
                     icon: member.icon ?? icon,

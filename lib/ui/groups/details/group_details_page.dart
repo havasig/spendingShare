@@ -73,7 +73,6 @@ class GroupDetailsPage extends StatelessWidget {
                                 if (snapshot.connectionState == ConnectionState.done) {
                                   var member = Member.fromDocument(snapshot.data!);
                                   return CircleIconButton(
-                                    onTap: () {},
                                     width: (MediaQuery.of(context).size.width - 197) / 8,
                                     //-padding*2 -iconWidth*4 -spacing*3
                                     color: group['color'],

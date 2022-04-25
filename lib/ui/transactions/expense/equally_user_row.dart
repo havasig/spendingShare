@@ -35,7 +35,6 @@ class _EquallyUserRowState extends State<EquallyUserRow> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleIconButton(
-                  onTap: () {},
                   color: createTransactionChangeNotifier.color!,
                   icon: member.icon ?? createTransactionChangeNotifier.groupIcon!,
                   width: 20,

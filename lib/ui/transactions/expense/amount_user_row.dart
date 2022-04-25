@@ -34,19 +34,18 @@ class _AmountUserRowState extends State<AmountUserRow> {
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             var member = Member.fromDocument(snapshot.data!);
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CircleIconButton(
-                  onTap: () {},
-                  color: createTransactionChangeNotifier.color!,
-                  icon: member.icon ?? createTransactionChangeNotifier.groupIcon!,
-                  width: 20,
-                ),
-                Text(member.name),
-                GestureDetector(
-                  onTap: () => createTransactionChangeNotifier.setSelectedMember(widget.memberReference),
-                  child: Container(
+            return GestureDetector(
+              onTap: () => createTransactionChangeNotifier.setSelectedMember(widget.memberReference),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleIconButton(
+                    color: createTransactionChangeNotifier.color!,
+                    icon: member.icon ?? createTransactionChangeNotifier.groupIcon!,
+                    width: 20,
+                  ),
+                  Text(member.name),
+                  Container(
                     padding: EdgeInsets.all(h(8)),
                     decoration: createTransactionChangeNotifier.selectedMember == widget.memberReference
                         ? BoxDecoration(
@@ -61,8 +60,8 @@ class _AmountUserRowState extends State<AmountUserRow> {
                       style: TextStyleConstants.value(createTransactionChangeNotifier.color),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           }
           return OnFutureBuildError(snapshot);

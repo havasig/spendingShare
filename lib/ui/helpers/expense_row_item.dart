@@ -71,7 +71,6 @@ class ExpenseRowItem extends StatelessWidget {
                             if (snapshot.connectionState == ConnectionState.done) {
                               var member = Member.fromDocument(snapshot.data!);
                               return CircleIconButton(
-                                onTap: () {},
                                 width: 7,
                                 color: color,
                                 icon: member.icon ?? icon,

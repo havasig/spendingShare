@@ -34,26 +34,32 @@ class _WeightUserRowState extends State<WeightUserRow> {
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             var member = Member.fromDocument(snapshot.data!);
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CircleIconButton(
-                  onTap: () {},
-                  color: createTransactionChangeNotifier.color!,
-                  icon: member.icon ?? createTransactionChangeNotifier.groupIcon!,
-                  width: 20,
-                ),
-                Text(member.name),
-                GestureDetector(
-                  onTap: () => createTransactionChangeNotifier.setSelectedMember(widget.memberReference),
-                  child: Container(
+            return GestureDetector(
+              onTap: () => createTransactionChangeNotifier.setSelectedMember(widget.memberReference),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleIconButton(
+                    color: createTransactionChangeNotifier.color!,
+                    icon: member.icon ?? createTransactionChangeNotifier.groupIcon!,
+                    width: 20,
+                  ),
+                  Text(member.name),
+                  Container(
                     padding: EdgeInsets.all(h(8)),
                     decoration: createTransactionChangeNotifier.selectedMember == widget.memberReference
                         ? BoxDecoration(
-                      border: Border.all(color: globals.colors[createTransactionChangeNotifier.color]!, width: 1),
-                      borderRadius: BorderRadius.circular(4),
-                    )
+                            border: Border.all(color: globals.colors[createTransactionChangeNotifier.color]!, width: 1),
+                            borderRadius: BorderRadius.circular(4),
+                          )
                         : null,
+                    child: Text(
+                      formatNumberString(createTransactionChangeNotifier.to[widget.memberReference]!.item2.toString()),
+                      style: TextStyleConstants.value(createTransactionChangeNotifier.color),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(h(8)),
                     child: Text(
                       formatNumberString(createTransactionChangeNotifier.to[widget.memberReference]!.item1.toString()) +
                           ' ' +
@@ -61,26 +67,8 @@ class _WeightUserRowState extends State<WeightUserRow> {
                       style: TextStyleConstants.value(createTransactionChangeNotifier.color),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () => createTransactionChangeNotifier.setSelectedMember(widget.memberReference),
-                  child: Container(
-                    padding: EdgeInsets.all(h(8)),
-                    decoration: createTransactionChangeNotifier.selectedMember == widget.memberReference
-                        ? BoxDecoration(
-                      border: Border.all(color: globals.colors[createTransactionChangeNotifier.color]!, width: 1),
-                      borderRadius: BorderRadius.circular(4),
-                    )
-                        : null,
-                    child: Text(
-                      formatNumberString(createTransactionChangeNotifier.to[widget.memberReference]!.item1.toString()) +
-                          ' ' +
-                          createTransactionChangeNotifier.currency,
-                      style: TextStyleConstants.value(createTransactionChangeNotifier.color),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             );
           }
           return OnFutureBuildError(snapshot);

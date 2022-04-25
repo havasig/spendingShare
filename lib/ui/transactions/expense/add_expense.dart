@@ -318,7 +318,7 @@ class AddExpense extends StatelessWidget {
             Calculator(
                 color: createTransactionChangeNotifier.color!,
                 onEqualPressed: (double userInput) {
-                  createTransactionChangeNotifier.setSelectedValue(userInput);
+                  createTransactionChangeNotifier.setSelectedAmount(userInput);
                 }),
           ],
         ),
@@ -331,7 +331,7 @@ class AddExpense extends StatelessWidget {
             Calculator(
                 color: createTransactionChangeNotifier.color!,
                 onEqualPressed: (double userInput) {
-                  createTransactionChangeNotifier.setSelectedValue(userInput);
+                  createTransactionChangeNotifier.setSelectedWeight(userInput);
                 }),
           ],
         ),

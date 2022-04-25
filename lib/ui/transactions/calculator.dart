@@ -160,6 +160,10 @@ class _CalculatorState extends State<Calculator> {
     }
     return false;
   }
+
+  setUserInput(String s) {
+    userInput = s;
+  }
 }
 
 class MyButton extends StatelessWidget {
