@@ -143,160 +143,17 @@ class AddExpense extends StatelessWidget {
                     child: TabNavigation(color: createTransactionChangeNotifier.color!, tabs: [
                       SpendingShareTab(
                         'equally'.tr,
-                        ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: createTransactionChangeNotifier.allMembers.length,
-                          itemBuilder: (context, index) {
-                            return EquallyUserRow(
-                              memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
-                              color: createTransactionChangeNotifier.color!,
-                            );
-                          },
-                          separatorBuilder: (context, index) => SizedBox(height: h(10)),
-                        ),
+                        equally(createTransactionChangeNotifier),
                       ),
                       SpendingShareTab(
                         'amounts'.tr,
-                        ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: createTransactionChangeNotifier.allMembers.length,
-                          itemBuilder: (context, index) {
-                            return AmountUserRow(
-                              memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
-                              color: createTransactionChangeNotifier.color!,
-                            );
-                          },
-                          separatorBuilder: (context, index) => SizedBox(height: h(10)),
-                        ),
-                        onSelect: (context) => showBarModalBottomSheet(
-                          expand: true,
-                          context: context,
-                          builder: (context) {
-                            return Container(
-                              color: ColorConstants.backgroundBlack,
-                              padding: EdgeInsets.all(h(16)),
-                              child: TabNavigation(initIndex: 1, color: createTransactionChangeNotifier.color!, tabs: [
-                                SpendingShareTab(
-                                  'equally'.tr,
-                                  ListView.separated(
-                                    shrinkWrap: true,
-                                    itemCount: createTransactionChangeNotifier.allMembers.length,
-                                    itemBuilder: (context, index) {
-                                      return EquallyUserRow(
-                                        memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
-                                        color: createTransactionChangeNotifier.color!,
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) => SizedBox(height: h(10)),
-                                  ),
-                                ),
-                                SpendingShareTab(
-                                  'amounts'.tr,
-                                  Column(
-                                    children: [
-                                      ListView.separated(
-                                        shrinkWrap: true,
-                                        itemCount: createTransactionChangeNotifier.allMembers.length,
-                                        itemBuilder: (context, index) {
-                                          return AmountUserRow(
-                                            memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
-                                            color: createTransactionChangeNotifier.color!,
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) => SizedBox(height: h(10)),
-                                      ),
-                                      Calculator(
-                                          color: createTransactionChangeNotifier.color!,
-                                          onEqualPressed: (double userInput) {
-                                            createTransactionChangeNotifier.setSelectedValue(userInput);
-                                          }),
-                                    ],
-                                  ),
-                                ),
-                                SpendingShareTab(
-                                  'weights'.tr,
-                                  Container(),
-                                ),
-                              ]),
-                            );
-                          },
-                        ),
+                        amount(createTransactionChangeNotifier),
+                        onSelect: (context) => onSelectTab(createTransactionChangeNotifier, context),
                       ),
                       SpendingShareTab(
                         'weights'.tr,
-                        Container(),
-                        onSelect: (context) => showBarModalBottomSheet(
-                          expand: true,
-                          context: context,
-                          builder: (context) {
-                            return Container(
-                              color: ColorConstants.backgroundBlack,
-                              padding: EdgeInsets.all(h(16)),
-                              child: TabNavigation(initIndex: 2, color: createTransactionChangeNotifier.color!, tabs: [
-                                SpendingShareTab(
-                                  'equally'.tr,
-                                  ListView.separated(
-                                    shrinkWrap: true,
-                                    itemCount: createTransactionChangeNotifier.allMembers.length,
-                                    itemBuilder: (context, index) {
-                                      return EquallyUserRow(
-                                        memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
-                                        color: createTransactionChangeNotifier.color!,
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) => SizedBox(height: h(10)),
-                                  ),
-                                ),
-                                SpendingShareTab(
-                                  'amounts'.tr,
-                                  Column(
-                                    children: [
-                                      ListView.separated(
-                                        shrinkWrap: true,
-                                        itemCount: createTransactionChangeNotifier.allMembers.length,
-                                        itemBuilder: (context, index) {
-                                          return AmountUserRow(
-                                            memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
-                                            color: createTransactionChangeNotifier.color!,
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) => SizedBox(height: h(10)),
-                                      ),
-                                      Calculator(
-                                          color: createTransactionChangeNotifier.color!,
-                                          onEqualPressed: (double userInput) {
-                                            createTransactionChangeNotifier.setSelectedValue(userInput);
-                                          }),
-                                    ],
-                                  ),
-                                ),
-                                SpendingShareTab(
-                                  'weights'.tr,
-                                  Column(
-                                    children: [
-                                      ListView.separated(
-                                        shrinkWrap: true,
-                                        itemCount: createTransactionChangeNotifier.allMembers.length,
-                                        itemBuilder: (context, index) {
-                                          return WeightUserRow(
-                                            memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
-                                            color: createTransactionChangeNotifier.color!,
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) => SizedBox(height: h(10)),
-                                      ),
-                                      Calculator(
-                                          color: createTransactionChangeNotifier.color!,
-                                          onEqualPressed: (double userInput) {
-                                            createTransactionChangeNotifier.setSelectedValue(userInput);
-                                          }),
-                                    ],
-                                  ),
-                                ),
-                              ]),
-                            );
-                          },
-                        ),
+                        weight(createTransactionChangeNotifier),
+                        onSelect: (context) => onSelectTab(createTransactionChangeNotifier, context),
                       ),
                     ])),
                 const Spacer(),
@@ -385,5 +242,100 @@ class AddExpense extends StatelessWidget {
         );
       }),
     );
+  }
+
+  equally(createTransactionChangeNotifier) {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: createTransactionChangeNotifier.allMembers.length,
+      itemBuilder: (context, index) {
+        return EquallyUserRow(
+          memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+          color: createTransactionChangeNotifier.color!,
+        );
+      },
+      separatorBuilder: (context, index) => SizedBox(height: h(10)),
+    );
+  }
+
+  amount(createTransactionChangeNotifier) {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: createTransactionChangeNotifier.allMembers.length,
+      itemBuilder: (context, index) {
+        return AmountUserRow(
+          memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+          color: createTransactionChangeNotifier.color!,
+        );
+      },
+      separatorBuilder: (context, index) => SizedBox(height: h(10)),
+    );
+  }
+
+  weight(createTransactionChangeNotifier) {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: createTransactionChangeNotifier.allMembers.length,
+      itemBuilder: (context, index) {
+        return WeightUserRow(
+          memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+          color: createTransactionChangeNotifier.color!,
+        );
+      },
+      separatorBuilder: (context, index) => SizedBox(height: h(10)),
+    );
+  }
+
+  onSelectTab(createTransactionChangeNotifier, context) {
+    return showBarModalBottomSheet(
+      expand: true,
+      context: context,
+      builder: (context) {
+        return Container(
+          color: ColorConstants.backgroundBlack,
+          padding: EdgeInsets.all(h(16)),
+          child: TabNavigation(
+            initIndex: 1,
+            color: createTransactionChangeNotifier.color!,
+            tabs: popupTabs(createTransactionChangeNotifier),
+          ),
+        );
+      },
+    );
+  }
+
+  popupTabs(createTransactionChangeNotifier) {
+    return [
+      SpendingShareTab(
+        'equally'.tr,
+        equally(createTransactionChangeNotifier),
+      ),
+      SpendingShareTab(
+        'amounts'.tr,
+        Column(
+          children: [
+            amount(createTransactionChangeNotifier),
+            Calculator(
+                color: createTransactionChangeNotifier.color!,
+                onEqualPressed: (double userInput) {
+                  createTransactionChangeNotifier.setSelectedValue(userInput);
+                }),
+          ],
+        ),
+      ),
+      SpendingShareTab(
+        'weights'.tr,
+        Column(
+          children: [
+            weight(createTransactionChangeNotifier),
+            Calculator(
+                color: createTransactionChangeNotifier.color!,
+                onEqualPressed: (double userInput) {
+                  createTransactionChangeNotifier.setSelectedValue(userInput);
+                }),
+          ],
+        ),
+      ),
+    ];
   }
 }

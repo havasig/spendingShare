@@ -58,5 +58,6 @@ Map<String, MaterialColor> colors = {
 
 const int circleShade = 500;
 const int iconShade = 100;
+const int decimals = 3;
 
 SplayTreeMap<String, dynamic> currencies = SplayTreeMap.from({"EUR": "Euro", "HUF": "Hungarian forint", "USD": "United States dollar"});

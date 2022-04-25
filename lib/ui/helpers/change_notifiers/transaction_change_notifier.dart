@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:spending_share/models/enums/split_by_type.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/number_helper.dart';
 import 'package:tuple/tuple.dart';
 
@@ -130,7 +133,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   }
 
   recalculateToEqualRemove(DocumentReference member) {
-    _to[member] = _to[member]!.withItem1('0');
+    _to[member] = const Tuple2('0', '0');
     int payingCount = _to.entries.where((element) {
       return element.value.item1 != '0';
     }).length;
@@ -173,10 +176,34 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
           if (!_editedAmountMembers.contains(key) && _to[key]?.item1 != '0') _to[key] = value.withItem1(eachPay.toString());
         });
       }
+
+      //update weights
+      Map<DocumentReference, int> values = {};
+      _to.forEach((key, value) {
+        values[key] = (double.parse(value.item1) * pow(10, globals.decimals)).toInt();
+      });
+      int gcd = findGCD(values.values);
+      if(gcd == 0) {
+        _to.forEach((key, value) {
+          _to[key] = value.withItem2('0');
+        });
+      } else {
+      _to.forEach((key, value) {
+        _to[key] = value.withItem2((values[key]! / gcd).toString());
+      });
+      }
     }
-    _to;
-    _editedAmountMembers;
     notifyListeners();
+  }
+
+  int findGCD(Iterable<int> arr) {
+    var result = arr.first;
+    for (int element in arr) {
+      if (element == 0) continue;
+      result = result.gcd(element);
+      if (result == 1) return 1;
+    }
+    return result;
   }
 
   setSelectedWeight(String newValue) {}
