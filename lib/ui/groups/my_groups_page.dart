@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/src/transformers/switch_map.dart';
 import 'package:spending_share/models/group.dart';
+import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/create/create_group_fab.dart';
@@ -53,6 +55,7 @@ class NoGroupsYet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FocusNode focusNode = FocusNode();
+    SpendingShareUser currentUser = Provider.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: SpendingShareAppBar(
@@ -108,7 +111,7 @@ class NoGroupsYet extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: CreateGroupFab(firestore: firestore),
+      floatingActionButton: CreateGroupFab(firestore: firestore, color: currentUser.color),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),
         selectedIndex: 1,
@@ -126,6 +129,8 @@ class HaveGroups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    SpendingShareUser currentUser = Provider.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: SpendingShareAppBar(
@@ -156,7 +161,7 @@ class HaveGroups extends StatelessWidget {
               }).toList()),
         ),
       ),
-      floatingActionButton: CreateGroupFab(firestore: firestore),
+      floatingActionButton: CreateGroupFab(firestore: firestore, color: currentUser.color),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),
         selectedIndex: 1,

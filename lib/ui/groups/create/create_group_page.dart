@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/models/user.dart';
-import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/groups/create/create_group_members_page.dart';
 import 'package:spending_share/ui/groups/create/select_currency.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/create_group_change_notifier.dart';
@@ -67,9 +66,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                     textEditingController: _groupNameTextEditingController,
                     labelText: 'name'.tr,
                     hintText: 'group_name'.tr,
-                    prefixIcon: const Icon(
+                    prefixIcon: Icon(
                       Icons.group,
-                      color: ColorConstants.defaultOrange,
+                      color: globals.colors[currentUser.color],
                     ),
                   ),
                 ),

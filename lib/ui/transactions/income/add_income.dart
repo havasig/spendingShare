@@ -131,13 +131,13 @@ class AddIncome extends StatelessWidget {
                               const Icon(Icons.arrow_forward_outlined),
                               Text(createTransactionChangeNotifier.exchangeRate.toString() +
                                   ' ' +
-                                  createTransactionChangeNotifier.defaultCurrency),
+                                  createTransactionChangeNotifier.defaultCurrency!),
                             ],
                           ),
                           Text((createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value)!)
                                   .toString() +
                               ' ' +
-                              createTransactionChangeNotifier.defaultCurrency),
+                              createTransactionChangeNotifier.defaultCurrency!),
                         ],
                       ),
                     ],

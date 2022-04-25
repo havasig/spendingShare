@@ -53,10 +53,10 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                 ),
                 underline: Container(height: 0),
                 onChanged: (String? newValue) {
-                  getExchangeRate(createChangeNotifier.defaultCurrency, newValue!, createChangeNotifier);
+                  if(createChangeNotifier.defaultCurrency != null) getExchangeRate(createChangeNotifier.defaultCurrency!, newValue!, createChangeNotifier);
                   setState(() {
                     createChangeNotifier.setCurrency(newValue);
-                    _dropdownValue = newValue;
+                    _dropdownValue = newValue!;
                   });
                 },
                 selectedItemBuilder: (BuildContext context) {

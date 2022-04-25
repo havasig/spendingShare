@@ -37,7 +37,12 @@ class CategoryDetails extends StatelessWidget {
                       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           var transaction = spending_share_transaction.Transaction.fromDocument(snapshot.data!);
-                          return TransactionRowItem(transaction, color: color, icon: category.icon);
+                          return TransactionRowItem(
+                            transaction,
+                            color: color,
+                            icon: category.icon,
+                            firestore: firestore,
+                          );
                         }
                         return OnFutureBuildError(snapshot);
                       },

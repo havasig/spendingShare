@@ -95,6 +95,15 @@
   "equally": "Equally",
   "amounts": "Amounts",
   "weights": "Weights",
-  "paid_for": "paid for"
-
+  "paid_for": "paid for",
+  "edit": "Edit",
+  "copy_invite_link": "Copy invite link",
+  "group_statistics": "Group statistics",
+  "group_settings": "Group settings",
+  "delete_group": "Delete group",
+  "leave_group": "Leave group",
+  "if_you_leave": "Pls don't leave",
+  "cannot_leave": "You cannot leave this group, because you are the owner. Transfer ownership (you can’t), or delete group.",
+  "save_changes": "Save changes",
+  "group_edit_failed": "Group edit failed"
 }

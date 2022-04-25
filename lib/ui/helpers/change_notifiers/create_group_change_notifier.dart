@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 import 'currency_change_notifier.dart';
 
 class CreateGroupChangeNotifier extends CreateChangeNotifier {
-  CreateGroupChangeNotifier(this._adminId, this._colorName, _currency, this._color, this._iconName, this._icon) : super(_currency);
+  CreateGroupChangeNotifier(
+    this._adminId,
+    _currency,
+    this._colorName,
+    this._color,
+    this._iconName,
+    this._icon,
+  ) : super(_currency);
 
   final String _adminId;
   String? _colorName;

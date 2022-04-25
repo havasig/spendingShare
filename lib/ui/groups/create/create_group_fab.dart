@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 import 'create_group_page.dart';
 
 class CreateGroupFab extends StatelessWidget {
-  const CreateGroupFab({Key? key, required this.firestore}) : super(key: key);
+  const CreateGroupFab({Key? key, required this.firestore, this.color}) : super(key: key);
 
   final FirebaseFirestore firestore;
+  final String? color;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class CreateGroupFab extends StatelessWidget {
       child: FloatingActionButton(
         key: const Key('create_group'),
         tooltip: 'create_group',
-        backgroundColor: ColorConstants.defaultOrange,
+        backgroundColor: globals.colors[color] ?? ColorConstants.defaultOrange,
         splashColor: ColorConstants.lightGray,
         onPressed: () => Get.to(() => CreateGroupPage(firestore: firestore)),
         child: const Icon(Icons.add),

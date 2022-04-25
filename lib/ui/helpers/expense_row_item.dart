@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:spending_share/models/category.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/constants/text_style_constants.dart';
@@ -26,7 +27,6 @@ class ExpenseRowItem extends StatelessWidget {
           return Row(
             children: [
               CircleIconButton(
-                onTap: () {},
                 width: (MediaQuery.of(context).size.width - 197) / 8,
                 //-padding*2 -iconWidth*4 -spacing*3
                 color: color,
@@ -36,6 +36,16 @@ class ExpenseRowItem extends StatelessWidget {
                 children: [
                   Text(expense.name),
                   Text(expense.date.toDate().toString()),
+                  FutureBuilder<DocumentSnapshot>(
+                    future: expense.category?.get(),
+                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        var category = Category.fromDocument(snapshot.data!);
+                        return Text(category.name);
+                      }
+                      return OnFutureBuildError(snapshot);
+                    },
+                  ),
                   Text(member.name + ' ' + 'paid_for'.tr),
                 ],
               ),
@@ -49,28 +59,30 @@ class ExpenseRowItem extends StatelessWidget {
                     Text(expense.value.toString() + ' ' + expense.currency, style: TextStyleConstants.value(color)),
                   SizedBox(
                     height: h(30),
-                    child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: expense.to.length,
-                        itemBuilder: (context, index) {
-                          return FutureBuilder<DocumentSnapshot>(
-                            future: expense.to[index].get(),
-                            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                var member = Member.fromDocument(snapshot.data!);
-                                return CircleIconButton(
-                                  onTap: () {},
-                                  width: 7,
-                                  color: color,
-                                  icon: member.icon ?? icon,
-                                );
-                              }
-                              return OnFutureBuildError(snapshot);
-                            },
-                          );
-                        }),
+                    child: ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: expense.to.length,
+                      itemBuilder: (context, index) {
+                        return FutureBuilder<DocumentSnapshot>(
+                          future: expense.to[index].get(),
+                          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.done) {
+                              var member = Member.fromDocument(snapshot.data!);
+                              return CircleIconButton(
+                                onTap: () {},
+                                width: 7,
+                                color: color,
+                                icon: member.icon ?? icon,
+                              );
+                            }
+                            return OnFutureBuildError(snapshot);
+                          },
+                        );
+                      },
+                      separatorBuilder: (context, index) => SizedBox(width: h(2)),
+                    ),
                   ),
                 ],
               ),

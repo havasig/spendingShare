@@ -12,7 +12,7 @@ class CreateChangeNotifier extends ChangeNotifier {
 
   String get currency => _currency!;
 
-  String get defaultCurrency => _defaultCurrency!;
+  String? get defaultCurrency => _defaultCurrency;
 
   String? get name => _name;
 

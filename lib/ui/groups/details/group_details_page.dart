@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:provider/provider.dart';
 import 'package:spending_share/models/category.dart';
 import 'package:spending_share/models/member.dart';
+import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/categories/categroy_details.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/groups/details/create_transaction_fab.dart';
@@ -15,7 +17,7 @@ import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
-import '../group_settings_page.dart';
+import '../settings/group_settings_page.dart';
 import 'debts/debts_list.dart';
 
 class GroupDetailsPage extends StatelessWidget {
@@ -27,6 +29,7 @@ class GroupDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SpendingShareUser currentUser = Provider.of(context);
     return FutureBuilder<DocumentSnapshot>(
       future: firestore.collection('groups').doc(groupId).get(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -38,10 +41,15 @@ class GroupDetailsPage extends StatelessWidget {
               hasForward: true,
               forwardText: 'settings'.tr,
               titleText: group['name'],
-              onForward: () => Get.to(() => GroupSettingsPage(firestore: firestore)),
+              onForward: () => Get.to(() => GroupSettingsPage(
+                    firestore: firestore,
+                    color: group['color'],
+                    groupId: groupId,
+                    isAdmin: group['adminId'] == currentUser.userFirebaseId,
+                  )),
             ),
             body: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(h(16)),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,6 +151,9 @@ class GroupDetailsPage extends StatelessWidget {
                       group['transactions'],
                       color: group['color'],
                       icon: group['icon'],
+                      firestore: firestore,
+                      currency: group['currency'],
+                      groupId: groupId,
                     ),
                     Divider(
                       thickness: 1,
