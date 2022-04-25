@@ -148,7 +148,7 @@ class _GroupEditPageState extends State<GroupEditPage> {
                         text: 'save_changes'.tr,
                         textColor: globals.colors[_createGroupChangeNotifier.colorName]!,
                         buttonColor: globals.colors[_createGroupChangeNotifier.colorName]!.withOpacity(0.2),
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width * 0.9,
                       ),
                     ],
                   ),

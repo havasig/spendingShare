@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
-import 'package:spending_share/ui/groups/details/transactions/transaction_list_page.dart';
+import 'package:spending_share/ui/transactions/transaction_list_page.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/helpers/transaction_row_item.dart';
 import 'package:spending_share/ui/widgets/button.dart';
@@ -58,7 +58,7 @@ class TransactionsList extends StatelessWidget {
           text: 'show_all_transactions'.tr,
           textColor: globals.colors[color]!,
           buttonColor: globals.colors[color]!.withOpacity(0.2),
-          width: MediaQuery.of(context).size.width * 0.8,
+          width: MediaQuery.of(context).size.width * 09,
         ),
       ],
     );

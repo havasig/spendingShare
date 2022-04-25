@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:spending_share/models/enums/split_by_type.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
 import 'package:spending_share/utils/number_helper.dart';
+import 'package:tuple/tuple.dart';
 
 import 'currency_change_notifier.dart';
 
@@ -15,7 +15,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   DocumentReference? _member;
   DateTime _date = DateTime.now();
   String _value = '';
-  final Map<DocumentReference, String> _to = {};
+  final Map<DocumentReference, Tuple2<String, String>> _to = {};
   SplitByType? _splitByType;
   String? _splitByWeights;
   String? _groupId;
@@ -41,7 +41,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   String get value => _value;
 
-  Map<DocumentReference, String> get to => _to;
+  Map<DocumentReference, Tuple2<String, String>> get to => _to;
 
   Set<DocumentReference> get allMembers => _allMembers;
 
@@ -113,83 +113,65 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   }
 
   addTo(DocumentReference member, String value) {
-    _to[member] = value;
+    _to[member] = _to[member]?.withItem1(value) ?? Tuple2(value, '1');
     notifyListeners();
   }
 
   recalculateToEqualAdd(DocumentReference member) {
-    _to[member] = '1';
-    int payingCount = _to.entries.where((element) => element.value != '0').length;
+    _to[member] = _to[member]!.withItem1('1');
+    int payingCount = _to.entries.where((element) => element.value.item1 != '0').length;
 
     _to.forEach((key, value) {
-      if (value != '0') {
-        _to[key] = (double.parse(_value) / payingCount).toString();
+      if (value.item1 != '0') {
+        _to[key] = Tuple2((double.parse(_value) / payingCount).toString(), '1');
       }
     });
     notifyListeners();
   }
 
   recalculateToEqualRemove(DocumentReference member) {
-    _to[member] = '0';
+    _to[member] = _to[member]!.withItem1('0');
     int payingCount = _to.entries.where((element) {
-      return element.value != '0';
+      return element.value.item1 != '0';
     }).length;
     _to.forEach((key, value) {
-      if (value != '0') {
-        _to[key] = (double.parse(_value) / payingCount).toString();
+      if (value.item1 != '0') {
+        _to[key] = Tuple2((double.parse(_value) / payingCount).toString(), '1');
       }
     });
     notifyListeners();
   }
 
-  setSelectedValue(String newValue) {
+  setSelectedValue(double newValue) {
     if (double.tryParse(_value) == null) throw Exception('Shit gets real');
     if (_selectedMember != null) {
-      try {
-        if (newValue == '') {
-          _to[_selectedMember!] = '0';
-          return;
-        }
-        String finalUserInput = newValue.replaceAll('x', '*').replaceAll('÷', '/');
-        Parser p = Parser();
-        Expression exp = p.parse(finalUserInput);
-        ContextModel cm = ContextModel();
-        double eval = exp.evaluate(EvaluationType.REAL, cm);
+      _to[_selectedMember!] = _to[_selectedMember!]!.withItem1(formatNumberString(newValue.toString()));
+      _editedAmountMembers.add(_selectedMember!);
+      double alreadyEditedSum = 0;
+      int toNotNull = 0;
+      for (var element in _editedAmountMembers) {
+        alreadyEditedSum += double.tryParse(_to[element]?.item1 ?? '') ?? 0;
+      }
+      _to.forEach((key, value) {
+        if (!_editedAmountMembers.contains(key) && to[key]?.item1 != '0') toNotNull++;
+      });
 
-        if (eval < 0) {
-          _to[_selectedMember!] = 'value_must_be_greater_than_zero'.tr;
-        } else {
-          _to[_selectedMember!] = formatNumberString(eval.toString());
-          _editedAmountMembers.add(_selectedMember!);
-          double alreadyEditedSum = 0;
-          int toNotNull = 0;
-          for (var element in _editedAmountMembers) {
-            alreadyEditedSum += double.tryParse(_to[element] ?? '') ?? 0;
-          }
-          _to.forEach((key, value) {
-            if (!_editedAmountMembers.contains(key) && to[key] != '0') toNotNull++;
-          });
-
-          if (alreadyEditedSum >= double.tryParse(_value)!) {
-            _value = alreadyEditedSum.toString();
-            _to.forEach((key, value) {
-              if (!_editedAmountMembers.contains(key)) _to[key] = '0';
-            });
-          } else if (toNotNull == 0) {
-            var result = 0.0;
-            _to.forEach((key, value) {
-              result += double.parse(value);
-            });
-            _value = result.toString();
-          } else {
-            double eachPay = (double.tryParse(_value)! - alreadyEditedSum) / toNotNull;
-            _to.forEach((key, value) {
-              if (!_editedAmountMembers.contains(key) && _to[key] != '0') _to[key] = eachPay.toString();
-            });
-          }
-        }
-      } on Exception {
-        _to[_selectedMember!] = 'format_error'.tr;
+      if (alreadyEditedSum >= double.tryParse(_value)!) {
+        _value = alreadyEditedSum.toString();
+        _to.forEach((key, value) {
+          if (!_editedAmountMembers.contains(key)) _to[key] = value.withItem1('0');
+        });
+      } else if (toNotNull == 0) {
+        var result = 0.0;
+        _to.forEach((key, value) {
+          result += double.parse(value.item1);
+        });
+        _value = result.toString();
+      } else {
+        double eachPay = (double.tryParse(_value)! - alreadyEditedSum) / toNotNull;
+        _to.forEach((key, value) {
+          if (!_editedAmountMembers.contains(key) && _to[key]?.item1 != '0') _to[key] = value.withItem1(eachPay.toString());
+        });
       }
     }
     _to;
@@ -197,10 +179,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
-  updateTo(DocumentReference member, String value) {
-    _to.update(member, (_) => value);
-    notifyListeners();
-  }
+  setSelectedWeight(String newValue) {}
 
   setSelectedMember(DocumentReference newMember) {
     _selectedMember = newMember;

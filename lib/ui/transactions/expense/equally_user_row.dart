@@ -25,7 +25,7 @@ class _EquallyUserRowState extends State<EquallyUserRow> {
   Widget build(BuildContext context) {
     return Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
       bool isChecked =
-          createTransactionChangeNotifier.to.entries.firstWhere((element) => element.key == widget.memberReference).value != '0';
+          createTransactionChangeNotifier.to.entries.firstWhere((element) => element.key == widget.memberReference).value.item1 != '0';
       return FutureBuilder<DocumentSnapshot>(
         future: widget.memberReference.get(),
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -42,7 +42,7 @@ class _EquallyUserRowState extends State<EquallyUserRow> {
                 ),
                 Text(member.name),
                 Text(
-                  formatNumberString(createTransactionChangeNotifier.to[widget.memberReference].toString()) +
+                  formatNumberString(createTransactionChangeNotifier.to[widget.memberReference]!.item1.toString()) +
                       ' ' +
                       createTransactionChangeNotifier.currency,
                   style: TextStyleConstants.value(createTransactionChangeNotifier.color),

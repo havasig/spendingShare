@@ -178,7 +178,8 @@ class AddTransfer extends StatelessWidget {
                           'from': createTransactionChangeNotifier.member,
                           'name': createTransactionChangeNotifier.name,
                           'to': createTransactionChangeNotifier.to.keys.toList(),
-                          'toValues': createTransactionChangeNotifier.to.values.toList(),
+                          'toAmounts': createTransactionChangeNotifier.to.values.map((e) => e.item1).toList(),
+                          'toWeights': createTransactionChangeNotifier.to.values.map((e) => e.item2).toList(),
                           'type': createTransactionChangeNotifier.type.toString(),
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });

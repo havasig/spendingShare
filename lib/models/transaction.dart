@@ -11,7 +11,8 @@ class Transaction {
   String name;
   DocumentReference from;
   List<dynamic> to;
-  List<dynamic> toValues;
+  List<dynamic> toAmounts;
+  List<dynamic> toWeights;
   TransactionType type;
   double value;
 
@@ -25,7 +26,8 @@ class Transaction {
     required this.name,
     required this.from,
     required this.to,
-    required this.toValues,
+    required this.toAmounts,
+    required this.toWeights,
     required this.type,
     required this.value,
   });
@@ -42,7 +44,8 @@ class Transaction {
       from: doc.data()?['from'],
       name: doc.data()?['name'],
       to: doc.data()?['to'],
-      toValues: doc.data()?['toValues'],
+      toAmounts: doc.data()?['toAmounts'],
+      toWeights: doc.data()?['toWeights'],
       type: TransactionType.values.firstWhere((e) => e.toString() == doc.data()?['type']),
       value: doc.data()!['value'],
     );

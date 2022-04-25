@@ -11,17 +11,17 @@ import '../../../utils/screen_util_helper.dart';
 import '../../helpers/change_notifiers/transaction_change_notifier.dart';
 import '../../helpers/on_future_build_error.dart';
 
-class AmountUserRow extends StatefulWidget {
-  const AmountUserRow({Key? key, required this.memberReference, required this.color}) : super(key: key);
+class WeightUserRow extends StatefulWidget {
+  const WeightUserRow({Key? key, required this.memberReference, required this.color}) : super(key: key);
 
   final DocumentReference memberReference;
   final String color;
 
   @override
-  State<AmountUserRow> createState() => _AmountUserRowState();
+  State<WeightUserRow> createState() => _WeightUserRowState();
 }
 
-class _AmountUserRowState extends State<AmountUserRow> {
+class _WeightUserRowState extends State<WeightUserRow> {
   TextEditingController textEditingController = TextEditingController();
 
   @override
@@ -50,9 +50,27 @@ class _AmountUserRowState extends State<AmountUserRow> {
                     padding: EdgeInsets.all(h(8)),
                     decoration: createTransactionChangeNotifier.selectedMember == widget.memberReference
                         ? BoxDecoration(
-                            border: Border.all(color: globals.colors[createTransactionChangeNotifier.color]!, width: 1),
-                            borderRadius: BorderRadius.circular(4),
-                          )
+                      border: Border.all(color: globals.colors[createTransactionChangeNotifier.color]!, width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                    )
+                        : null,
+                    child: Text(
+                      formatNumberString(createTransactionChangeNotifier.to[widget.memberReference]!.item1.toString()) +
+                          ' ' +
+                          createTransactionChangeNotifier.currency,
+                      style: TextStyleConstants.value(createTransactionChangeNotifier.color),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => createTransactionChangeNotifier.setSelectedMember(widget.memberReference),
+                  child: Container(
+                    padding: EdgeInsets.all(h(8)),
+                    decoration: createTransactionChangeNotifier.selectedMember == widget.memberReference
+                        ? BoxDecoration(
+                      border: Border.all(color: globals.colors[createTransactionChangeNotifier.color]!, width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                    )
                         : null,
                     child: Text(
                       formatNumberString(createTransactionChangeNotifier.to[widget.memberReference]!.item1.toString()) +

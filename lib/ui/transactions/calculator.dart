@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:math_expressions/math_expressions.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
@@ -9,7 +11,7 @@ class Calculator extends StatefulWidget {
   const Calculator({Key? key, required this.color, required this.onEqualPressed}) : super(key: key);
 
   final String color;
-  final Function(String) onEqualPressed;
+  final Function(double) onEqualPressed;
 
   @override
   _CalculatorState createState() => _CalculatorState();
@@ -107,8 +109,24 @@ class _CalculatorState extends State<Calculator> {
                   return MyButton(
                     buttontapped: () {
                       setState(() {
-                        widget.onEqualPressed(userInput);
-                        userInput = '';
+                        if (userInput == '') {
+                          return;
+                        }
+                        try {
+                          String finalUserInput = userInput.replaceAll('x', '*').replaceAll('÷', '/');
+                          Parser p = Parser();
+                          Expression exp = p.parse(finalUserInput);
+                          ContextModel cm = ContextModel();
+                          double eval = exp.evaluate(EvaluationType.REAL, cm);
+                          if (eval < 0) {
+                            userInput = 'value_must_be_greater_than_zero'.tr;
+                          } else {
+                            widget.onEqualPressed(eval);
+                            userInput = '';
+                          }
+                        } on Exception {
+                          userInput = 'format_error'.tr;
+                        }
                       });
                     },
                     buttonText: buttons[index],

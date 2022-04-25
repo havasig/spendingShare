@@ -36,7 +36,7 @@ class Statistics extends StatelessWidget {
             text: 'show_all_statistics'.tr,
             textColor: globals.colors[color]!,
             buttonColor: globals.colors[color]!.withOpacity(0.2),
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: MediaQuery.of(context).size.width * 0.9,
           ),
         ),
       ],

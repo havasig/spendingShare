@@ -6,6 +6,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/transactions/expense/equally_user_row.dart';
+import 'package:spending_share/ui/transactions/expense/weight_user_row.dart';
 import 'package:spending_share/ui/widgets/tab_navigation.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 
@@ -156,11 +157,20 @@ class AddExpense extends StatelessWidget {
                       ),
                       SpendingShareTab(
                         'amounts'.tr,
-                        Container(),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: createTransactionChangeNotifier.allMembers.length,
+                          itemBuilder: (context, index) {
+                            return AmountUserRow(
+                              memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+                              color: createTransactionChangeNotifier.color!,
+                            );
+                          },
+                          separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                        ),
                         onSelect: (context) => showBarModalBottomSheet(
                           expand: true,
                           context: context,
-                          backgroundColor: ColorConstants.green,
                           builder: (context) {
                             return Container(
                               color: ColorConstants.backgroundBlack,
@@ -197,7 +207,7 @@ class AddExpense extends StatelessWidget {
                                       ),
                                       Calculator(
                                           color: createTransactionChangeNotifier.color!,
-                                          onEqualPressed: (String userInput) {
+                                          onEqualPressed: (double userInput) {
                                             createTransactionChangeNotifier.setSelectedValue(userInput);
                                           }),
                                     ],
@@ -218,8 +228,74 @@ class AddExpense extends StatelessWidget {
                         onSelect: (context) => showBarModalBottomSheet(
                           expand: true,
                           context: context,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => Container(),
+                          builder: (context) {
+                            return Container(
+                              color: ColorConstants.backgroundBlack,
+                              padding: EdgeInsets.all(h(16)),
+                              child: TabNavigation(initIndex: 2, color: createTransactionChangeNotifier.color!, tabs: [
+                                SpendingShareTab(
+                                  'equally'.tr,
+                                  ListView.separated(
+                                    shrinkWrap: true,
+                                    itemCount: createTransactionChangeNotifier.allMembers.length,
+                                    itemBuilder: (context, index) {
+                                      return EquallyUserRow(
+                                        memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+                                        color: createTransactionChangeNotifier.color!,
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                                  ),
+                                ),
+                                SpendingShareTab(
+                                  'amounts'.tr,
+                                  Column(
+                                    children: [
+                                      ListView.separated(
+                                        shrinkWrap: true,
+                                        itemCount: createTransactionChangeNotifier.allMembers.length,
+                                        itemBuilder: (context, index) {
+                                          return AmountUserRow(
+                                            memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+                                            color: createTransactionChangeNotifier.color!,
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                                      ),
+                                      Calculator(
+                                          color: createTransactionChangeNotifier.color!,
+                                          onEqualPressed: (double userInput) {
+                                            createTransactionChangeNotifier.setSelectedValue(userInput);
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                                SpendingShareTab(
+                                  'weights'.tr,
+                                  Column(
+                                    children: [
+                                      ListView.separated(
+                                        shrinkWrap: true,
+                                        itemCount: createTransactionChangeNotifier.allMembers.length,
+                                        itemBuilder: (context, index) {
+                                          return WeightUserRow(
+                                            memberReference: createTransactionChangeNotifier.allMembers.elementAt(index),
+                                            color: createTransactionChangeNotifier.color!,
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                                      ),
+                                      Calculator(
+                                          color: createTransactionChangeNotifier.color!,
+                                          onEqualPressed: (double userInput) {
+                                            createTransactionChangeNotifier.setSelectedValue(userInput);
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                              ]),
+                            );
+                          },
                         ),
                       ),
                     ])),
@@ -232,7 +308,7 @@ class AddExpense extends StatelessWidget {
                         SpendingShareUser user = Provider.of(context, listen: false);
                         DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
 
-                        createTransactionChangeNotifier.to.removeWhere((key, value) => value == '0');
+                        createTransactionChangeNotifier.to.removeWhere((key, value) => value.item1 == '0');
 
                         DocumentReference expenseReference = await firestore.collection('transactions').add({
                           'category': createTransactionChangeNotifier.category,
@@ -243,7 +319,8 @@ class AddExpense extends StatelessWidget {
                           'from': createTransactionChangeNotifier.member,
                           'name': createTransactionChangeNotifier.name,
                           'to': createTransactionChangeNotifier.to.keys.toList(),
-                          'toValues': createTransactionChangeNotifier.to.values.toList(),
+                          'toAmounts': createTransactionChangeNotifier.to.values.map((e) => e.item1).toList(),
+                          'toWeights': createTransactionChangeNotifier.to.values.map((e) => e.item2).toList(),
                           'type': createTransactionChangeNotifier.type.toString(),
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });

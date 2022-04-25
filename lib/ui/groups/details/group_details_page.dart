@@ -49,7 +49,7 @@ class GroupDetailsPage extends StatelessWidget {
                   )),
             ),
             body: Padding(
-              padding: EdgeInsets.all(h(16)),
+              padding: EdgeInsets.symmetric(horizontal: h(16)),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,17 +105,20 @@ class GroupDetailsPage extends StatelessWidget {
                                 builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                                   if (snapshot.connectionState == ConnectionState.done) {
                                     var category = Category.fromDocument(snapshot.data!);
-                                    return CircleIconButton(
-                                      onTap: () => Get.to(() => CategoryDetails(
-                                            firestore: firestore,
-                                            category: category,
-                                            color: group['color'],
-                                          )),
-                                      width: (MediaQuery.of(context).size.width - 197) / 8,
-                                      //-padding*2 -iconWidth*4 -spacing*3
-                                      color: group['color'],
-                                      name: category.name,
-                                      icon: category.icon ?? group['icon'],
+                                    return Padding(
+                                      padding: EdgeInsets.only(right: h(10)),
+                                      child: CircleIconButton(
+                                        onTap: () => Get.to(() => CategoryDetails(
+                                              firestore: firestore,
+                                              category: category,
+                                              color: group['color'],
+                                            )),
+                                        width: (MediaQuery.of(context).size.width - 197) / 8,
+                                        //-padding*2 -iconWidth*4 -spacing*3
+                                        color: group['color'],
+                                        name: category.name,
+                                        icon: category.icon ?? group['icon'],
+                                      ),
                                     );
                                   }
                                   return OnFutureBuildError(snapshot);

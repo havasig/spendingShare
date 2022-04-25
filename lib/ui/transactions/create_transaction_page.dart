@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
@@ -217,26 +216,8 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                 const Spacer(),
                 Calculator(
                   color: widget.color,
-                  onEqualPressed: (String userInput) {
-                    try {
-                      if (userInput == '') {
-                        createTransactionChangeNotifier.setValue('0');
-                        return;
-                      }
-                      String finalUserInput = userInput.replaceAll('x', '*').replaceAll('÷', '/');
-                      Parser p = Parser();
-                      Expression exp = p.parse(finalUserInput);
-                      ContextModel cm = ContextModel();
-                      double eval = exp.evaluate(EvaluationType.REAL, cm);
-
-                      if (eval < 0) {
-                        createTransactionChangeNotifier.setValue('value_must_be_greater_than_zero'.tr);
-                      } else {
-                        createTransactionChangeNotifier.setValue(formatNumberString(eval.toString()));
-                      }
-                    } on Exception {
-                      createTransactionChangeNotifier.setValue('format_error'.tr);
-                    }
+                  onEqualPressed: (double userInput) {
+                    createTransactionChangeNotifier.setValue(formatNumberString(userInput.toString()));
                   },
                 ),
               ],
