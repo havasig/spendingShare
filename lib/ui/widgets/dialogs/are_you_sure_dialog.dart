@@ -9,9 +9,8 @@ import '../button.dart';
 class AreYouSureDialog extends StatelessWidget {
   final String title;
   final String message;
-  final VoidCallback ok;
 
-  const AreYouSureDialog({Key? key, required this.title, required this.message, required this.ok}) : super(key: key);
+  const AreYouSureDialog({Key? key, required this.title, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +39,13 @@ class AreYouSureDialog extends StatelessWidget {
       actions: <Widget>[
         Button(
           onPressed: () {
-            ok.call();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true);
           },
           text: 'ok'.tr,
         ),
         Button(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
           },
           text: 'cancel'.tr,
         ),

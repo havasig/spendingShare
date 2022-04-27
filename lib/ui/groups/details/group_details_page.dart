@@ -8,7 +8,7 @@ import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/categories/categroy_details.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
-import 'package:spending_share/ui/groups/details/create_transaction_fab.dart';
+import 'package:spending_share/ui/helpers/fab/create_transaction_fab.dart';
 import 'package:spending_share/ui/groups/details/statistics/statistics.dart';
 import 'package:spending_share/ui/groups/details/transactions/transactions_list.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
@@ -44,6 +44,7 @@ class GroupDetailsPage extends StatelessWidget {
               onForward: () => Get.to(() => GroupSettingsPage(
                     firestore: firestore,
                     color: group['color'],
+                    icon: group['icon'],
                     groupId: groupId,
                     isAdmin: group['adminId'] == currentUser.userFirebaseId,
                   )),

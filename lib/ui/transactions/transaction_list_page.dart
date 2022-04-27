@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
-import 'package:spending_share/ui/groups/details/create_transaction_fab.dart';
+import 'package:spending_share/ui/helpers/fab/create_transaction_fab.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/helpers/transaction_row_item.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';

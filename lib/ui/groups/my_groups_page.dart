@@ -9,7 +9,7 @@ import 'package:spending_share/models/group.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/ui/groups/create/create_group_fab.dart';
+import 'package:spending_share/ui/helpers/fab/create_group_fab.dart';
 import 'package:spending_share/ui/groups/details/group_details_page.dart';
 import 'package:spending_share/ui/groups/join_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';

@@ -17,20 +17,20 @@ import 'group_members_page.dart';
 import 'group_statistics_page.dart';
 
 class GroupSettingsPage extends StatelessWidget {
-  const GroupSettingsPage({Key? key, required this.firestore, required this.color, required this.groupId, required this.isAdmin})
+  const GroupSettingsPage(
+      {Key? key, required this.firestore, required this.color, required this.icon, required this.groupId, required this.isAdmin})
       : super(key: key);
 
   final FirebaseFirestore firestore;
   final String color;
+  final String icon;
   final String groupId;
   final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SpendingShareAppBar(
-        titleText: 'group_settings'.tr,
-      ),
+      appBar: SpendingShareAppBar(titleText: 'group_settings'.tr),
       body: Padding(
         padding: EdgeInsets.all(h(16)),
         child: Center(
@@ -88,7 +88,12 @@ class GroupSettingsPage extends StatelessWidget {
                 textColor: ColorConstants.white.withOpacity(0.8),
                 buttonColor: ColorConstants.lightGray,
                 borderSide: const BorderSide(color: Colors.grey),
-                onPressed: () => Get.to(() => GroupCategoriesPage()),
+                onPressed: () => Get.to(() => GroupCategoriesPage(
+                      firestore: firestore,
+                      groupId: groupId,
+                      color: color,
+                      icon: icon,
+                    )),
                 text: 'categories'.tr,
               ),
               const Spacer(),
@@ -101,7 +106,7 @@ class GroupSettingsPage extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AreYouSureDialog(title: 'title', message: 'message', ok: () {});
+                              return AreYouSureDialog(title: 'title', message: 'message');
                             });
                       },
                       text: 'delete_group'.tr,
@@ -115,7 +120,7 @@ class GroupSettingsPage extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AreYouSureDialog(title: 'title', message: 'message', ok: () {});
+                              return AreYouSureDialog(title: 'title', message: 'message');
                             });
                       },
                       text: 'leave_group'.tr,
