@@ -70,7 +70,7 @@ class AddExpense extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       FutureBuilder<DocumentSnapshot>(
-                        future: createTransactionData.member!.get(),
+                        future: createTransactionData.member?.get(),
                         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                           if (snapshot.connectionState == ConnectionState.done) {
                             var member = Member.fromDocument(snapshot.data!);
@@ -202,7 +202,7 @@ class AddExpense extends StatelessWidget {
                             .set({'transactions': newTransactionReferenceList}, SetOptions(merge: true));
 
                         var groupId = createTransactionData.groupId!;
-                        
+
                         createTransactionData.clear();
                         createTransactionChangeNotifier.clear();
 

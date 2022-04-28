@@ -19,8 +19,12 @@ class CreateChangeNotifier extends ChangeNotifier {
 
   MaterialColor? get color => _color;
 
-  setColorNoNotify(MaterialColor color) {
+  setColorNoNotify(MaterialColor? color) {
     _color = color;
+  }
+
+  setCurrencyNoNotify(String? currency) {
+    _currency = currency;
   }
 
   setCurrency(String? currency) {

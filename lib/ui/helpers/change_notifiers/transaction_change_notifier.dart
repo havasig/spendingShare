@@ -226,8 +226,8 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     _type = TransactionType.expense;
     _value = '';
     _to.clear();
-    setCurrency(null);
+    setCurrencyNoNotify(null);
     setExchangeRate(null);
-    setColor(null);
+    setColorNoNotify(null);
   }
 }

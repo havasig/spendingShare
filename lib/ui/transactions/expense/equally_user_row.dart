@@ -23,15 +23,16 @@ class EquallyUserRow extends StatefulWidget {
 class _EquallyUserRowState extends State<EquallyUserRow> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<CreateTransactionChangeNotifier>(
-      builder: (_, createTransactionChangeNotifier, __) => Consumer<CreateTransactionData>(builder: (_, createTransactionData, __) {
-        bool isChecked =
-            createTransactionChangeNotifier.to.entries.firstWhere((element) => element.key == widget.memberReference).value.item1 != '0';
-        return FutureBuilder<DocumentSnapshot>(
-          future: widget.memberReference.get(),
-          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              var member = Member.fromDocument(snapshot.data!);
+    return FutureBuilder<DocumentSnapshot>(
+      future: widget.memberReference.get(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          var member = Member.fromDocument(snapshot.data!);
+          return Consumer<CreateTransactionChangeNotifier>(
+            builder: (_, createTransactionChangeNotifier, __) => Consumer<CreateTransactionData>(builder: (_, createTransactionData, __) {
+              bool isChecked =
+                  createTransactionChangeNotifier.to.entries.firstWhere((element) => element.key == widget.memberReference).value.item1 !=
+                      '0';
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -64,11 +65,11 @@ class _EquallyUserRowState extends State<EquallyUserRow> {
                   )
                 ],
               );
-            }
-            return OnFutureBuildError(snapshot);
-          },
-        );
-      }),
+            }),
+          );
+        }
+        return OnFutureBuildError(snapshot);
+      },
     );
   }
 
