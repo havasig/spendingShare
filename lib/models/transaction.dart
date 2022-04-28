@@ -9,10 +9,11 @@ class Transaction {
   Timestamp date;
   String? exchangeRate;
   String name;
-  DocumentReference from;
+  DocumentReference? from;
+  String? incomeFrom;
   List<dynamic> to;
-  List<dynamic> toAmounts;
-  List<dynamic> toWeights;
+  List<dynamic>? toAmounts;
+  List<dynamic>? toWeights;
   TransactionType type;
   double value;
 
@@ -25,6 +26,7 @@ class Transaction {
     this.exchangeRate,
     required this.name,
     required this.from,
+    required this.incomeFrom,
     required this.to,
     required this.toAmounts,
     required this.toWeights,
@@ -40,8 +42,9 @@ class Transaction {
       createdBy: doc.data()?['createdBy'],
       currency: doc.data()?['currency'],
       date: doc.data()?['date'],
-      exchangeRate: doc.data()?['exchangeRate'],
+      exchangeRate: doc.data()?['exchangeRate']?.toString(),
       from: doc.data()?['from'],
+      incomeFrom: doc.data()?['incomeFrom'],
       name: doc.data()?['name'],
       to: doc.data()?['to'],
       toAmounts: doc.data()?['toAmounts'],

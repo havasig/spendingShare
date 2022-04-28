@@ -7,6 +7,7 @@ import 'package:spending_share/models/transaction.dart' as spending_share_transa
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 import 'on_future_build_error.dart';
 
@@ -14,13 +15,13 @@ class ExpenseRowItem extends StatelessWidget {
   const ExpenseRowItem({Key? key, required this.expense, required this.color, this.icon}) : super(key: key);
 
   final spending_share_transaction.Transaction expense;
-  final String color;
-  final String? icon;
+  final MaterialColor color;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: expense.from.get(),
+      future: expense.from!.get(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           var member = Member.fromDocument(snapshot.data!);
@@ -30,7 +31,7 @@ class ExpenseRowItem extends StatelessWidget {
                 width: (MediaQuery.of(context).size.width - 197) / 8,
                 //-padding*2 -iconWidth*4 -spacing*3
                 color: color,
-                icon: icon ?? member.icon ?? 'money',
+                icon: icon ?? member.icon ?? globals.icons['default'],
               ),
               Column(
                 children: [

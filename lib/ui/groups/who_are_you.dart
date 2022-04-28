@@ -14,6 +14,7 @@ import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 import 'details/group_details_page.dart';
@@ -27,7 +28,7 @@ class WhoAreYou extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late String color;
+    late MaterialColor color;
     FocusNode focusNode = FocusNode();
     SpendingShareUser currentUser = Provider.of(context);
 
@@ -46,7 +47,7 @@ class WhoAreYou extends StatelessWidget {
               Expanded(
                 child: StreamBuilder<List<DocumentSnapshot>>(
                     stream: firestore.collection('groups').doc(groupId).snapshots().switchMap((group) {
-                      color = group.data()!['color'];
+                      color = globals.colors[group.data()!['color']] ?? globals.colors['default']!;
                       return CombineLatestStream.list(
                           group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()));
                     }),

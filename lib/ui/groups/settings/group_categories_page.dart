@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:spending_share/models/category.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/helpers/fab/create_category_fab.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
@@ -13,18 +14,10 @@ import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.d
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class GroupCategoriesPage extends StatefulWidget {
-  const GroupCategoriesPage({
-    Key? key,
-    required this.firestore,
-    required this.groupId,
-    required this.color,
-    required this.icon,
-  }) : super(key: key);
+  const GroupCategoriesPage({Key? key, required this.firestore, required this.groupData}) : super(key: key);
 
   final FirebaseFirestore firestore;
-  final String groupId;
-  final String color;
-  final String icon;
+  final GroupData groupData;
 
   @override
   State<GroupCategoriesPage> createState() => _GroupCategoriesPageState();
@@ -38,7 +31,7 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
       body: Padding(
         padding: EdgeInsets.all(h(8)),
         child: StreamBuilder<List<DocumentSnapshot>>(
-            stream: widget.firestore.collection('groups').doc(widget.groupId).snapshots().switchMap((group) {
+            stream: widget.firestore.collection('groups').doc(widget.groupData.groupId).snapshots().switchMap((group) {
               return CombineLatestStream.list(
                   group.data()!['categories'].map<Stream<DocumentSnapshot>>((category) => (category as DocumentReference).snapshots()));
             }),
@@ -66,10 +59,10 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
                                 Padding(
                                   padding: EdgeInsets.all(h(6)),
                                   child: CircleIconButton(
-                                    color: widget.color,
+                                    color: widget.groupData.color,
                                     width: 20,
                                     name: category.name,
-                                    icon: category.icon ?? widget.icon,
+                                    icon: category.icon ?? widget.groupData.icon,
                                   ),
                                 ),
                                 Material(
@@ -93,7 +86,7 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
                                                   builder: (BuildContext context) {
                                                     return SelectNewCategoryDialog(
                                                       options: categoryListWithoutCurrent,
-                                                      color: widget.color,
+                                                      color: widget.groupData.color,
                                                     );
                                                   }).then((newCategory) async {
                                                 if (newCategory != null) {
@@ -120,13 +113,13 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
                                                       .doc((newCategory as DocumentReference).id)
                                                       .set({'transactions': newTransactionList}, SetOptions(merge: true));
 
-                                                  var group = await widget.firestore.collection('groups').doc(widget.groupId).get();
+                                                  var group = await widget.firestore.collection('groups').doc(widget.groupData.groupId).get();
                                                   List<dynamic> newCategoryReferenceList = group.data()!['categories'];
                                                   newCategoryReferenceList.removeWhere((element) => element.id == category.databaseId);
 
                                                   await widget.firestore
                                                       .collection('groups')
-                                                      .doc(widget.groupId)
+                                                      .doc(widget.groupData.groupId)
                                                       .set({'categories': newCategoryReferenceList}, SetOptions(merge: true));
 
                                                   widget.firestore.collection('categories').doc(category.databaseId).delete();
@@ -157,11 +150,10 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         firestore: widget.firestore,
         selectedIndex: 1,
-        color: widget.color,
+        color: widget.groupData.color,
       ),
       floatingActionButton: CreateCategoryFab(
-        groupId: widget.groupId,
-        color: widget.color,
+        groupData: widget.groupData,
         firestore: widget.firestore,
       ),
     );

@@ -10,7 +10,7 @@ class MemberItem extends StatelessWidget {
   final Member member;
   final Function onClick;
   final VoidCallback? onDelete;
-  final String color;
+  final MaterialColor color;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,8 @@ class MemberItem extends StatelessWidget {
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: globals.colors[color]![globals.circleShade],
-                      child: Text(member.name[0], style: TextStyle(color: globals.colors[color]![globals.iconShade])),
+                      backgroundColor: color[globals.circleShade],
+                      child: Text(member.name[0], style: TextStyle(color: color[globals.iconShade])),
                     ),
                     SizedBox(width: w(8)),
                     Text(member.name),

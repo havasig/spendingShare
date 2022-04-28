@@ -18,6 +18,7 @@ class InputField extends StatefulWidget {
   final TextEditingController? textEditingController;
   bool obscureText = false;
   final String? Function(String?)? validator;
+  final Function(String?)? onSubmit;
 
   InputField({
     Key? key,
@@ -26,6 +27,7 @@ class InputField extends StatefulWidget {
     this.initialValue,
     this.prefixIcon,
     this.textEditingController,
+    this.onSubmit,
     this.hintText = '',
     this.labelText = '',
     this.enabled = true,
@@ -63,6 +65,7 @@ class _InputFieldState extends State<InputField> {
           });
         },
         child: TextFormField(
+          onFieldSubmitted: widget.onSubmit,
           validator: widget.validator,
           initialValue: widget.initialValue,
           textCapitalization: widget.textCapitalization,

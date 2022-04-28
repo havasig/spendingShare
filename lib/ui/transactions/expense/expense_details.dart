@@ -12,7 +12,7 @@ class ExpenseDetails extends StatelessWidget {
 
   final FirebaseFirestore firestore;
   final spending_share_transaction.Transaction expense;
-  final String color;
+  final MaterialColor color;
 
   @override
   Widget build(BuildContext context) {

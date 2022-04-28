@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 
 import 'color_constants.dart';
 
 class TextStyleConstants {
-  static TextStyle value(color) {
+  static TextStyle value(MaterialColor color) {
     return TextStyle(
-      color: globals.colors[color],
+      color: color,
       fontSize: 18,
       fontWeight: FontWeight.bold,
     );

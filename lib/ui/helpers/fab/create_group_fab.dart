@@ -10,7 +10,7 @@ class CreateGroupFab extends StatelessWidget {
   const CreateGroupFab({Key? key, required this.firestore, this.color}) : super(key: key);
 
   final FirebaseFirestore firestore;
-  final String? color;
+  final MaterialColor? color;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class CreateGroupFab extends StatelessWidget {
       child: FloatingActionButton(
         key: const Key('create_group'),
         tooltip: 'create_group',
-        backgroundColor: globals.colors[color] ?? ColorConstants.defaultOrange,
+        backgroundColor: color ?? globals.colors['default'],
         splashColor: ColorConstants.lightGray,
         onPressed: () => Get.to(() => CreateGroupPage(firestore: firestore)),
         child: const Icon(Icons.add),

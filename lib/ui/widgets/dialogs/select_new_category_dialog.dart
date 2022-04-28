@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 import '../button.dart';
@@ -11,7 +10,7 @@ class SelectNewCategoryDialog extends StatefulWidget {
   const SelectNewCategoryDialog({Key? key, this.defaultValue, required this.color, required this.options}) : super(key: key);
 
   final String? defaultValue;
-  final String color;
+  final MaterialColor color;
   final Map<String, dynamic> options;
 
   @override
@@ -53,7 +52,7 @@ class _SelectNewCategoryDialogState extends State<SelectNewCategoryDialog> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: h(6)),
               decoration: BoxDecoration(
-                border: Border.all(color: globals.colors[widget.color]!),
+                border: Border.all(color: widget.color),
                 borderRadius: const BorderRadius.all(
                   Radius.circular(10),
                 ),
@@ -65,7 +64,7 @@ class _SelectNewCategoryDialogState extends State<SelectNewCategoryDialog> {
                 elevation: 6,
                 icon: Icon(
                   Icons.keyboard_arrow_down_outlined,
-                  color: globals.colors[widget.color]!,
+                  color: widget.color,
                 ),
                 underline: Container(height: 0),
                 onChanged: (String? newValue) {
@@ -86,7 +85,7 @@ class _SelectNewCategoryDialogState extends State<SelectNewCategoryDialog> {
                     value: key,
                     child: Text(
                       key,
-                      style: _dropdownValue == key ? TextStyle(color: globals.colors[widget.color]!) : null,
+                      style: _dropdownValue == key ? TextStyle(color: widget.color) : null,
                     ),
                   );
                 }).toList(),

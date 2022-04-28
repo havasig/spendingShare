@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 Map<String, IconData> icons = {
+  'default': Icons.deck,
   'sport': Icons.directions_run,
   'politics': Icons.gavel,
   'science': Icons.wb_sunny,
@@ -46,6 +47,7 @@ Map<String, IconData> icons = {
 };
 
 Map<String, MaterialColor> colors = {
+  'default': Colors.orange,
   'pink': Colors.pink,
   'red': Colors.red,
   'teal': Colors.teal,

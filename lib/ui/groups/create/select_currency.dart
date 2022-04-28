@@ -13,10 +13,10 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import '../../../utils/config/environment.dart';
 
 class SelectCurrency extends StatefulWidget {
-  const SelectCurrency({Key? key, required this.currency, required this.color}) : super(key: key);
+  const SelectCurrency({Key? key, required this.currency, this.color}) : super(key: key);
 
   final String currency;
-  final String color;
+  final MaterialColor? color;
 
   @override
   State<SelectCurrency> createState() => _SelectCurrencyState();
@@ -29,34 +29,36 @@ class _SelectCurrencyState extends State<SelectCurrency> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: h(12)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('selected_currency'.tr),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: h(6)),
-            decoration: BoxDecoration(
-              border: Border.all(color: globals.colors[widget.color]!),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(10),
+      child: Consumer<CreateChangeNotifier>(
+        builder: (_, createChangeNotifier, __) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('selected_currency'.tr),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: h(6)),
+              decoration: BoxDecoration(
+                border: Border.all(color: createChangeNotifier.color ?? widget.color!),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10),
+                ),
               ),
-            ),
-            child: Consumer<CreateChangeNotifier>(builder: (_, createChangeNotifier, __) {
-              return DropdownButton<String>(
+              child: DropdownButton<String>(
                 value: _dropdownValue,
                 dropdownColor: ColorConstants.darkGray,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 elevation: 6,
                 icon: Icon(
                   Icons.keyboard_arrow_down_outlined,
-                  color: globals.colors[widget.color]!,
+                  color: createChangeNotifier.color ?? widget.color!,
                 ),
                 underline: Container(height: 0),
                 onChanged: (String? newValue) {
-                  if(createChangeNotifier.defaultCurrency != null) getExchangeRate(createChangeNotifier.defaultCurrency!, newValue!, createChangeNotifier);
+                  if (createChangeNotifier.defaultCurrency != null) {
+                    getExchangeRate(createChangeNotifier.defaultCurrency!, newValue!, createChangeNotifier);
+                  }
                   setState(() {
-                    createChangeNotifier.setCurrency(newValue);
-                    _dropdownValue = newValue!;
+                    createChangeNotifier.setCurrency(newValue!);
+                    _dropdownValue = newValue;
                   });
                 },
                 selectedItemBuilder: (BuildContext context) {
@@ -72,14 +74,14 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                     value: key,
                     child: Text(
                       key,
-                      style: _dropdownValue == key ? TextStyle(color: globals.colors[widget.color]!) : null,
+                      style: _dropdownValue == key ? TextStyle(color: createChangeNotifier.color ?? widget.color!) : null,
                     ),
                   );
                 }).toList(),
-              );
-            }),
-          )
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

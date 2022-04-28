@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 class Member {
   String name;
   String? userFirebaseId;
   String? databaseId;
-  String? icon;
+  IconData? icon;
 
   Member({
     required this.name,
@@ -16,10 +18,10 @@ class Member {
   factory Member.fromDocument(DocumentSnapshot doc) {
     doc as DocumentSnapshot<Map<String, dynamic>>;
     return Member(
-      databaseId: doc.id, // TODO need?
+      databaseId: doc.id,
       name: doc.data()?['name'],
       userFirebaseId: doc.data()?['userFirebaseId'],
-      icon: doc.data()?['icon'],
+      icon: globals.icons[doc.data()?['icon']],
     );
   }
 }

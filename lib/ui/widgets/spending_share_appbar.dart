@@ -10,7 +10,7 @@ class SpendingShareAppBar extends AppBar {
   final bool hasBack;
   final bool hasForward;
   final VoidCallback? onBack;
-  final VoidCallback? onForward;
+  final Function? onForward;
   final Widget? titleWidget;
   final Widget? suffixWidget;
 

@@ -15,7 +15,7 @@ class CategoryDetails extends StatelessWidget {
 
   final FirebaseFirestore firestore;
   final Category category;
-  final String color;
+  final MaterialColor color;
 
   @override
   Widget build(BuildContext context) {

@@ -2,23 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
-import 'package:spending_share/ui/transactions/transaction_list_page.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/helpers/transaction_row_item.dart';
+import 'package:spending_share/ui/transactions/transaction_list_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 
 class TransactionsList extends StatelessWidget {
-  const TransactionsList(this.transactions,
-      {Key? key, required this.color, required this.icon, required this.firestore, required this.currency, required this.groupId})
-      : super(key: key);
+  const TransactionsList(this.transactions, {Key? key, required this.firestore, required this.groupData}) : super(key: key);
 
   final List<dynamic> transactions;
-  final String color;
-  final String icon;
-  final String currency;
-  final String groupId;
+  final GroupData groupData;
   final FirebaseFirestore firestore;
 
   @override
@@ -36,8 +31,8 @@ class TransactionsList extends StatelessWidget {
                   var transaction = spending_share_transaction.Transaction.fromDocument(snapshot.data!);
                   return TransactionRowItem(
                     transaction,
-                    color: color,
-                    icon: icon,
+                    color: groupData.color,
+                    icon: groupData.icon,
                     firestore: firestore,
                   );
                 }
@@ -49,15 +44,12 @@ class TransactionsList extends StatelessWidget {
         Button(
           onPressed: () => Get.to(() => TransactionListPage(
                 firestore: firestore,
-                icon: icon,
                 transactions: transactions,
-                color: color,
-                currency: currency,
-                groupId: groupId,
+                groupData: groupData,
               )),
           text: 'show_all_transactions'.tr,
-          textColor: globals.colors[color]!,
-          buttonColor: globals.colors[color]!.withOpacity(0.2),
+          textColor: groupData.color,
+          buttonColor: groupData.color.withOpacity(0.2),
           width: MediaQuery.of(context).size.width * 09,
         ),
       ],

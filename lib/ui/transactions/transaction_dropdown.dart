@@ -10,7 +10,7 @@ class CreateTransactionDropdown extends StatefulWidget {
 
   final String? defaultValue;
   final String title;
-  final String color;
+  final MaterialColor color;
   final Map<String, dynamic> options;
   final Function(dynamic) onSelect;
 
@@ -40,7 +40,7 @@ class _CreateTransactionDropdownState extends State<CreateTransactionDropdown> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: h(6)),
             decoration: BoxDecoration(
-              border: Border.all(color: globals.colors[widget.color]!),
+              border: Border.all(color: widget.color),
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
               ),
@@ -52,7 +52,7 @@ class _CreateTransactionDropdownState extends State<CreateTransactionDropdown> {
               elevation: 6,
               icon: Icon(
                 Icons.keyboard_arrow_down_outlined,
-                color: globals.colors[widget.color]!,
+                color: widget.color,
               ),
               underline: Container(height: 0),
               onChanged: (String? newValue) {
@@ -74,7 +74,7 @@ class _CreateTransactionDropdownState extends State<CreateTransactionDropdown> {
                   value: key,
                   child: Text(
                     key,
-                    style: _dropdownValue == key ? TextStyle(color: globals.colors[widget.color]!) : null,
+                    style: _dropdownValue == key ? TextStyle(color: widget.color) : null,
                   ),
                 );
               }).toList(),

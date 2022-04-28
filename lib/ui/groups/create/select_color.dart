@@ -8,7 +8,7 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 class SelectColor extends StatefulWidget {
   const SelectColor({Key? key, required this.defaultColor}) : super(key: key);
 
-  final String defaultColor;
+  final MaterialColor defaultColor;
 
   @override
   State<SelectColor> createState() => _SelectColorState();
@@ -19,7 +19,7 @@ class _SelectColorState extends State<SelectColor> {
 
   @override
   void initState() {
-    globals.colors.keys.toList().asMap().forEach((index, value) => {if (value == widget.defaultColor) selectedIndex = index});
+    globals.colors.values.toList().asMap().forEach((index, value) => {if (value == widget.defaultColor) selectedIndex = index});
     super.initState();
   }
 
@@ -41,7 +41,6 @@ class _SelectColorState extends State<SelectColor> {
               scrollDirection: Axis.horizontal,
               itemCount: globals.colors.length,
               itemBuilder: (context, index) {
-                String key = globals.colors.keys.elementAt(index);
                 MaterialColor value = globals.colors.values.elementAt(index);
 
                 return Padding(
@@ -59,7 +58,7 @@ class _SelectColorState extends State<SelectColor> {
                           borderRadius: BorderRadius.circular(1000),
                           onTap: () {
                             setState(() {
-                              createGroupChangeNotifier.setColor(key, value);
+                              createGroupChangeNotifier.setColor(value);
                               selectedIndex = index;
                             });
                           },

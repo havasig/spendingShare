@@ -4,13 +4,15 @@ import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/models/category.dart';
+import 'package:spending_share/models/data/group_data.dart';
+import 'package:spending_share/models/group.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/categories/categroy_details.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
-import 'package:spending_share/ui/helpers/fab/create_transaction_fab.dart';
 import 'package:spending_share/ui/groups/details/statistics/statistics.dart';
 import 'package:spending_share/ui/groups/details/transactions/transactions_list.dart';
+import 'package:spending_share/ui/helpers/fab/create_transaction_fab.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
@@ -34,19 +36,22 @@ class GroupDetailsPage extends StatelessWidget {
       future: firestore.collection('groups').doc(groupId).get(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> group = snapshot.data!.data() as Map<String, dynamic>;
+          Group group = Group.fromDocument(snapshot.data!);
+
           return Scaffold(
             appBar: SpendingShareAppBar(
               hasBack: hasBack,
               hasForward: true,
               forwardText: 'settings'.tr,
-              titleText: group['name'],
+              titleText: group.name,
               onForward: () => Get.to(() => GroupSettingsPage(
                     firestore: firestore,
-                    color: group['color'],
-                    icon: group['icon'],
-                    groupId: groupId,
-                    isAdmin: group['adminId'] == currentUser.userFirebaseId,
+                    groupData: GroupData(
+                      color: group.color,
+                      icon: group.icon,
+                      groupId: groupId,
+                    ),
+                    isAdmin: group.adminId == currentUser.userFirebaseId,
                   )),
             ),
             body: Padding(
@@ -66,19 +71,19 @@ class GroupDetailsPage extends StatelessWidget {
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: group['members'].length,
+                          itemCount: group.members.length,
                           itemBuilder: (context, index) {
                             return FutureBuilder<DocumentSnapshot>(
-                              future: group['members'][index].get(),
+                              future: group.members[index].get(),
                               builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                                 if (snapshot.connectionState == ConnectionState.done) {
                                   var member = Member.fromDocument(snapshot.data!);
                                   return CircleIconButton(
                                     width: (MediaQuery.of(context).size.width - 197) / 8,
                                     //-padding*2 -iconWidth*4 -spacing*3
-                                    color: group['color'],
+                                    color: group.color,
                                     name: member.name,
-                                    icon: member.icon ?? group['icon'],
+                                    icon: member.icon ?? group.icon,
                                   );
                                 }
                                 return OnFutureBuildError(snapshot);
@@ -96,9 +101,9 @@ class GroupDetailsPage extends StatelessWidget {
                       child: Text('categories'.tr),
                     ),
                     SizedBox(
-                      height: h(getCategoriesHeight(group['categories'])),
+                      height: h(getCategoriesHeight(group.categories)),
                       child: Wrap(
-                        children: group['categories']
+                        children: group.categories
                             .map<Widget>(
                               (c) => FutureBuilder<DocumentSnapshot>(
                                 future: c.get(),
@@ -111,13 +116,13 @@ class GroupDetailsPage extends StatelessWidget {
                                         onTap: () => Get.to(() => CategoryDetails(
                                               firestore: firestore,
                                               category: category,
-                                              color: group['color'],
+                                              color: group.color,
                                             )),
                                         width: (MediaQuery.of(context).size.width - 197) / 8,
                                         //-padding*2 -iconWidth*4 -spacing*3
-                                        color: group['color'],
+                                        color: group.color,
                                         name: category.name,
-                                        icon: category.icon ?? group['icon'],
+                                        icon: category.icon ?? group.icon,
                                       ),
                                     );
                                   }
@@ -137,10 +142,10 @@ class GroupDetailsPage extends StatelessWidget {
                       child: Text('debts'.tr),
                     ),
                     DebtsList(
-                      group['debts'],
-                      currency: group['currency'],
-                      color: group['color'],
-                      icon: group['icon'],
+                      group.debts,
+                      currency: group.currency,
+                      color: group.color,
+                      icon: group.icon,
                     ),
                     Divider(
                       thickness: 1,
@@ -151,12 +156,14 @@ class GroupDetailsPage extends StatelessWidget {
                       child: Text('transactions'.tr),
                     ),
                     TransactionsList(
-                      group['transactions'],
-                      color: group['color'],
-                      icon: group['icon'],
+                      group.transactions,
+                      groupData: GroupData(
+                        color: group.color,
+                        icon: group.icon,
+                        currency: group.currency,
+                        groupId: groupId,
+                      ),
                       firestore: firestore,
-                      currency: group['currency'],
-                      groupId: groupId,
                     ),
                     Divider(
                       thickness: 1,
@@ -166,7 +173,7 @@ class GroupDetailsPage extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text('statistics'.tr),
                     ),
-                    Statistics(color: group['color']),
+                    Statistics(color: group.color),
                     Divider(
                       thickness: 1,
                       color: ColorConstants.white.withOpacity(0.2),
@@ -178,11 +185,14 @@ class GroupDetailsPage extends StatelessWidget {
             ),
             floatingActionButton: CreateTransactionFab(
               firestore: firestore,
-              color: group['color'],
-              currency: group['currency'],
-              groupId: groupId,
+              groupData: GroupData(
+                color: group.color,
+                icon: group.icon,
+                currency: group.currency,
+                groupId: groupId,
+              ),
             ),
-            bottomNavigationBar: SpendingShareBottomNavigationBar(firestore: firestore, selectedIndex: 1, color: group['color']),
+            bottomNavigationBar: SpendingShareBottomNavigationBar(firestore: firestore, selectedIndex: 1, color: group.color),
           );
         }
 

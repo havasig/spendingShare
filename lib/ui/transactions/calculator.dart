@@ -10,7 +10,7 @@ import '../../utils/screen_util_helper.dart';
 class Calculator extends StatefulWidget {
   const Calculator({Key? key, required this.color, required this.onEqualPressed}) : super(key: key);
 
-  final String color;
+  final MaterialColor color;
   final Function(double) onEqualPressed;
 
   @override
@@ -60,7 +60,7 @@ class _CalculatorState extends State<Calculator> {
                       });
                     },
                     buttonText: buttons[index],
-                    color: globals.colors[widget.color]![cOpacity],
+                    color: widget.color[cOpacity],
                     textColor: Colors.white,
                   );
                 }
@@ -69,7 +69,7 @@ class _CalculatorState extends State<Calculator> {
                 else if (index == 1) {
                   return MyButton(
                     buttonText: buttons[index],
-                    color: globals.colors[widget.color]![bracketAndDelOpacity],
+                    color: widget.color[bracketAndDelOpacity],
                     textColor: Colors.white,
                     buttontapped: () {
                       setState(() {
@@ -82,7 +82,7 @@ class _CalculatorState extends State<Calculator> {
                 else if (index == 2) {
                   return MyButton(
                     buttonText: buttons[index],
-                    color: globals.colors[widget.color]![bracketAndDelOpacity],
+                    color: widget.color[bracketAndDelOpacity],
                     textColor: Colors.white,
                     buttontapped: () {
                       setState(() {
@@ -100,7 +100,7 @@ class _CalculatorState extends State<Calculator> {
                       });
                     },
                     buttonText: buttons[index],
-                    color: globals.colors[widget.color]![bracketAndDelOpacity],
+                    color: widget.color[bracketAndDelOpacity],
                     textColor: Colors.white,
                   );
                 }
@@ -130,7 +130,7 @@ class _CalculatorState extends State<Calculator> {
                       });
                     },
                     buttonText: buttons[index],
-                    color: globals.colors[widget.color]![equalOpacity],
+                    color: widget.color[equalOpacity],
                     textColor: Colors.white,
                   );
                 }
@@ -144,8 +144,8 @@ class _CalculatorState extends State<Calculator> {
                       });
                     },
                     buttonText: buttons[index],
-                    color: isOperator(buttons[index]) ? globals.colors[widget.color]![operatorOpacity] : Colors.white,
-                    textColor: isOperator(buttons[index]) ? Colors.white : globals.colors[widget.color]![numberOpacity],
+                    color: isOperator(buttons[index]) ? widget.color[operatorOpacity] : Colors.white,
+                    textColor: isOperator(buttons[index]) ? Colors.white : widget.color[numberOpacity],
                   );
                 }
               }),

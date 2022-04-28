@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:spending_share/models/enums/split_by_type.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/number_helper.dart';
@@ -12,95 +10,41 @@ import 'package:tuple/tuple.dart';
 import 'currency_change_notifier.dart';
 
 class CreateTransactionChangeNotifier extends CreateChangeNotifier {
-  CreateTransactionChangeNotifier() : super(null);
+  CreateTransactionChangeNotifier() : super(null, null);
 
   TransactionType _type = TransactionType.expense;
-  DocumentReference? _category;
-  DocumentReference? _member;
-  DateTime _date = DateTime.now();
   String _value = '';
   final Map<DocumentReference, Tuple2<String, String>> _to = {};
-  SplitByType? _splitByType;
-  String? _splitByWeights;
-  String? _groupId;
-  final Set<DocumentReference> _allMembers = {};
-  final Set<DocumentReference> _editedAmountMembers = {};
-  String? _color;
-  String? _groupIcon;
   DocumentReference? _selectedMember;
+  final Set<DocumentReference> _editedAmountMembers = {};
+  bool _disposed = false;
 
   TransactionType get type => _type;
-
-  DocumentReference? get category => _category;
-
-  String? get groupId => _groupId;
-
-  String? get color => _color;
-
-  String? get groupIcon => _groupIcon;
-
-  DocumentReference? get member => _member;
-
-  DateTime get date => _date;
 
   String get value => _value;
 
   Map<DocumentReference, Tuple2<String, String>> get to => _to;
 
-  Set<DocumentReference> get allMembers => _allMembers;
+  DocumentReference? get selectedMember => _selectedMember;
 
   Set<DocumentReference> get editedAmountMembers => _editedAmountMembers;
 
-  DocumentReference? get selectedMember => _selectedMember;
-
-  get splitByType => _splitByType;
-
-  get splitByWeights => _splitByWeights;
-
-  setGroupId(String groupId) {
-    _groupId = groupId;
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 
-  setAllMembers(List<DocumentReference> allMembers) {
-    _allMembers.clear();
-    _allMembers.addAll(allMembers);
-  }
-
-  clearAllMembers() {
-    _allMembers.clear();
-  }
-
-  addToAllMembers(DocumentReference item) {
-    _allMembers.add(item);
-  }
-
-  addEditedAmount(DocumentReference item) {
-    _editedAmountMembers.add(item);
-  }
-
-  setColor(String color) {
-    _color = color;
-  }
-
-  setGroupIcon(String groupIcon) {
-    _groupIcon = groupIcon;
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
   }
 
   setType(TransactionType type) {
     _type = type;
     notifyListeners();
-  }
-
-  setCategory(DocumentReference category) {
-    _category = category;
-  }
-
-  setMember(DocumentReference member) {
-    _member = member;
-  }
-
-  setDate(DateTime date) {
-    _date = date;
   }
 
   setValue(String value) {
@@ -110,10 +54,6 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   clearTo() {
     _to.clear();
-  }
-
-  clearEditedAmount() {
-    _editedAmountMembers.clear();
   }
 
   addTo(DocumentReference member, String value) {
@@ -225,17 +165,14 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     }
   }
 
+  clearEditedAmount() {
+    _editedAmountMembers.clear();
+  }
+
   setSelectedMember(DocumentReference newMember) {
     _selectedMember = newMember;
     notifyListeners();
   }
-
-  setSplitByType(SplitByType splitByType) {
-    _splitByType = splitByType;
-    notifyListeners();
-  }
-
-  // TODO set split by weights
 
   bool isValidExpense() {
     if (_type != TransactionType.expense) {
@@ -244,18 +181,6 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     }
     if (currency == null) {
       setValue('currency_cannot_be_empty'.tr);
-      return false;
-    }
-    if (_category == null) {
-      setValue('category_cannot_be_empty'.tr);
-      return false;
-    }
-    if (_member == null) {
-      setValue('member_cannot_be_empty'.tr);
-      return false;
-    }
-    if (_date == null) {
-      setValue('date_cannot_be_empty'.tr);
       return false;
     }
     if (_value == '' || double.tryParse(_value) == null || double.tryParse(_value)! <= 0) {
@@ -274,14 +199,6 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
       setValue('currency_cannot_be_empty'.tr);
       return false;
     }
-    if (_member == null) {
-      setValue('member_cannot_be_empty'.tr);
-      return false;
-    }
-    if (_date == null) {
-      setValue('date_cannot_be_empty'.tr);
-      return false;
-    }
     if (_value == '' || double.tryParse(_value) == null || double.tryParse(_value)! <= 0) {
       setValue('invalid_value'.tr);
       return false;
@@ -298,14 +215,6 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
       setValue('currency_cannot_be_empty'.tr);
       return false;
     }
-    if (_date == null) {
-      setValue('date_cannot_be_empty'.tr);
-      return false;
-    }
-    if (_member == null) {
-      setValue('member_cannot_be_empty'.tr);
-      return false;
-    }
     if (_value == '' || double.tryParse(_value) == null || double.tryParse(_value)! <= 0) {
       setValue('invalid_value'.tr);
       return false;
@@ -315,17 +224,10 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
 
   clear() {
     _type = TransactionType.expense;
-    _category = null;
-    _member = null;
-    _date = DateTime.now();
     _value = '';
     _to.clear();
-    _allMembers.clear();
-    _splitByType = null;
-    _splitByWeights = null;
-    _groupId = null;
-    _groupIcon = null;
     setCurrency(null);
     setExchangeRate(null);
+    setColor(null);
   }
 }

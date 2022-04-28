@@ -87,6 +87,8 @@
   "transfer_from": "Transfer from",
   "exchange_rate": "Exchange rate",
   "save_transfer": "Save transfer",
+  "save_income": "Save income",
+  "save_expense": "Save expense",
   "transaction_creation_failed": "Transaction creation failed",
   "income_name": "Income name",
   "received_from": "Received form",
@@ -107,5 +109,6 @@
   "save_changes": "Save changes",
   "group_edit_failed": "Group edit failed",
   "create_category": "Create category",
-  "add_new_category_name": "Add the new category's name"
+  "add_new_category_name": "Add the new category's name",
+  "type_name_and_add_member" : "Type a name, and add member easily"
 }

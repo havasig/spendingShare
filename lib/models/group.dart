@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 class Group {
   String adminId;
   String databaseId;
   List<dynamic> categories;
-  String color;
+  MaterialColor color;
   String currency;
-  String icon;
+  IconData icon;
   List<dynamic> members;
   String name;
   List<dynamic> transactions;
@@ -29,12 +31,11 @@ class Group {
     doc as DocumentSnapshot<Map<String, dynamic>>;
     return Group(
       databaseId: doc.id,
-      // TODO need?
       adminId: doc.data()?['adminId'],
       categories: doc.data()?['categories'],
-      color: doc.data()?['color'],
+      color: globals.colors[doc.data()?['color']] ?? globals.colors['default']!,
       currency: doc.data()?['currency'],
-      icon: doc.data()?['icon'],
+      icon: globals.icons[doc.data()?['icon']] ?? globals.icons['default']!,
       members: doc.data()?['members'],
       name: doc.data()?['name'],
       transactions: doc.data()?['transactions'],

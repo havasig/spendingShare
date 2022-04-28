@@ -11,8 +11,8 @@ class DebtsList extends StatelessWidget {
 
   final List<dynamic> debts;
   final String currency;
-  final String color;
-  final String icon;
+  final MaterialColor color;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {

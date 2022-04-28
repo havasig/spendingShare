@@ -12,8 +12,8 @@ class TransactionRowItem extends StatelessWidget {
   const TransactionRowItem(this.transaction, {Key? key, required this.firestore, required this.color, this.icon}) : super(key: key);
 
   final spending_share_transaction.Transaction transaction;
-  final String? icon;
-  final String color;
+  final IconData? icon;
+  final MaterialColor color;
   final FirebaseFirestore firestore;
 
   @override

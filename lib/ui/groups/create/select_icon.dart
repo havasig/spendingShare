@@ -10,7 +10,7 @@ import '../../helpers/change_notifiers/create_group_change_notifier.dart';
 class SelectIcon extends StatefulWidget {
   const SelectIcon({Key? key, required this.defaultIcon}) : super(key: key);
 
-  final String defaultIcon;
+  final IconData defaultIcon;
 
   @override
   _SelectIconState createState() => _SelectIconState();
@@ -21,7 +21,7 @@ class _SelectIconState extends State<SelectIcon> {
 
   @override
   void initState() {
-    globals.icons.keys.toList().asMap().forEach((index, value) => {if (value == widget.defaultIcon) selectedIndex = index});
+    globals.icons.values.toList().asMap().forEach((index, value) => {if (value == widget.defaultIcon) selectedIndex = index});
     super.initState();
   }
 
@@ -50,13 +50,13 @@ class _SelectIconState extends State<SelectIcon> {
                     alignment: Alignment.center,
                     child: GestureDetector(
                       onTap: () {
-                        createGroupChangeNotifier.setIcon(globals.icons.keys.toList()[index], globals.icons.values.toList()[index]);
+                        createGroupChangeNotifier.setIcon(globals.icons.values.toList()[index]);
                         selectedIndex = index;
                       },
                       child: Icon(
                         globals.icons.values.toList()[index],
                         size: h(34),
-                        color: selectedIndex == index ? createGroupChangeNotifier.color[globals.circleShade] : null,
+                        color: selectedIndex == index ? createGroupChangeNotifier.color![globals.circleShade] : null,
                       ),
                     ),
                   );

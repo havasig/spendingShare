@@ -6,7 +6,7 @@ import 'package:spending_share/utils/globals.dart' as globals;
 class Statistics extends StatelessWidget {
   const Statistics({Key? key, required this.color}) : super(key: key);
 
-  final String color;
+  final MaterialColor color;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +34,8 @@ class Statistics extends StatelessWidget {
           child: Button(
             onPressed: () {},
             text: 'show_all_statistics'.tr,
-            textColor: globals.colors[color]!,
-            buttonColor: globals.colors[color]!.withOpacity(0.2),
+            textColor: color,
+            buttonColor: color.withOpacity(0.2),
             width: MediaQuery.of(context).size.width * 0.9,
           ),
         ),

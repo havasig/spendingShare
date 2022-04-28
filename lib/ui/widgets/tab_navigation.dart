@@ -7,7 +7,7 @@ import '../constants/color_constants.dart';
 
 class TabNavigation extends StatefulWidget {
   final int initIndex;
-  final String color;
+  final MaterialColor color;
   final List<SpendingShareTab> tabs;
 
   const TabNavigation({this.initIndex = 0, required this.color, required this.tabs, Key? key}) : super(key: key);
@@ -53,7 +53,7 @@ class _TabNavigationState extends State<TabNavigation> {
                     child: Container(
                       width: (MediaQuery.of(context).size.width - h(8) * widget.tabs.length - h(34)) / widget.tabs.length,
                       decoration: BoxDecoration(
-                        color: index == selectedIndex ? globals.colors[widget.color] : Colors.transparent,
+                        color: index == selectedIndex ? widget.color : Colors.transparent,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Center(

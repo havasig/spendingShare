@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/helpers/fab/create_transaction_fab.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
@@ -13,18 +14,12 @@ class TransactionListPage extends StatelessWidget {
   const TransactionListPage({
     Key? key,
     required this.firestore,
-    required this.color,
-    required this.icon,
-    required this.currency,
-    required this.groupId,
+    required this.groupData,
     required this.transactions,
   }) : super(key: key);
 
   final FirebaseFirestore firestore;
-  final String color;
-  final String icon;
-  final String currency;
-  final String groupId;
+  final GroupData groupData;
   final List<dynamic> transactions;
 
   @override
@@ -50,8 +45,8 @@ class TransactionListPage extends StatelessWidget {
                         var transaction = spending_share_transaction.Transaction.fromDocument(snapshot.data!);
                         return TransactionRowItem(
                           transaction,
-                          color: color,
-                          icon: icon,
+                          color: groupData.color,
+                          icon: groupData.icon,
                           firestore: firestore,
                         );
                       }
@@ -69,13 +64,11 @@ class TransactionListPage extends StatelessWidget {
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         firestore: firestore,
         selectedIndex: 1,
-        color: color,
+        color: groupData.color,
       ),
       floatingActionButton: CreateTransactionFab(
-        currency: currency,
         firestore: firestore,
-        color: color,
-        groupId: groupId,
+        groupData: groupData,
       ),
     );
   }

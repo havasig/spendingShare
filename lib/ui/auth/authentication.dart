@@ -7,6 +7,7 @@ import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/groups/my_groups_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../../firebase_options.dart';
 
@@ -26,9 +27,9 @@ class Authentication extends StatelessWidget {
     QuerySnapshot<Map<String, dynamic>> firestoreUser =
         await firestore.collection('users').where('userFirebaseId', isEqualTo: user.userFirebaseId).get();
     user.name = firestoreUser.docs.first['name'];
-    user.color = firestoreUser.docs.first['color'];
+    user.color = globals.colors[firestoreUser.docs.first['color']] ?? globals.colors['default']!;
     user.currency = firestoreUser.docs.first['currency'];
-    user.icon = firestoreUser.docs.first['icon'];
+    user.icon = globals.icons[firestoreUser.docs.first['icon']] ?? globals.icons['default']!;
     user.databaseId = firestoreUser.docs.first.id;
   }
 

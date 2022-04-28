@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/dialogs/are_you_sure_dialog.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 import 'group_categories_page.dart';
@@ -17,14 +17,10 @@ import 'group_members_page.dart';
 import 'group_statistics_page.dart';
 
 class GroupSettingsPage extends StatelessWidget {
-  const GroupSettingsPage(
-      {Key? key, required this.firestore, required this.color, required this.icon, required this.groupId, required this.isAdmin})
-      : super(key: key);
+  const GroupSettingsPage({Key? key, required this.firestore, required this.groupData, required this.isAdmin}) : super(key: key);
 
   final FirebaseFirestore firestore;
-  final String color;
-  final String icon;
-  final String groupId;
+  final GroupData groupData;
   final bool isAdmin;
 
   @override
@@ -44,7 +40,7 @@ class GroupSettingsPage extends StatelessWidget {
                 borderSide: const BorderSide(color: Colors.grey),
                 onPressed: () => Get.to(() => GroupEditPage(
                       firestore: firestore,
-                      groupId: groupId,
+                      groupId: groupData.groupId,
                     )),
                 text: 'edit'.tr,
               ),
@@ -56,7 +52,7 @@ class GroupSettingsPage extends StatelessWidget {
                 buttonColor: ColorConstants.lightGray,
                 borderSide: const BorderSide(color: Colors.grey),
                 onPressed: () {
-                  Clipboard.setData(ClipboardData(text: groupId));
+                  Clipboard.setData(ClipboardData(text: groupData.groupId));
                   //TODO show toast copied
                 },
                 text: 'copy_invite_link'.tr,
@@ -90,9 +86,7 @@ class GroupSettingsPage extends StatelessWidget {
                 borderSide: const BorderSide(color: Colors.grey),
                 onPressed: () => Get.to(() => GroupCategoriesPage(
                       firestore: firestore,
-                      groupId: groupId,
-                      color: color,
-                      icon: icon,
+                      groupData: groupData,
                     )),
                 text: 'categories'.tr,
               ),
@@ -110,8 +104,8 @@ class GroupSettingsPage extends StatelessWidget {
                             });
                       },
                       text: 'delete_group'.tr,
-                      textColor: globals.colors[color]!,
-                      buttonColor: globals.colors[color]!.withOpacity(0.2),
+                      textColor: groupData.color,
+                      buttonColor: groupData.color.withOpacity(0.2),
                       width: MediaQuery.of(context).size.width * 0.9,
                     )
                   : Button(
@@ -124,8 +118,8 @@ class GroupSettingsPage extends StatelessWidget {
                             });
                       },
                       text: 'leave_group'.tr,
-                      textColor: globals.colors[color]!,
-                      buttonColor: globals.colors[color]!.withOpacity(0.2),
+                      textColor: groupData.color,
+                      buttonColor: groupData.color.withOpacity(0.2),
                       width: MediaQuery.of(context).size.width * 0.9,
                     ),
             ],
@@ -135,7 +129,7 @@ class GroupSettingsPage extends StatelessWidget {
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         firestore: firestore,
         selectedIndex: 1,
-        color: color,
+        color: groupData.color,
       ),
     );
   }

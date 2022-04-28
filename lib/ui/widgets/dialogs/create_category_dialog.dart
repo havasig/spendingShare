@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../button.dart';
 import '../input_field.dart';
@@ -10,7 +9,7 @@ import '../input_field.dart';
 class CreateCategoryDialog extends StatelessWidget {
   const CreateCategoryDialog({Key? key, required this.color}) : super(key: key);
 
-  final String color;
+  final MaterialColor color;
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +35,14 @@ class CreateCategoryDialog extends StatelessWidget {
               color: ColorConstants.white.withOpacity(0.2),
             ),
             InputField(
-              labelColor: globals.colors[color]!,
-              focusColor: globals.colors[color]!,
+              labelColor: color,
+              focusColor: color,
               key: const Key('category_name_input'),
               focusNode: _focusNode,
               textEditingController: _textEditingController,
               prefixIcon: Icon(
                 Icons.mail,
-                color: globals.colors[color],
+                color: color,
               ),
               labelText: 'category'.tr,
               hintText: 'category'.tr,
@@ -53,7 +52,7 @@ class CreateCategoryDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         Button(
-          buttonColor: globals.colors[color]!,
+          buttonColor: color,
           onPressed: () {
             Navigator.of(context).pop(_textEditingController.text);
           },

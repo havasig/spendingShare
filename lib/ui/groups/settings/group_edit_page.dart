@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:provider/provider.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/group.dart';
-import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/groups/create/select_color.dart';
 import 'package:spending_share/ui/groups/create/select_currency.dart';
@@ -18,7 +18,6 @@ import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
@@ -51,107 +50,108 @@ class _GroupEditPageState extends State<GroupEditPage> {
             builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 Group group = Group.fromDocument(snapshot.data!);
-                CreateGroupChangeNotifier _createGroupChangeNotifier = CreateGroupChangeNotifier(
-                  group.adminId,
-                  group.currency,
-                  group.color,
-                  globals.colors[group.color],
-                  group.icon,
-                  globals.icons[group.icon],
-                );
-                return ChangeNotifierProvider(
-                  create: (context) => _createGroupChangeNotifier,
-                  child: Column(
-                    children: [
-                      SizedBox(height: h(6)),
-                      Form(
-                        key: _formKey,
-                        child: InputField(
-                          validator: TextValidator.validateGroupNameText,
-                          key: const Key('group_name_input'),
-                          focusNode: _groupNameFocusNode,
-                          textEditingController: _groupNameTextEditingController,
-                          labelText: 'name'.tr,
-                          hintText: 'group_name'.tr,
-                          prefixIcon: const Icon(
-                            Icons.group,
-                            color: ColorConstants.defaultOrange,
-                          ),
+                CreateGroupChangeNotifier _createGroupChangeNotifier = Provider.of(context);
+
+                _createGroupChangeNotifier.init(
+                    GroupData(
+                      groupId: '',
+                      currency: group.currency,
+                      icon: group.icon,
+                      color: group.color,
+                    ),
+                    null,
+                    group.adminId);
+
+                return Column(
+                  children: [
+                    SizedBox(height: h(6)),
+                    Form(
+                      key: _formKey,
+                      child: InputField(
+                        validator: TextValidator.validateGroupNameText,
+                        key: const Key('group_name_input'),
+                        focusNode: _groupNameFocusNode,
+                        textEditingController: _groupNameTextEditingController,
+                        labelText: 'name'.tr,
+                        hintText: 'group_name'.tr,
+                        prefixIcon: const Icon(
+                          Icons.group,
+                          color: ColorConstants.defaultOrange,
                         ),
                       ),
-                      ChangeNotifierProvider(
-                        create: (context) => _createGroupChangeNotifier as CreateChangeNotifier,
-                        child: SelectCurrency(currency: group.currency, color: group.color),
-                      ),
-                      SelectColor(defaultColor: group.color),
-                      SelectIcon(defaultIcon: group.icon),
-                      const Spacer(),
-                      Button(
-                        onPressed: () async {
-                          _createGroupChangeNotifier.setName(_groupNameTextEditingController.text);
-                          if (_formKey.currentState!.validate() && _createGroupChangeNotifier.validateFirstPage()) {
-                            try {
-                              List<DocumentReference> memberReferences = [];
-                              for (var member in _createGroupChangeNotifier.members) {
-                                memberReferences.add(await widget.firestore.collection('members').add({
-                                  'name': member,
-                                  'userFirebaseId': _createGroupChangeNotifier.adminId,
-                                }));
-                              }
-/*
-                              // TODO update not overwrite
-                              List<DocumentReference> categoryReferences = [];
-                              categoryReferences.add(await widget.firestore.collection('categories').add({
-                                'name': 'other'.tr,
-                                'transactions': [],
+                    ),
+                    ChangeNotifierProvider(
+                      create: (context) => _createGroupChangeNotifier as CreateChangeNotifier,
+                      child: SelectCurrency(currency: group.currency),
+                    ),
+                    SelectColor(defaultColor: group.color),
+                    SelectIcon(defaultIcon: group.icon),
+                    const Spacer(),
+                    Button(
+                      onPressed: () async {
+                        _createGroupChangeNotifier.setName(_groupNameTextEditingController.text);
+                        if (_formKey.currentState!.validate() && _createGroupChangeNotifier.validateFirstPage()) {
+                          try {
+                            List<DocumentReference> memberReferences = [];
+                            for (var member in _createGroupChangeNotifier.members) {
+                              memberReferences.add(await widget.firestore.collection('members').add({
+                                'name': member,
+                                'userFirebaseId': _createGroupChangeNotifier.adminId,
                               }));
-
-                              DocumentReference groupReference = await widget.firestore.collection('groups').add({
-                                'adminId': _createGroupChangeNotifier.adminId,
-                                'name': _createGroupChangeNotifier.name,
-                                'color': _createGroupChangeNotifier.colorName,
-                                'currency': _createGroupChangeNotifier.currency,
-                                'icon': _createGroupChangeNotifier.iconName,
-                                'members': memberReferences,
-                                'categories': categoryReferences,
-                                'transactions': [],
-                                'debts': [],
-                              });
-
-                              SpendingShareUser user = Provider.of(context, listen: false);
-
-                              DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-                                  await widget.firestore.collection('users').doc(user.databaseId).get();
-
-                              List<dynamic> newGroupReferenceList = userSnapshot.data()!['groups'];
-                              newGroupReferenceList.add(groupReference);
-
-                              await widget.firestore
-                                  .collection('users')
-                                  .doc(user.databaseId)
-                                  .set({'groups': newGroupReferenceList}, SetOptions(merge: true));
-*/
-                              Get.offAll(() => GroupDetailsPage(firestore: widget.firestore, hasBack: false, groupId: widget.groupId));
-                            } catch (e) {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return ErrorDialog(
-                                    title: 'group_edit_failed'.tr,
-                                    message: '${(e as dynamic).message}'.tr,
-                                  );
-                                },
-                              );
                             }
+/*
+                            // TODO update not overwrite
+                            List<DocumentReference> categoryReferences = [];
+                            categoryReferences.add(await widget.firestore.collection('categories').add({
+                              'name': 'other'.tr,
+                              'transactions': [],
+                            }));
+
+                            DocumentReference groupReference = await widget.firestore.collection('groups').add({
+                              'adminId': _createGroupChangeNotifier.adminId,
+                              'name': _createGroupChangeNotifier.name,
+                              'color': _createGroupChangeNotifier.colorName,
+                              'currency': _createGroupChangeNotifier.currency,
+                              'icon': _createGroupChangeNotifier.iconName,
+                              'members': memberReferences,
+                              'categories': categoryReferences,
+                              'transactions': [],
+                              'debts': [],
+                            });
+
+                            SpendingShareUser user = Provider.of(context, listen: false);
+
+                            DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+                                await widget.firestore.collection('users').doc(user.databaseId).get();
+
+                            List<dynamic> newGroupReferenceList = userSnapshot.data()!['groups'];
+                            newGroupReferenceList.add(groupReference);
+
+                            await widget.firestore
+                                .collection('users')
+                                .doc(user.databaseId)
+                                .set({'groups': newGroupReferenceList}, SetOptions(merge: true));
+*/
+                            Get.offAll(() => GroupDetailsPage(firestore: widget.firestore, hasBack: false, groupId: widget.groupId));
+                          } catch (e) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ErrorDialog(
+                                  title: 'group_edit_failed'.tr,
+                                  message: '${(e as dynamic).message}'.tr,
+                                );
+                              },
+                            );
                           }
-                        },
-                        text: 'save_changes'.tr,
-                        textColor: globals.colors[_createGroupChangeNotifier.colorName]!,
-                        buttonColor: globals.colors[_createGroupChangeNotifier.colorName]!.withOpacity(0.2),
-                        width: MediaQuery.of(context).size.width * 0.9,
-                      ),
-                    ],
-                  ),
+                        }
+                      },
+                      text: 'save_changes'.tr,
+                      textColor: _createGroupChangeNotifier.color!,
+                      buttonColor: _createGroupChangeNotifier.color!.withOpacity(0.2),
+                      width: MediaQuery.of(context).size.width * 0.9,
+                    ),
+                  ],
                 );
               }
               return OnFutureBuildError(snapshot);

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:spending_share/models/data/create_transaction_data.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
-import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/create/select_currency.dart';
@@ -25,13 +26,10 @@ import '../../utils/number_helper.dart';
 import 'income/add_income.dart';
 
 class CreateTransactionPage extends StatefulWidget {
-  const CreateTransactionPage({Key? key, required this.firestore, required this.color, required this.currency, required this.groupId})
-      : super(key: key);
+  const CreateTransactionPage({Key? key, required this.firestore, required this.groupData}) : super(key: key);
 
   final FirebaseFirestore firestore;
-  final String color;
-  final String currency;
-  final String groupId;
+  final GroupData groupData;
 
   @override
   State<CreateTransactionPage> createState() => _CreateTransactionPageState();
@@ -43,190 +41,210 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      var createTransactionChangeNotifier = Provider.of<CreateTransactionChangeNotifier>(context, listen: false);
+      var createTransactionData = Provider.of<CreateTransactionData>(context, listen: false);
+      createTransactionData.setGroupId(widget.groupData.groupId);
+      createTransactionData.setColor(widget.groupData.color);
 
-      createTransactionChangeNotifier.setCurrency(widget.currency);
-      createTransactionChangeNotifier.setDefaultCurrency(widget.currency);
-      createTransactionChangeNotifier.setGroupId(widget.groupId);
-      createTransactionChangeNotifier.setColor(widget.color);
+      var createTransactionChangeNotifier = Provider.of<CreateTransactionChangeNotifier>(context, listen: false);
+      createTransactionChangeNotifier.setCurrency(widget.groupData.currency);
+      createTransactionChangeNotifier.setDefaultCurrency(widget.groupData.currency!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    SpendingShareUser currentUser = Provider.of(context);
-    return Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
+    return Consumer<CreateTransactionData>(builder: (_, createTransactionData, __) {
       return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: SpendingShareAppBar(
-              titleText: 'add_transaction'.tr,
-              hasForward: true,
-              forwardText: 'next'.tr,
-              onForward: () async {
-                switch (createTransactionChangeNotifier.type) {
-                  case TransactionType.expense:
-                    if (createTransactionChangeNotifier.isValidExpense()) {
-                      var group = await widget.firestore.collection('groups').doc(createTransactionChangeNotifier.groupId).get();
-                      createTransactionChangeNotifier.clearAllMembers();
-                      createTransactionChangeNotifier.clearTo();
-                      createTransactionChangeNotifier.clearEditedAmount();
-                      String valuePerMember =
-                          (double.parse(createTransactionChangeNotifier.value) / group.data()!['members'].length).toString();
-                      for (var member in group.data()!['members']) {
-                        createTransactionChangeNotifier.addToAllMembers(member);
-                        createTransactionChangeNotifier.addTo(member, valuePerMember);
-                      }
-                      Get.to(() => AddExpense(firestore: widget.firestore));
+            titleText: 'add_transaction'.tr,
+            hasForward: true,
+            forwardText: 'next'.tr,
+            onForward: () async {
+              CreateTransactionChangeNotifier createTransactionChangeNotifier =
+                  Provider.of<CreateTransactionChangeNotifier>(context, listen: false);
+              createTransactionChangeNotifier.setColorNoNotify(widget.groupData.color);
+
+              String? validate = createTransactionData.validateDateAndMember();
+              if (validate != null) {
+                createTransactionChangeNotifier.setValue(validate);
+                return;
+              }
+
+              switch (createTransactionChangeNotifier.type) {
+                case TransactionType.expense:
+                  String? validate = createTransactionData.validateCategory();
+                  if (validate != null) {
+                    createTransactionChangeNotifier.setValue(validate);
+                    return;
+                  }
+                  if (createTransactionChangeNotifier.isValidExpense()) {
+                    var group = await widget.firestore.collection('groups').doc(createTransactionData.groupId).get();
+                    createTransactionData.clearAllMembers();
+                    createTransactionChangeNotifier.clearTo();
+                    createTransactionChangeNotifier.clearEditedAmount();
+                    String valuePerMember =
+                        (double.parse(createTransactionChangeNotifier.value) / group.data()!['members'].length).toString();
+                    for (var member in group.data()!['members']) {
+                      createTransactionData.addToAllMembers(member);
+                      createTransactionChangeNotifier.addTo(member, valuePerMember);
                     }
-                    break;
-                  case TransactionType.transfer:
-                    if (createTransactionChangeNotifier.isValidTransfer()) Get.to(() => TransferTo(firestore: widget.firestore));
-                    break;
-                  case TransactionType.income:
-                    if (createTransactionChangeNotifier.isValidIncome()) Get.to(() => AddIncome(firestore: widget.firestore));
-                    break;
-                }
-              }),
+                    Get.to(() => AddExpense(firestore: widget.firestore));
+                  }
+                  break;
+                case TransactionType.transfer:
+                  if (createTransactionChangeNotifier.isValidTransfer()) Get.to(() => TransferTo(firestore: widget.firestore));
+                  break;
+                case TransactionType.income:
+                  if (createTransactionChangeNotifier.isValidIncome()) {
+                    Get.to(() => AddIncome(firestore: widget.firestore));
+                  }
+                  break;
+              }
+            },
+          ),
           body: Padding(
             padding: EdgeInsets.fromLTRB(h(16), 0, h(16), h(16)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                ChangeNotifierProvider(
-                  create: (context) => createTransactionChangeNotifier as CreateChangeNotifier,
-                  child: SelectCurrency(currency: currentUser.currency, color: widget.color),
-                ),
-                CreateTransactionDropdown(
-                  defaultValue: 'expense'.tr,
-                  options: {
-                    'expense'.tr: TransactionType.expense,
-                    'transfer'.tr: TransactionType.transfer,
-                    'income'.tr: TransactionType.income,
-                  },
-                  title: 'type'.tr,
-                  color: widget.color,
-                  onSelect: (value) {
-                    createTransactionChangeNotifier.setType(value);
-                  },
-                ),
-                createTransactionChangeNotifier.type == TransactionType.expense
-                    ? StreamBuilder<List<DocumentSnapshot>>(
-                        stream: widget.firestore.collection('groups').doc(widget.groupId).snapshots().switchMap((group) {
-                          createTransactionChangeNotifier.setGroupIcon(group.data()!['icon']);
-                          return CombineLatestStream.list(group
-                              .data()!['categories']
-                              .map<Stream<DocumentSnapshot>>((category) => (category as DocumentReference).snapshots()));
-                        }),
-                        builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> categoryListSnapshot) {
-                          if (categoryListSnapshot.hasData && categoryListSnapshot.data!.isNotEmpty) {
-                            Map<String, dynamic> options = {};
-                            for (var category in categoryListSnapshot.data!) {
-                              category as DocumentSnapshot<Map<String, dynamic>>;
-                              options.addAll({category.data()!['name']: category.reference});
+            child: Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  ChangeNotifierProvider(
+                    create: (context) => createTransactionChangeNotifier as CreateChangeNotifier,
+                    child: SelectCurrency(currency: widget.groupData.currency!, color: widget.groupData.color),
+                  ),
+                  CreateTransactionDropdown(
+                    defaultValue: 'expense'.tr,
+                    options: {
+                      'expense'.tr: TransactionType.expense,
+                      'transfer'.tr: TransactionType.transfer,
+                      'income'.tr: TransactionType.income,
+                    },
+                    title: 'type'.tr,
+                    color: widget.groupData.color,
+                    onSelect: (value) {
+                      createTransactionChangeNotifier.setType(value);
+                    },
+                  ),
+                  createTransactionChangeNotifier.type == TransactionType.expense
+                      ? StreamBuilder<List<DocumentSnapshot>>(
+                          stream: widget.firestore.collection('groups').doc(widget.groupData.groupId).snapshots().switchMap((group) {
+                            createTransactionData.setGroupIcon(globals.icons[group.data()!['icon']] ?? globals.icons['default']!);
+                            return CombineLatestStream.list(group
+                                .data()!['categories']
+                                .map<Stream<DocumentSnapshot>>((category) => (category as DocumentReference).snapshots()));
+                          }),
+                          builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> categoryListSnapshot) {
+                            if (categoryListSnapshot.hasData && categoryListSnapshot.data!.isNotEmpty) {
+                              Map<String, dynamic> options = {};
+                              for (var category in categoryListSnapshot.data!) {
+                                category as DocumentSnapshot<Map<String, dynamic>>;
+                                options.addAll({category.data()!['name']: category.reference});
+                              }
+                              createTransactionData.category == null
+                                  ? createTransactionData.setCategory(options.entries.first.value)
+                                  : null;
+                              return CreateTransactionDropdown(
+                                title: 'category'.tr,
+                                options: options,
+                                color: widget.groupData.color,
+                                onSelect: (value) {
+                                  createTransactionData.setCategory(value);
+                                },
+                              );
+                            } else if (!categoryListSnapshot.hasData) {
+                              return Text('no_category_found'.tr);
+                            } else {
+                              return OnFutureBuildError(categoryListSnapshot);
                             }
-                            createTransactionChangeNotifier.category == null
-                                ? createTransactionChangeNotifier.setCategory(options.entries.first.value)
-                                : null;
-                            return CreateTransactionDropdown(
-                              title: 'category'.tr,
-                              options: options,
-                              color: widget.color,
-                              onSelect: (value) {
-                                createTransactionChangeNotifier.setCategory(value);
-                              },
-                            );
-                          } else if (!categoryListSnapshot.hasData) {
-                            return Text('no_category_found'.tr);
-                          } else {
-                            return OnFutureBuildError(categoryListSnapshot);
+                          })
+                      : const SizedBox.shrink(),
+                  StreamBuilder<List<DocumentSnapshot>>(
+                      stream: widget.firestore.collection('groups').doc(widget.groupData.groupId).snapshots().switchMap((group) {
+                        return CombineLatestStream.list(
+                            group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()));
+                      }),
+                      builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> memberListSnapshot) {
+                        if (memberListSnapshot.hasData && memberListSnapshot.data!.isNotEmpty) {
+                          Map<String, dynamic> options = {};
+                          for (var member in memberListSnapshot.data!) {
+                            member as DocumentSnapshot<Map<String, dynamic>>;
+                            options.addAll({member.data()!['name']: member.reference});
                           }
-                        })
-                    : const SizedBox.shrink(),
-                StreamBuilder<List<DocumentSnapshot>>(
-                    stream: widget.firestore.collection('groups').doc(widget.groupId).snapshots().switchMap((group) {
-                      return CombineLatestStream.list(
-                          group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()));
-                    }),
-                    builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> memberListSnapshot) {
-                      if (memberListSnapshot.hasData && memberListSnapshot.data!.isNotEmpty) {
-                        Map<String, dynamic> options = {};
-                        for (var member in memberListSnapshot.data!) {
-                          member as DocumentSnapshot<Map<String, dynamic>>;
-                          options.addAll({member.data()!['name']: member.reference});
+                          return TransactionMemberDropdown(
+                            options: options,
+                            color: widget.groupData.color,
+                          );
+                        } else if (memberListSnapshot.hasData && memberListSnapshot.data!.isEmpty) {
+                          return Text('no_member_found'.tr);
+                        } else {
+                          return OnFutureBuildError(memberListSnapshot);
                         }
-                        return TransactionMemberDropdown(
-                          options: options,
-                          color: widget.color,
-                        );
-                      } else if (memberListSnapshot.hasData && memberListSnapshot.data!.isEmpty) {
-                        return Text('no_member_found'.tr);
-                      } else {
-                        return OnFutureBuildError(memberListSnapshot);
-                      }
-                    }),
-                Row(
-                  children: [
-                    Text('date'.tr),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () async {
-                        var selectedDate = await showDatePicker(
-                          context: context,
-                          initialDate: createTransactionChangeNotifier.date,
-                          firstDate: DateTime.now().add(const Duration(days: -365 * 5)),
-                          lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
-                          builder: (context, child) {
-                            return Theme(
-                              data: Theme.of(context).copyWith(
-                                colorScheme: ColorScheme.light(
-                                  primary: globals.colors[widget.color]!, // header text color
-                                  onSurface: ColorConstants.white,
+                      }),
+                  Row(
+                    children: [
+                      Text('date'.tr),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () async {
+                          var selectedDate = await showDatePicker(
+                            context: context,
+                            initialDate: createTransactionData.date,
+                            firstDate: DateTime.now().add(const Duration(days: -365 * 5)),
+                            lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.light(
+                                    primary: widget.groupData.color, // header text color
+                                    onSurface: ColorConstants.white,
+                                  ),
                                 ),
-                              ),
-                              child: child!,
-                            );
-                          },
-                        );
-                        if (selectedDate != null) createTransactionChangeNotifier.setDate(selectedDate);
-                      },
-                      child: Row(
-                        children: [
-                          Text(createTransactionChangeNotifier.date.toString()),
-                          Icon(
-                            Icons.calendar_today,
-                            color: globals.colors[widget.color],
-                          ),
-                        ],
+                                child: child!,
+                              );
+                            },
+                          );
+                          if (selectedDate != null) createTransactionData.setDate(selectedDate);
+                        },
+                        child: Row(
+                          children: [
+                            Text(createTransactionData.date.toString()),
+                            Icon(
+                              Icons.calendar_today,
+                              color: widget.groupData.color,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: h(16)),
-                createTransactionChangeNotifier.value.isNotEmpty && double.tryParse(createTransactionChangeNotifier.value) != null
-                    ? Text(
-                        formatNumberString(createTransactionChangeNotifier.value) + ' ' + createTransactionChangeNotifier.currency,
-                        style: TextStyleConstants.value(createTransactionChangeNotifier.color).copyWith(fontSize: 30),
-                      )
-                    : Text(
-                        createTransactionChangeNotifier.value,
-                        style: TextStyleConstants.value(createTransactionChangeNotifier.color).copyWith(fontSize: 30),
-                      ),
-                const Spacer(),
-                Calculator(
-                  color: widget.color,
-                  onEqualPressed: (double userInput) {
-                    createTransactionChangeNotifier.setValue(formatNumberString(userInput.toString()));
-                  },
-                ),
-              ],
-            ),
+                    ],
+                  ),
+                  SizedBox(height: h(10)),
+                  createTransactionChangeNotifier.value.isNotEmpty && double.tryParse(createTransactionChangeNotifier.value) != null
+                      ? Text(
+                          formatNumberString(createTransactionChangeNotifier.value) + ' ' + createTransactionChangeNotifier.currency,
+                          style: TextStyleConstants.value(widget.groupData.color).copyWith(fontSize: 30),
+                        )
+                      : Text(
+                          createTransactionChangeNotifier.value,
+                          style: TextStyleConstants.value(widget.groupData.color).copyWith(fontSize: 30),
+                        ),
+                  const Spacer(),
+                  Calculator(
+                    color: widget.groupData.color,
+                    onEqualPressed: (double userInput) {
+                      createTransactionChangeNotifier.setValue(formatNumberString(userInput.toString()));
+                    },
+                  ),
+                ],
+              );
+            }),
           ),
           bottomNavigationBar: SpendingShareBottomNavigationBar(
             selectedIndex: 1,
             firestore: widget.firestore,
-            color: widget.color,
+            color: widget.groupData.color,
           ),
         ),
       );

@@ -5,8 +5,8 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 
 class CircleIconButton extends StatelessWidget {
   final VoidCallback? onTap;
-  final String color;
-  final String? icon;
+  final MaterialColor color;
+  final IconData? icon;
   final String? name;
   final double width;
 
@@ -29,7 +29,7 @@ class CircleIconButton extends StatelessWidget {
             type: MaterialType.transparency,
             child: Ink(
               decoration: BoxDecoration(
-                color: globals.colors[color]?[globals.circleShade] ?? Colors.orange[globals.circleShade],
+                color: color[globals.circleShade],
                 shape: BoxShape.circle,
               ),
               child: InkWell(
@@ -38,9 +38,9 @@ class CircleIconButton extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(h(width)),
                   child: Icon(
-                    globals.icons[icon] ?? Icons.group,
+                    icon ?? globals.icons['default'],
                     size: h(width),
-                    color: globals.colors[color]?[globals.iconShade] ?? Colors.orange[globals.iconShade],
+                    color: color[globals.iconShade],
                   ),
                 ),
               ),

@@ -11,12 +11,14 @@ import 'package:provider/provider.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
+import 'package:spending_share/ui/helpers/change_notifiers/create_group_change_notifier.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
 import 'package:spending_share/utils/config/environment.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/localization_service.dart';
 
 import 'firebase_options.dart';
+import 'models/data/create_transaction_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,12 +36,19 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ApplicationState()),
         ChangeNotifierProvider(create: (context) => CreateTransactionChangeNotifier()),
-        Provider(create: (context) => SpendingShareUser(groups: [])),
+        ChangeNotifierProvider(create: (context) => CreateGroupChangeNotifier()),
+        Provider(
+            create: (context) => SpendingShareUser(
+                  groups: [],
+                  color: globals.colors['default']!,
+                  icon: globals.icons['default']!,
+                )),
+        Provider(create: (context) => CreateTransactionData()),
       ],
       child: MyApp(firestore: firestore),
     ),
   );
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  //SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 }
 
 Future<void> initializeEnvironment() async {
@@ -76,18 +85,19 @@ class MyApp extends StatelessWidget {
       builder: () => GetMaterialApp(
         title: 'Speding Share',
         theme: ThemeData(
-            bottomSheetTheme: const BottomSheetThemeData(
-              backgroundColor: ColorConstants.backgroundBlack,
-              modalBackgroundColor: ColorConstants.backgroundBlack,
-            ),
-            fontFamily: 'Nunito',
-            brightness: Brightness.dark,
-            scaffoldBackgroundColor: ColorConstants.backgroundBlack,
-            scrollbarTheme: ScrollbarThemeData(
-                isAlwaysShown: true,
-                thickness: MaterialStateProperty.all(10),
-                thumbColor: MaterialStateProperty.all(ColorConstants.defaultOrange),
-                radius: const Radius.circular(10))),
+          bottomSheetTheme: const BottomSheetThemeData(
+            backgroundColor: ColorConstants.backgroundBlack,
+            modalBackgroundColor: ColorConstants.backgroundBlack,
+          ),
+          fontFamily: 'Nunito',
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: ColorConstants.backgroundBlack,
+          scrollbarTheme: ScrollbarThemeData(
+            isAlwaysShown: true,
+            thickness: MaterialStateProperty.all(6),
+            radius: const Radius.circular(4),
+          ),
+        ),
         themeMode: ThemeMode.dark,
         locale: LocalizationService.locale,
         fallbackLocale: LocalizationService.fallbackLocale,

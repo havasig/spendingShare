@@ -21,8 +21,8 @@ class DebtItem extends StatelessWidget {
   final DocumentReference to;
   final double value;
   final String currency;
-  final String color;
-  final String icon;
+  final MaterialColor color;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {

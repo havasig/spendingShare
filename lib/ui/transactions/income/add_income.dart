@@ -3,15 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:spending_share/models/data/create_transaction_data.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
+import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
 
 import '../../../models/member.dart';
 import '../../../models/user.dart';
 import '../../../utils/screen_util_helper.dart';
-import '../../../utils/text_validator.dart';
 import '../../groups/details/group_details_page.dart';
-import '../../helpers/change_notifiers/transaction_change_notifier.dart';
 import '../../helpers/on_future_build_error.dart';
 import '../../widgets/button.dart';
 import '../../widgets/circle_icon_button.dart';
@@ -32,20 +31,18 @@ class AddIncome extends StatelessWidget {
     TextEditingController nameTextEditingController = TextEditingController();
     TextEditingController fromTextEditingController = TextEditingController();
 
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Consumer<CreateTransactionChangeNotifier>(builder: (_, createTransactionChangeNotifier, __) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: SpendingShareAppBar(titleText: 'add_income'.tr),
-          body: Padding(
-            padding: EdgeInsets.all(h(16)),
-            child: Column(
-              children: [
-                Form(
-                  key: _formKey,
-                  child: Column(
+      child: Consumer<CreateTransactionChangeNotifier>(
+        builder: (_, createTransactionChangeNotifier, __) => Consumer<CreateTransactionData>(
+          builder: (_, createTransactionData, __) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: SpendingShareAppBar(titleText: 'add_income'.tr),
+            body: Padding(
+              padding: EdgeInsets.all(h(16)),
+              child: Column(
+                children: [
+                  Column(
                     children: [
                       InputField(
                         key: const Key('income_name_field'),
@@ -53,10 +50,9 @@ class AddIncome extends StatelessWidget {
                         textEditingController: nameTextEditingController,
                         hintText: 'income_name'.tr,
                         labelText: 'income_name'.tr,
-                        prefixIcon: Icon(Icons.group_add, color: globals.colors[createTransactionChangeNotifier.color]!),
-                        validator: TextValidator.validateIsNotEmpty,
-                        labelColor: globals.colors[createTransactionChangeNotifier.color]!,
-                        focusColor: globals.colors[createTransactionChangeNotifier.color]!,
+                        prefixIcon: Icon(Icons.group_add, color: createTransactionData.color),
+                        labelColor: createTransactionData.color,
+                        focusColor: createTransactionData.color,
                       ),
                       SizedBox(height: h(16)),
                       InputField(
@@ -65,117 +61,117 @@ class AddIncome extends StatelessWidget {
                         textEditingController: fromTextEditingController,
                         hintText: 'received_from'.tr,
                         labelText: 'received_from'.tr,
-                        prefixIcon: Icon(Icons.group_add, color: globals.colors[createTransactionChangeNotifier.color]!),
-                        labelColor: globals.colors[createTransactionChangeNotifier.color]!,
-                        focusColor: globals.colors[createTransactionChangeNotifier.color]!,
+                        prefixIcon: Icon(Icons.group_add, color: createTransactionData.color),
+                        labelColor: createTransactionData.color,
+                        focusColor: createTransactionData.color,
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: h(16)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    FutureBuilder<DocumentSnapshot>(
-                      future: createTransactionChangeNotifier.member!.get(),
-                      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          var member = Member.fromDocument(snapshot.data!);
-                          return Column(
-                            children: [
-                              CircleIconButton(
-                                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                                width: 20,
-                                color: createTransactionChangeNotifier.color!,
-                                icon: member.icon ?? createTransactionChangeNotifier.groupIcon!,
-                              ),
-                              Text(member.name + ' ' + 'received'.tr),
-                            ],
-                          );
-                        }
-                        return OnFutureBuildError(snapshot);
-                      },
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          createTransactionChangeNotifier.value + ' ' + createTransactionChangeNotifier.currency,
-                          style: TextStyleConstants.value(createTransactionChangeNotifier.color),
-                        ),
-                        SizedBox(height: h(16)),
-                        Row(
-                          children: [
-                            Text(createTransactionChangeNotifier.date.toString()),
-                            Icon(
-                              Icons.calendar_today,
-                              color: globals.colors[createTransactionChangeNotifier.color],
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                if (createTransactionChangeNotifier.exchangeRate != null)
+                  SizedBox(height: h(16)),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('exchange_rate'.tr),
-                      const Spacer(),
+                      FutureBuilder<DocumentSnapshot>(
+                        future: createTransactionData.member!.get(),
+                        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            var member = Member.fromDocument(snapshot.data!);
+                            return Column(
+                              children: [
+                                CircleIconButton(
+                                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                                  width: 20,
+                                  color: createTransactionData.color,
+                                  icon: member.icon ?? createTransactionData.groupIcon,
+                                ),
+                                Text(member.name + ' ' + 'received'.tr),
+                              ],
+                            );
+                          }
+                          return OnFutureBuildError(snapshot);
+                        },
+                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          Text(
+                            createTransactionChangeNotifier.value + ' ' + createTransactionChangeNotifier.currency,
+                            style: TextStyleConstants.value(createTransactionData.color),
+                          ),
+                          SizedBox(height: h(16)),
                           Row(
                             children: [
-                              Text('1 ' + createTransactionChangeNotifier.currency),
-                              const Icon(Icons.arrow_forward_outlined),
-                              Text(createTransactionChangeNotifier.exchangeRate.toString() +
-                                  ' ' +
-                                  createTransactionChangeNotifier.defaultCurrency!),
+                              Text(createTransactionData.date.toString()),
+                              Icon(
+                                Icons.calendar_today,
+                                color: createTransactionData.color,
+                              ),
                             ],
                           ),
-                          Text((createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value)!)
-                                  .toString() +
-                              ' ' +
-                              createTransactionChangeNotifier.defaultCurrency!),
                         ],
-                      ),
+                      )
                     ],
                   ),
-                const Spacer(),
-                Button(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      createTransactionChangeNotifier.setName(nameTextEditingController.text);
+                  if (createTransactionChangeNotifier.exchangeRate != null)
+                    Row(
+                      children: [
+                        Text('exchange_rate'.tr),
+                        const Spacer(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                Text('1 ' + createTransactionChangeNotifier.currency),
+                                const Icon(Icons.arrow_forward_outlined),
+                                Text(createTransactionChangeNotifier.exchangeRate.toString() +
+                                    ' ' +
+                                    createTransactionChangeNotifier.defaultCurrency!),
+                              ],
+                            ),
+                            Text((createTransactionChangeNotifier.exchangeRate! * double.tryParse(createTransactionChangeNotifier.value)!)
+                                    .toString() +
+                                ' ' +
+                                createTransactionChangeNotifier.defaultCurrency!),
+                          ],
+                        ),
+                      ],
+                    ),
+                  const Spacer(),
+                  Button(
+                    onPressed: () async {
+                      String name = nameTextEditingController.text.isNotEmpty ? nameTextEditingController.text : 'income'.tr;
+                      createTransactionChangeNotifier.setName(name);
                       try {
                         SpendingShareUser user = Provider.of(context, listen: false);
                         DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
 
                         DocumentReference incomeReference = await firestore.collection('transactions').add({
-                          'category': createTransactionChangeNotifier.category, // TODO select income category automatically (?)
+                          //'category': createTransactionData.category, // TODO select income category automatically (?)
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
-                          'date': createTransactionChangeNotifier.date,
+                          'date': createTransactionData.date,
                           'exchangeRate': createTransactionChangeNotifier.exchangeRate,
-                          'from': fromTextEditingController.text,
+                          'incomeFrom': fromTextEditingController.text,
                           'name': createTransactionChangeNotifier.name,
-                          'to': createTransactionChangeNotifier.member,
+                          'to': [createTransactionData.member],
                           'type': createTransactionChangeNotifier.type.toString(),
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });
 
                         DocumentSnapshot<Map<String, dynamic>> groupSnapshot =
-                            await firestore.collection('groups').doc(createTransactionChangeNotifier.groupId).get();
+                            await firestore.collection('groups').doc(createTransactionData.groupId).get();
 
                         List<dynamic> newTransactionReferenceList = groupSnapshot.data()!['transactions'];
                         newTransactionReferenceList.add(incomeReference);
 
                         await firestore
                             .collection('groups')
-                            .doc(createTransactionChangeNotifier.groupId)
+                            .doc(createTransactionData.groupId)
                             .set({'transactions': newTransactionReferenceList}, SetOptions(merge: true));
 
-                        var groupId = createTransactionChangeNotifier.groupId!;
+                        var groupId = createTransactionData.groupId!;
+                        createTransactionData.clear();
                         createTransactionChangeNotifier.clear();
 
                         Get.to(() => GroupDetailsPage(
@@ -197,21 +193,21 @@ class AddIncome extends StatelessWidget {
                           },
                         );
                       }
-                    }
-                  },
-                  text: 'save_transfer'.tr,
-                  buttonColor: globals.colors[createTransactionChangeNotifier.color]!,
-                ),
-              ],
+                    },
+                    text: 'save_income'.tr,
+                    buttonColor: createTransactionData.color,
+                  ),
+                ],
+              ),
+            ),
+            bottomNavigationBar: SpendingShareBottomNavigationBar(
+              selectedIndex: 1,
+              firestore: firestore,
+              color: createTransactionData.color,
             ),
           ),
-          bottomNavigationBar: SpendingShareBottomNavigationBar(
-            selectedIndex: 1,
-            firestore: firestore,
-            color: createTransactionChangeNotifier.color!,
-          ),
-        );
-      }),
+        ),
+      ),
     );
   }
 }

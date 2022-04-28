@@ -9,14 +9,15 @@ import 'package:spending_share/models/group.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
-import 'package:spending_share/ui/helpers/fab/create_group_fab.dart';
 import 'package:spending_share/ui/groups/details/group_details_page.dart';
 import 'package:spending_share/ui/groups/join_page.dart';
+import 'package:spending_share/ui/helpers/fab/create_group_fab.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
+import 'package:spending_share/utils/loading_indicator.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class MyGroupsPage extends StatelessWidget {
@@ -26,30 +27,68 @@ class MyGroupsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SpendingShareUser currentUser = Provider.of(context);
     var currentUserFirebaseId = FirebaseAuth.instance.currentUser!.uid;
     return StreamBuilder<List<DocumentSnapshot>>(
         stream: firestore.collection('users').where('userFirebaseId', isEqualTo: currentUserFirebaseId).snapshots().switchMap((user) =>
             CombineLatestStream.list(
                 user.docs.first['groups'].map<Stream<DocumentSnapshot>>((group) => (group as DocumentReference).snapshots()))),
         builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> groupListSnapshot) {
-          if (groupListSnapshot.hasData && groupListSnapshot.data!.isNotEmpty) {
-            for (var g in groupListSnapshot.data!) {
-              Group.fromDocument(g);
+          if (groupListSnapshot.hasData) {
+            if (groupListSnapshot.data!.isNotEmpty) {
+              return HaveGroups(
+                groups: groupListSnapshot.data!,
+                firestore: firestore,
+                color: currentUser.color,
+              );
+            } else {
+              return NoGroupsYet(
+                firestore: firestore,
+                color: currentUser.color,
+              );
             }
-
-            return HaveGroups(
-              groups: groupListSnapshot.data!,
-              firestore: firestore,
-            );
           }
-          return NoGroupsYet(firestore: firestore);
+          return LoadingPage(
+            firestore: firestore,
+            color: currentUser.color,
+          );
         });
   }
 }
 
-class NoGroupsYet extends StatelessWidget {
-  const NoGroupsYet({Key? key, required this.firestore}) : super(key: key);
+class LoadingPage extends StatelessWidget {
+  const LoadingPage({Key? key, required this.firestore, required this.color}) : super(key: key);
 
+  final MaterialColor color;
+  final FirebaseFirestore firestore;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: SpendingShareAppBar(
+        hasBack: false,
+        titleText: 'my_groups'.tr,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(h(16)),
+        child: const LoadingIndicator(),
+      ),
+      floatingActionButton: CreateGroupFab(firestore: firestore, color: color),
+      bottomNavigationBar: SpendingShareBottomNavigationBar(
+        key: const Key('bottom_navigation'),
+        selectedIndex: 1,
+        firestore: firestore,
+        color: color,
+      ),
+    );
+  }
+}
+
+class NoGroupsYet extends StatelessWidget {
+  const NoGroupsYet({Key? key, required this.firestore, required this.color}) : super(key: key);
+
+  final MaterialColor color;
   final FirebaseFirestore firestore;
 
   @override
@@ -111,26 +150,22 @@ class NoGroupsYet extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: CreateGroupFab(firestore: firestore, color: currentUser.color),
-      bottomNavigationBar: SpendingShareBottomNavigationBar(
-        key: const Key('bottom_navigation'),
-        selectedIndex: 1,
-        firestore: firestore,
-      ),
+      floatingActionButton: CreateGroupFab(firestore: firestore, color: color),
+      bottomNavigationBar:
+          SpendingShareBottomNavigationBar(key: const Key('bottom_navigation'), selectedIndex: 1, firestore: firestore, color: color),
     );
   }
 }
 
 class HaveGroups extends StatelessWidget {
-  const HaveGroups({Key? key, required this.groups, required this.firestore}) : super(key: key);
+  const HaveGroups({Key? key, required this.groups, required this.firestore, required this.color}) : super(key: key);
 
+  final MaterialColor color;
   final List<DocumentSnapshot> groups;
   final FirebaseFirestore firestore;
 
   @override
   Widget build(BuildContext context) {
-
-    SpendingShareUser currentUser = Provider.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: SpendingShareAppBar(
@@ -161,11 +196,12 @@ class HaveGroups extends StatelessWidget {
               }).toList()),
         ),
       ),
-      floatingActionButton: CreateGroupFab(firestore: firestore, color: currentUser.color),
+      floatingActionButton: CreateGroupFab(firestore: firestore, color: color),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),
         selectedIndex: 1,
         firestore: firestore,
+        color: color,
       ),
     );
   }
