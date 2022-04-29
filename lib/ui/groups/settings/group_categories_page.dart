@@ -113,7 +113,8 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
                                                       .doc((newCategory as DocumentReference).id)
                                                       .set({'transactions': newTransactionList}, SetOptions(merge: true));
 
-                                                  var group = await widget.firestore.collection('groups').doc(widget.groupData.groupId).get();
+                                                  var group =
+                                                      await widget.firestore.collection('groups').doc(widget.groupData.groupId).get();
                                                   List<dynamic> newCategoryReferenceList = group.data()!['categories'];
                                                   newCategoryReferenceList.removeWhere((element) => element.id == category.databaseId);
 

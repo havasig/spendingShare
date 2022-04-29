@@ -6,8 +6,8 @@ import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
-import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
+import 'package:spending_share/utils/screen_util_helper.dart';
 
 import 'on_future_build_error.dart';
 

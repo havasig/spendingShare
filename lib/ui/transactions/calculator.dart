@@ -3,7 +3,6 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../../utils/screen_util_helper.dart';
 

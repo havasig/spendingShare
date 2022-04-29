@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spending_share/ui/widgets/tab.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 
 import '../../utils/screen_util_helper.dart';
 import '../constants/color_constants.dart';

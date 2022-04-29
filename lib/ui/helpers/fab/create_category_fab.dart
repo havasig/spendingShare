@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/widgets/dialogs/create_category_dialog.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 
 class CreateCategoryFab extends StatelessWidget {
   const CreateCategoryFab({Key? key, required this.firestore, required this.groupData}) : super(key: key);
@@ -34,7 +33,10 @@ class CreateCategoryFab extends StatelessWidget {
           var newCategoryReferenceList = group.data()!['categories'];
           newCategoryReferenceList.add(categoryReference);
 
-          await firestore.collection('groups').doc(groupData.groupId).set({'categories': newCategoryReferenceList}, SetOptions(merge: true));
+          await firestore
+              .collection('groups')
+              .doc(groupData.groupId)
+              .set({'categories': newCategoryReferenceList}, SetOptions(merge: true));
         }),
         child: const Icon(Icons.add),
       ),

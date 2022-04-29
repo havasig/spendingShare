@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class CreateTransactionDropdown extends StatefulWidget {

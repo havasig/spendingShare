@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/ui/widgets/button.dart';
-import 'package:spending_share/utils/globals.dart' as globals;
 
 class Statistics extends StatelessWidget {
   const Statistics({Key? key, required this.color}) : super(key: key);
