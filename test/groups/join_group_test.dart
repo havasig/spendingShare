@@ -1,7 +1,7 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spending_share/ui/groups/join_page.dart';
+import 'package:spending_share/ui/groups/join/join_page.dart';
 
 import '../wrapper.dart';
 

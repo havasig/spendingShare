@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
+import 'package:spending_share/ui/auth/sign_up_with_google_button.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/my_groups_page.dart';
@@ -136,17 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
                 SizedBox(height: h(16)),
-                Button(
-                  textColor: ColorConstants.white.withOpacity(0.8),
-                  buttonColor: ColorConstants.lightGray,
-                  onPressed: () {},
-                  text: 'sign_up_with_google'.tr,
-                  prefixWidget: SvgPicture.asset('assets/graphics/icons/google_logo.svg'),
-                  suffixWidget: Icon(
-                    Icons.arrow_forward_ios,
-                    color: ColorConstants.white.withOpacity(0.8),
-                  ),
-                ),
+                SingUpWithGoogleButton(firestore: widget.firestore, text: 'sign_up_with_google'.tr),
               ],
             ),
           ),
@@ -173,5 +164,37 @@ class _RegisterPageState extends State<RegisterPage> {
         },
       );
     }
+  }
+
+  Future<void> createUserIfNotExists(User firebaseUser) async {
+    QuerySnapshot<Map<String, dynamic>> firestoreUser =
+        await widget.firestore.collection('users').where('userFirebaseId', isEqualTo: firebaseUser.uid).get();
+    if (firestoreUser.size == 0) {
+      await widget.firestore.collection('users').add({
+        'color': 'default',
+        'icon': 'default',
+        'currency': 'USD', // TODO ???
+        'groups': [],
+        'name': firebaseUser.displayName,
+        'userFirebaseId': firebaseUser.uid,
+      });
+    }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
-import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/auth/register_page.dart';
+import 'package:spending_share/ui/auth/sign_up_with_google_button.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/button.dart';
@@ -35,8 +32,8 @@ class _LoginPageState extends State<LoginPage> {
   bool passwordHadFocus = false;
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-  final _emailTextEditingController = TextEditingController();
-  final _passwordTextEditingController = TextEditingController();
+  final _emailTextEditingController = TextEditingController(text: 'havasi.gaabor@gmail.com');
+  final _passwordTextEditingController = TextEditingController(text: 'Passw0rd');
   final _formKey = GlobalKey<FormState>(debugLabel: '_LoginFormState');
 
   @override
@@ -130,23 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   SizedBox(height: h(16)),
-                  Button(
-                    textColor: ColorConstants.white.withOpacity(0.8),
-                    buttonColor: ColorConstants.lightGray,
-                    onPressed: () async {
-                      await signInWithGoogle().then((value) {
-                        SpendingShareUser user = Provider.of(context);
-                        user.userFirebaseId = value.user!.uid;
-                        Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
-                      });
-                    },
-                    text: 'login_with_google'.tr,
-                    prefixWidget: SvgPicture.asset('assets/graphics/icons/google_logo.svg'),
-                    suffixWidget: Icon(
-                      Icons.arrow_forward_ios,
-                      color: ColorConstants.white.withOpacity(0.8),
-                    ),
-                  ),
+                  SingUpWithGoogleButton(firestore: widget.firestore, text: 'login_with_google'.tr),
                 ],
               ),
             ),
@@ -177,22 +158,5 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
     }
-  }
-
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
