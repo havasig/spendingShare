@@ -173,7 +173,7 @@ class HaveGroups extends StatelessWidget {
         hasForward: true,
         forwardText: 'join'.tr,
         titleText: 'my_groups'.tr,
-        onForward: () => Get.to(() => JoinPage(firestore: firestore)),
+        onForward: () => Get.to(() => JoinPage(firestore: firestore, color: color)),
       ),
       body: Padding(
         padding: EdgeInsets.all(h(16)),

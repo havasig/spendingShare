@@ -25,7 +25,7 @@ void main() {
       testWidgets('MyGroups has no groups title', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final textFinder = find.text('no-groups');
+        final textFinder = find.text('no_groups');
         expect(textFinder, findsOneWidget);
       });
 
@@ -39,7 +39,7 @@ void main() {
       testWidgets('MyGroups has paste code here text', (WidgetTester tester) async {
         var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
         await tester.pumpWidget(testWidget);
-        final textFinder = find.text('paste-code-here');
+        final textFinder = find.text('paste_code_here');
         expect(textFinder, findsOneWidget);
       });
 

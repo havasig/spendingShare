@@ -27,7 +27,7 @@ void main() {
       });
 
       testWidgets('WhoAreYou has Who are you header', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group'));
+        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group', color: Colors.orange));
         await tester.pumpWidget(testWidget);
         final textFinder = find.text('who-are-you');
         expect(textFinder, findsOneWidget);
@@ -48,35 +48,35 @@ void main() {
        */
 
       testWidgets('WhoAreYou has back button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group'));
+        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group', color: Colors.orange));
         await tester.pumpWidget(testWidget);
         final textFinder = find.text('back');
         expect(textFinder, findsOneWidget);
       });
 
       testWidgets('WhoAreYou has none of these text', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group'));
+        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group', color: Colors.orange));
         await tester.pumpWidget(testWidget);
         final textFinder = find.text('none_of_these');
         expect(textFinder, findsOneWidget);
       });
 
       testWidgets('WhoAreYou has join input field', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group'));
+        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group', color: Colors.orange));
         await tester.pumpWidget(testWidget);
         final joinInputField = find.byKey(const Key('join_input_field'));
         expect(joinInputField, findsOneWidget);
       });
 
       testWidgets('WhoAreYou has join button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group'));
+        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group', color: Colors.orange));
         await tester.pumpWidget(testWidget);
         final joinButton = find.byKey(const Key('join_button'));
         expect(joinButton, findsOneWidget);
       });
 
       testWidgets('WhoAreYou has bottom navigation', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group'));
+        var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group', color: Colors.orange));
         await tester.pumpWidget(testWidget);
         final bottomNavigationFinder = find.byKey(const Key('bottom_navigation'));
         expect(bottomNavigationFinder, findsOneWidget);

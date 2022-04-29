@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
-import 'package:spending_share/ui/groups/who_are_you.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 
@@ -24,12 +23,6 @@ class SettingsPage extends StatelessWidget {
               Get.offAll(() => LoginPage(firestore: firestore));
             },
             text: 'logout',
-          ),
-          TextButton(
-            onPressed: () {
-              Get.to(() => WhoAreYou(firestore: firestore, groupId: 'WhelNFlsCtIpjoqFxEPJ'));
-            },
-            child: const Text('Who are you?'),
           ),
         ],
       ),

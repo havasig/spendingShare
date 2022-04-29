@@ -72,7 +72,7 @@ class AddIncome extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       FutureBuilder<DocumentSnapshot>(
-                        future: createTransactionData.member!.get(),
+                        future: createTransactionData.member?.get(),
                         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                           if (snapshot.connectionState == ConnectionState.done) {
                             var member = Member.fromDocument(snapshot.data!);

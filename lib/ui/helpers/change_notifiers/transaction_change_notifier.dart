@@ -118,7 +118,6 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
         });
       }
       calculateMinimalWeights();
-      print('stop');
     }
     notifyListeners();
   }

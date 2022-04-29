@@ -110,5 +110,12 @@
   "group_edit_failed": "Group edit failed",
   "create_category": "Create category",
   "add_new_category_name": "Add the new category's name",
-  "type_name_and_add_member" : "Type a name, and add member easily"
+  "type_name_and_add_member" : "Type a name, and add member easily",
+  "incorrect_group_id": "Incorrect group id",
+  "select_member": "Select a member and join with clicking on it",
+  "ok": "ok",
+  "already_member_of_the_group": "You are already member of this group with name: ",
+  "member_is_taken": "This member is taken by someone else. Choose another or join by input.",
+  "who-are-you": "Who are your?",
+  "paste_from_clipboard": "Paste from clipboard"
 }

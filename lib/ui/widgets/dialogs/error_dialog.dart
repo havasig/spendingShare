@@ -9,8 +9,9 @@ import '../button.dart';
 class ErrorDialog extends StatelessWidget {
   final String title;
   final String message;
+  final MaterialColor? color;
 
-  const ErrorDialog({Key? key, required this.title, required this.message}) : super(key: key);
+  const ErrorDialog({Key? key, required this.title, required this.message, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +39,9 @@ class ErrorDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         Button(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          text: 'OK',
+          buttonColor: color ?? ColorConstants.defaultOrange,
+          onPressed: () => Navigator.of(context).pop(),
+          text: 'ok'.tr,
         )
       ],
     );
