@@ -61,7 +61,11 @@ class GroupSettingsPage extends StatelessWidget {
                 textColor: ColorConstants.white.withOpacity(0.8),
                 buttonColor: ColorConstants.lightGray,
                 borderSide: const BorderSide(color: Colors.grey),
-                onPressed: () => Get.to(() => GroupMembersPage()),
+                onPressed: () => Get.to(() => GroupMembersPage(
+                      firestore: firestore,
+                      color: groupData.color,
+                      groupId: groupData.groupId,
+                    )),
                 text: 'members'.tr,
               ),
               SizedBox(height: h(10)),

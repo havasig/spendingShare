@@ -180,6 +180,17 @@ class AddTransfer extends StatelessWidget {
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });
 
+                        DocumentSnapshot toMemberSnapshot = await createTransactionChangeNotifier.to.keys.first.get();
+                        List<dynamic> newToMemberTransactionReferenceList = toMemberSnapshot['transactions'];
+                        newToMemberTransactionReferenceList.add(transferReference);
+                        createTransactionChangeNotifier.to.keys.first
+                            .set({'transactions': newToMemberTransactionReferenceList}, SetOptions(merge: true));
+
+                        DocumentSnapshot fromMemberSnapshot = await createTransactionData.member!.get();
+                        List<dynamic> newFromMemberTransactionReferenceList = fromMemberSnapshot['transactions'];
+                        newFromMemberTransactionReferenceList.add(transferReference);
+                        createTransactionData.member!.set({'transactions': newFromMemberTransactionReferenceList}, SetOptions(merge: true));
+
                         DocumentSnapshot<Map<String, dynamic>> groupSnapshot =
                             await firestore.collection('groups').doc(createTransactionData.groupId).get();
 

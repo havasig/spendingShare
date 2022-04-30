@@ -159,6 +159,11 @@ class AddIncome extends StatelessWidget {
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });
 
+                        DocumentSnapshot memberSnapshot = await createTransactionData.member!.get();
+                        List<dynamic> newMemberTransactionReferenceList = memberSnapshot['transactions'];
+                        newMemberTransactionReferenceList.add(incomeReference);
+                        createTransactionData.member!.set({'transactions': newMemberTransactionReferenceList}, SetOptions(merge: true));
+
                         DocumentSnapshot<Map<String, dynamic>> groupSnapshot =
                             await firestore.collection('groups').doc(createTransactionData.groupId).get();
 

@@ -117,5 +117,13 @@
   "already_member_of_the_group": "You are already member of this group with name: ",
   "member_is_taken": "This member is taken by someone else. Choose another or join by input.",
   "who-are-you": "Who are your?",
-  "paste_from_clipboard": "Paste from clipboard"
+  "paste_from_clipboard": "Paste from clipboard",
+  "add_member_by_typing": "Add member by typing it's name",
+  "member_delete_failed": "Member delete failed",
+  "cannot_remove": "This member is part of transactions, so cannot be removed.",
+  "are_you_sure": "Are you sure?",
+  "if_you_delete_category": "If you delete this category, nobody can use it.",
+  "delete": "delete",
+  "cannot_delete": "Cannot delete",
+  "least_one_category": "There need to be least one category"
 }

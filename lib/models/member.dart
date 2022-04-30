@@ -7,12 +7,14 @@ class Member {
   String? userFirebaseId;
   String? databaseId;
   IconData? icon;
+  List<dynamic> transactions = [];
 
   Member({
     required this.name,
     this.databaseId,
     this.userFirebaseId,
     this.icon,
+    required this.transactions,
   });
 
   factory Member.fromDocument(DocumentSnapshot doc) {
@@ -22,6 +24,7 @@ class Member {
       name: doc.data()?['name'],
       userFirebaseId: doc.data()?['userFirebaseId'],
       icon: globals.icons[doc.data()?['icon']],
+      transactions: doc.data()?['transactions'],
     );
   }
 }

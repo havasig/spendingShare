@@ -107,6 +107,7 @@ class WhoAreYou extends StatelessWidget {
                       'icon': icon,
                       'name': textEditingController.text,
                       'userFirebaseId': currentUser.userFirebaseId,
+                      'transactions': [],
                     });
 
                     var oldMemberData = await firestore.collection('groups').doc(groupId).get();

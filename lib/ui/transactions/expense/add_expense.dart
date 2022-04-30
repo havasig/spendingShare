@@ -179,6 +179,13 @@ class AddExpense extends StatelessWidget {
                           'value': double.parse(createTransactionChangeNotifier.value),
                         });
 
+                        for (DocumentReference toItem in createTransactionChangeNotifier.to.keys.toList()) {
+                          DocumentSnapshot memberSnapshot = await toItem.get();
+                          List<dynamic> newMemberTransactionReferenceList = memberSnapshot['transactions'];
+                          newMemberTransactionReferenceList.add(expenseReference);
+                          toItem.set({'transactions': newMemberTransactionReferenceList}, SetOptions(merge: true));
+                        }
+
                         DocumentSnapshot<Map<String, dynamic>> categorySnapshot =
                             await firestore.collection('categories').doc(createTransactionData.category?.id).get();
 
@@ -221,6 +228,7 @@ class AddExpense extends StatelessWidget {
                             return ErrorDialog(
                               title: 'transaction_creation_failed'.tr,
                               message: e.toString().tr,
+                              color: createTransactionData.color,
                             );
                           },
                         );

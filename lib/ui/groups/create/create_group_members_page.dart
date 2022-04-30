@@ -52,7 +52,7 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                       return Padding(
                         padding: const EdgeInsets.all(4),
                         child: MemberItem(
-                          member: Member(name: createGroupChangeNotifier.members[index]),
+                          member: Member(name: createGroupChangeNotifier.members[index], transactions: []),
                           onClick: () {},
                           onDelete: index == 0 ? null : () => createGroupChangeNotifier.removeMember(index),
                           color: createGroupChangeNotifier.color!,
@@ -105,6 +105,7 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                           memberReferences.add(await widget.firestore.collection('members').add({
                             'name': member,
                             'userFirebaseId': createGroupChangeNotifier.adminId,
+                            'transactions': [],
                           }));
                         }
 

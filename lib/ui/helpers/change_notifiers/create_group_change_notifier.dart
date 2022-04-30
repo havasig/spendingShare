@@ -25,7 +25,7 @@ class CreateGroupChangeNotifier extends CreateChangeNotifier {
 
   void init(GroupData groupData, String? memberName, String adminId) {
     setColorNoNotify(groupData.color);
-    setCurrency(groupData.currency);
+    setCurrencyNoNotify(groupData.currency);
     if (memberName != null) _members.add(memberName);
     _icon = groupData.icon;
     _adminId = adminId;

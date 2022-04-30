@@ -9,8 +9,9 @@ import '../button.dart';
 class AreYouSureDialog extends StatelessWidget {
   final String title;
   final String message;
+  final MaterialColor? color;
 
-  const AreYouSureDialog({Key? key, required this.title, required this.message}) : super(key: key);
+  const AreYouSureDialog({Key? key, required this.title, required this.message, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +39,14 @@ class AreYouSureDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         Button(
-          onPressed: () {
-            Navigator.of(context).pop(true);
-          },
-          text: 'ok'.tr,
+          buttonColor: color ?? ColorConstants.defaultOrange,
+          onPressed: () => Navigator.of(context).pop(true),
+          text: 'delete'.tr,
         ),
         Button(
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
+          buttonColor: color?.withOpacity(0.2) ?? ColorConstants.defaultOrange.withOpacity(0.2),
+          textColor: color ?? ColorConstants.defaultOrange,
+          onPressed: () => Navigator.of(context).pop(false),
           text: 'cancel'.tr,
         ),
       ],
