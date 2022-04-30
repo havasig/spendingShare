@@ -38,10 +38,7 @@ class GroupSettingsPage extends StatelessWidget {
                 textColor: ColorConstants.white.withOpacity(0.8),
                 buttonColor: ColorConstants.lightGray,
                 borderSide: const BorderSide(color: Colors.grey),
-                onPressed: () => Get.to(() => GroupEditPage(
-                      firestore: firestore,
-                      groupId: groupData.groupId,
-                    )),
+                onPressed: () => Get.to(() => GroupEditPage(firestore: firestore, groupData: groupData)),
                 text: 'edit'.tr,
               ),
               SizedBox(height: h(10)),

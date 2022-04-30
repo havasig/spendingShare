@@ -50,6 +50,8 @@ class GroupDetailsPage extends StatelessWidget {
                       color: group.color,
                       icon: group.icon,
                       groupId: groupId,
+                      name: group.name,
+                      currency: group.currency
                     ),
                     isAdmin: group.adminId == currentUser.userFirebaseId,
                   )),
