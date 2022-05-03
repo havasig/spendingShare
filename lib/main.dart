@@ -13,6 +13,7 @@ import 'package:spending_share/ui/auth/authentication.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/create_group_change_notifier.dart';
 import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_notifier.dart';
+import 'package:spending_share/ui/widgets/dialogs/helpers/select_icon_change_notifier.dart';
 import 'package:spending_share/utils/config/environment.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/localization_service.dart';
@@ -37,6 +38,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ApplicationState()),
         ChangeNotifierProvider(create: (context) => CreateTransactionChangeNotifier()),
         ChangeNotifierProvider(create: (context) => CreateGroupChangeNotifier()),
+        ChangeNotifierProvider(create: (context) => SelectIconChangeNotifier()),
         Provider(
             create: (context) => SpendingShareUser(
                   groups: [],

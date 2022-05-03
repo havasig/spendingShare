@@ -1,36 +1,52 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/helpers/expense_row_item.dart';
-import 'package:spending_share/ui/helpers/income_row_item.dart';
-import 'package:spending_share/ui/helpers/transfer_row_item.dart';
 import 'package:spending_share/ui/transactions/expense/expense_details.dart';
 
 class TransactionRowItem extends StatelessWidget {
-  const TransactionRowItem(this.transaction, {Key? key, required this.firestore, required this.color, this.icon}) : super(key: key);
+  const TransactionRowItem(this.transaction, {Key? key, required this.firestore, required this.groupData}) : super(key: key);
 
   final spending_share_transaction.Transaction transaction;
-  final IconData? icon;
-  final MaterialColor color;
+  final GroupData groupData;
   final FirebaseFirestore firestore;
 
   @override
   Widget build(BuildContext context) {
-    return content(transaction);
+    return content(transaction, context);
   }
 
-  Widget content(spending_share_transaction.Transaction transaction) {
+  Widget content(spending_share_transaction.Transaction transaction, BuildContext context) {
     switch (transaction.type) {
       case TransactionType.expense:
         return GestureDetector(
-            onTap: () => Get.to(() => ExpenseDetails(firestore: firestore, expense: transaction, color: color)),
-            child: ExpenseRowItem(expense: transaction, color: color, icon: icon));
+            onTap: () async {
+              var group = await firestore.collection('groups').doc(groupData.groupId).get();
+              List<DocumentReference> members = List<DocumentReference>.from(group['members']);
+              members.removeWhere((element) => transaction.to.contains(element));
+              transaction.to.addAll(members);
+              transaction.toWeights?.addAll(List.generate(members.length, (index) => '0'));
+              transaction.toAmounts?.addAll(List.generate(members.length, (index) => '0'));
+              Get.to(() => ExpenseDetails(
+                    firestore: firestore,
+                    expense: transaction,
+                    groupData: groupData,
+                  ));
+            },
+            child: ExpenseRowItem(expense: transaction, groupData: groupData));
       case TransactionType.transfer:
-        return TransferRowItem();
+        return Text('asd');
+      /*return GestureDetector(
+            onTap: () => Get.to(() => TransferDetails(firestore: firestore, expense: transaction, groupData: groupData)),
+            child: TransferRowItem(transfer: transaction, groupData: groupData));*/
       case TransactionType.income:
-        return IncomeRowItem();
+        return Text('asd');
+      /*return GestureDetector(
+            onTap: () => Get.to(() => IncomeDetails(firestore: firestore, expense: transaction, groupData: groupData)),
+            child: IncomeRowItem(expense: transaction, groupData: groupData));*/
     }
   }
 }

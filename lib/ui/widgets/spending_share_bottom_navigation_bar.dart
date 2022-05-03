@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/my_groups_page.dart';
+import 'package:spending_share/ui/profile/profile_page.dart';
 import 'package:spending_share/ui/settings/settings_page.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
@@ -88,7 +89,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
           ),
           GestureDetector(
             onTap: () {
-              Get.to(() => SettingsPage(firestore: widget.firestore));
+              Get.offAll(() => SettingsPage(firestore: widget.firestore));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -111,9 +112,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
             ),
           ),
           GestureDetector(
-            onTap: () {
-              //TODO: Navigation
-            },
+            onTap: () => Get.offAll(() => ProfilePage(firestore: widget.firestore)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

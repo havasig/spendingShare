@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
+import 'package:spending_share/ui/groups/settings/member_details_page.dart';
 import 'package:spending_share/ui/helpers/member_item.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
@@ -55,12 +56,12 @@ class GroupMembersPage extends StatelessWidget {
                         return SingleChildScrollView(
                           child: Column(
                               children: memberListSnapshot.data!.map((m) {
-                                if(m.data() == null) return const SizedBox.shrink();
+                            if (m.data() == null) return const SizedBox.shrink();
                             var member = Member.fromDocument(m);
                             if (member.userFirebaseId != null) memberIdName[member.userFirebaseId!] = member.name;
                             return MemberItem(
                               member: member,
-                              onClick: () {},
+                              onClick: () => Get.to(() => MemberDetailsPage(firestore: firestore, color: color)),
                               onDelete: () async {
                                 if (member.transactions.isEmpty) {
                                   await firestore.collection('members').doc(member.databaseId).delete();

@@ -20,7 +20,7 @@ class AreYouSureDialog extends StatelessWidget {
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: Text(
-        title.tr,
+        title,
         style: TextStyleConstants.h_5,
       ),
       content: SingleChildScrollView(

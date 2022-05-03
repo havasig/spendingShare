@@ -119,6 +119,7 @@ class GroupDetailsPage extends StatelessWidget {
                                               firestore: firestore,
                                               category: category,
                                               color: group.color,
+                                          groupId: groupId,
                                             )),
                                         width: (MediaQuery.of(context).size.width - 197) / 8,
                                         //-padding*2 -iconWidth*4 -spacing*3

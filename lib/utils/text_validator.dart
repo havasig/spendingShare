@@ -31,4 +31,11 @@ class TextValidator {
     if (text?.isEmpty ?? true) return 'cant_be_empty'.tr;
     return null;
   }
+
+  static String? validateIsNotNegative(String? text) {
+    if (text?.isEmpty ?? true) return 'cant_be_empty'.tr;
+    if (double.tryParse(text!)?.isNaN ?? true) return 'must_be_number'.tr;
+    if (double.tryParse(text)! < 0) return 'must_be_zero_or_greater'.tr;
+    return null;
+  }
 }

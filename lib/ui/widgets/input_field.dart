@@ -92,9 +92,9 @@ class _InputFieldState extends State<InputField> {
                   )
                 : null,
             prefixIcon: widget.isPasswordField
-                ? const Icon(
+                ? Icon(
                     Icons.lock,
-                    color: ColorConstants.defaultOrange,
+                    color: widget.focusColor,
                   )
                 : widget.prefixIcon,
             errorBorder: OutlineInputBorder(

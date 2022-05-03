@@ -1,10 +1,76 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:spending_share/models/member.dart';
+import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
+import 'package:spending_share/ui/constants/text_style_constants.dart';
+import 'package:spending_share/ui/widgets/circle_icon_button.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
+import 'package:spending_share/utils/screen_util_helper.dart';
+
+import 'on_future_build_error.dart';
 
 class TransferRowItem extends StatelessWidget {
-  const TransferRowItem({Key? key}) : super(key: key);
+  const TransferRowItem({Key? key, required this.transfer, required this.color, this.icon}) : super(key: key);
+
+  final spending_share_transaction.Transaction transfer;
+  final MaterialColor color;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
-    return const Text('Transfer row item');
+    return FutureBuilder<DocumentSnapshot>(
+      future: transfer.from!.get(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          var member = Member.fromDocument(snapshot.data!);
+          return Row(
+            children: [
+              CircleIconButton(
+                width: (MediaQuery.of(context).size.width - 197) / 8,
+                //-padding*2 -iconWidth*4 -spacing*3
+                color: color,
+                icon: icon ?? member.icon ?? globals.icons['default'],
+              ),
+              Column(
+                children: [
+                  Text(transfer.name),
+                  Text(transfer.date.toDate().toString()),
+                  Text(member.name + ' ' + 'gave'.tr),
+                ],
+              ),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  if (transfer.value.floor() == transfer.value)
+                    Text(transfer.value.toInt().toString() + ' ' + transfer.currency, style: TextStyleConstants.value(color))
+                  else
+                    Text(transfer.value.toString() + ' ' + transfer.currency, style: TextStyleConstants.value(color)),
+                  SizedBox(
+                    height: h(30),
+                    child: FutureBuilder<DocumentSnapshot>(
+                      future: transfer.to.first.get(),
+                      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          var member = Member.fromDocument(snapshot.data!);
+                          return CircleIconButton(
+                            width: 7,
+                            color: color,
+                            icon: member.icon ?? icon,
+                          );
+                        }
+                        return OnFutureBuildError(snapshot);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }
+        return OnFutureBuildError(snapshot);
+      },
+    );
   }
 }

@@ -5,7 +5,7 @@ class GroupData {
 
   String groupId;
   MaterialColor color;
-  IconData icon;
+  IconData? icon;
   String? currency;
   String? name;
 }

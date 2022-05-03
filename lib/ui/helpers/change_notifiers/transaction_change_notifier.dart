@@ -52,8 +52,17 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
+  setValueNoNotify(String value) {
+    _value = value;
+  }
+
   clearTo() {
     _to.clear();
+  }
+
+  setTo(Map<DocumentReference, Tuple2<String, String>> map) {
+    to.clear();
+    _to.addAll(map);
   }
 
   addTo(DocumentReference member, String value) {
@@ -225,6 +234,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     _type = TransactionType.expense;
     _value = '';
     _to.clear();
+    _selectedMember = null;
     setCurrencyNoNotify(null);
     setExchangeRate(null);
     setColorNoNotify(null);

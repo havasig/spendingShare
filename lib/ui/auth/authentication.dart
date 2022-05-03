@@ -27,6 +27,7 @@ class Authentication extends StatelessWidget {
     QuerySnapshot<Map<String, dynamic>> firestoreUser =
         await firestore.collection('users').where('userFirebaseId', isEqualTo: user.userFirebaseId).get();
     user.name = firestoreUser.docs.first['name'];
+    user.currentMoney = firestoreUser.docs.first['currentMoney'].toDouble();
     user.color = globals.colors[firestoreUser.docs.first['color']] ?? globals.colors['default']!;
     user.currency = firestoreUser.docs.first['currency'];
     user.icon = globals.icons[firestoreUser.docs.first['icon']] ?? globals.icons['default']!;

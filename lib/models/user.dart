@@ -10,6 +10,7 @@ class SpendingShareUser {
   String name;
   String userFirebaseId;
   String databaseId;
+  double? currentMoney;
 
   SpendingShareUser({
     required this.color,
@@ -18,6 +19,7 @@ class SpendingShareUser {
     this.name = '',
     this.userFirebaseId = '',
     this.databaseId = '',
+    this.currentMoney = 0.0,
     required this.groups,
   });
 
@@ -31,6 +33,7 @@ class SpendingShareUser {
       currency: doc.data()?['currency'],
       userFirebaseId: doc.data()?['userFirebaseId'],
       groups: doc.data()?['groups'],
+      currentMoney: doc.data()?['currentMoney'],
     );
   }
 }

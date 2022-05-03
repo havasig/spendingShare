@@ -101,8 +101,14 @@ class GroupSettingsPage extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AreYouSureDialog(title: 'title', message: 'message');
-                            });
+                              return AreYouSureDialog(
+                                title: 'are_you_sure'.tr,
+                                message: 'if_you_delete_group'.tr,
+                                color: groupData.color,
+                              );
+                            }).then((value) {
+                          // TODO delete group
+                        });
                       },
                       text: 'delete_group'.tr,
                       textColor: groupData.color,
@@ -115,8 +121,14 @@ class GroupSettingsPage extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AreYouSureDialog(title: 'title', message: 'message');
-                            });
+                              return AreYouSureDialog(
+                                title: 'are_you_sure'.tr,
+                                message: 'if_you_leave_group'.tr,
+                                color: groupData.color,
+                              );
+                            }).then((value) {
+                          // TODO leave group
+                        });
                       },
                       text: 'leave_group'.tr,
                       textColor: groupData.color,

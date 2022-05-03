@@ -45,8 +45,7 @@ class TransactionListPage extends StatelessWidget {
                         var transaction = spending_share_transaction.Transaction.fromDocument(snapshot.data!);
                         return TransactionRowItem(
                           transaction,
-                          color: groupData.color,
-                          icon: groupData.icon,
+                          groupData: groupData,
                           firestore: firestore,
                         );
                       }

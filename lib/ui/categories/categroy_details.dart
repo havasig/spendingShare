@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/category.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/helpers/transaction_row_item.dart';
@@ -11,11 +12,13 @@ import 'package:spending_share/ui/widgets/tab_navigation.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class CategoryDetails extends StatelessWidget {
-  const CategoryDetails({Key? key, required this.firestore, required this.category, required this.color}) : super(key: key);
+  const CategoryDetails({Key? key, required this.firestore, required this.category, required this.color, required this.groupId})
+      : super(key: key);
 
   final FirebaseFirestore firestore;
   final Category category;
   final MaterialColor color;
+  final String groupId;
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +42,11 @@ class CategoryDetails extends StatelessWidget {
                           var transaction = spending_share_transaction.Transaction.fromDocument(snapshot.data!);
                           return TransactionRowItem(
                             transaction,
-                            color: color,
-                            icon: category.icon,
+                            groupData: GroupData(
+                              groupId: groupId,
+                              color: color,
+                              icon: category.icon,
+                            ),
                             firestore: firestore,
                           );
                         }

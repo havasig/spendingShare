@@ -42,7 +42,7 @@ class _SelectNewCategoryDialogState extends State<SelectNewCategoryDialog> {
         child: ListBody(
           children: <Widget>[
             Text(
-              'message',
+              'message'.tr,
               style: TextStyleConstants.body_1,
             ),
             Divider(
@@ -96,16 +96,15 @@ class _SelectNewCategoryDialogState extends State<SelectNewCategoryDialog> {
       ),
       actions: <Widget>[
         Button(
-          onPressed: () {
-            Navigator.of(context).pop(widget.options[_dropdownValue]);
-          },
+          onPressed: () => Navigator.of(context).pop(widget.options[_dropdownValue]),
           text: 'ok'.tr,
+          buttonColor: widget.color,
         ),
         Button(
-          onPressed: () {
-            Navigator.of(context).pop(null);
-          },
+          onPressed: () => Navigator.of(context).pop(null),
           text: 'cancel'.tr,
+          textColor: widget.color,
+          buttonColor: widget.color.withOpacity(0.2),
         ),
       ],
     );

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/category.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/constants/text_style_constants.dart';
@@ -12,11 +13,10 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'on_future_build_error.dart';
 
 class ExpenseRowItem extends StatelessWidget {
-  const ExpenseRowItem({Key? key, required this.expense, required this.color, this.icon}) : super(key: key);
+  const ExpenseRowItem({Key? key, required this.expense, required this.groupData}) : super(key: key);
 
   final spending_share_transaction.Transaction expense;
-  final MaterialColor color;
-  final IconData? icon;
+  final GroupData groupData;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +30,8 @@ class ExpenseRowItem extends StatelessWidget {
               CircleIconButton(
                 width: (MediaQuery.of(context).size.width - 197) / 8,
                 //-padding*2 -iconWidth*4 -spacing*3
-                color: color,
-                icon: icon ?? member.icon ?? globals.icons['default'],
+                color: groupData.color,
+                icon: groupData.icon ?? member.icon ?? globals.icons['default'],
               ),
               Column(
                 children: [
@@ -55,9 +55,9 @@ class ExpenseRowItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (expense.value.floor() == expense.value)
-                    Text(expense.value.toInt().toString() + ' ' + expense.currency, style: TextStyleConstants.value(color))
+                    Text(expense.value.toInt().toString() + ' ' + expense.currency, style: TextStyleConstants.value(groupData.color))
                   else
-                    Text(expense.value.toString() + ' ' + expense.currency, style: TextStyleConstants.value(color)),
+                    Text(expense.value.toString() + ' ' + expense.currency, style: TextStyleConstants.value(groupData.color)),
                   SizedBox(
                     height: h(30),
                     child: ListView.separated(
@@ -73,8 +73,8 @@ class ExpenseRowItem extends StatelessWidget {
                               var member = Member.fromDocument(snapshot.data!);
                               return CircleIconButton(
                                 width: 7,
-                                color: color,
-                                icon: member.icon ?? icon,
+                                color: groupData.color,
+                                icon: member.icon ?? groupData.icon,
                               );
                             }
                             return OnFutureBuildError(snapshot);

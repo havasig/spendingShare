@@ -88,7 +88,7 @@ class _TransactionMemberDropdownState extends State<TransactionMemberDropdown> {
               ),
               SizedBox(width: h(10)),
               if (createTransactionChangeNotifier.type == TransactionType.expense) Text('paid'.tr),
-              if (createTransactionChangeNotifier.type == TransactionType.transfer) Text('gave'.tr),
+              if (createTransactionChangeNotifier.type == TransactionType.transfer) Text('gave_capital'.tr),
               if (createTransactionChangeNotifier.type == TransactionType.income) Text('got'.tr),
             ],
           );
