@@ -8,10 +8,11 @@ import 'package:spending_share/ui/helpers/change_notifiers/transaction_change_no
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class TransactionMemberDropdown extends StatefulWidget {
-  const TransactionMemberDropdown({Key? key, required this.options, required this.color}) : super(key: key);
+  const TransactionMemberDropdown({Key? key, required this.options, required this.color, this.defaultValue}) : super(key: key);
 
   final MaterialColor color;
   final Map<String, dynamic> options;
+  final String? defaultValue;
 
   @override
   State<TransactionMemberDropdown> createState() => _TransactionMemberDropdownState();
@@ -25,7 +26,7 @@ class _TransactionMemberDropdownState extends State<TransactionMemberDropdown> {
   void initState() {
     super.initState();
     dropDownItems.addAll(widget.options);
-    _dropdownValue = dropDownItems.keys.first;
+    _dropdownValue = widget.defaultValue ?? dropDownItems.keys.first;
   }
 
   String getTitle(CreateTransactionChangeNotifier createTransactionChangeNotifier) {
@@ -38,7 +39,6 @@ class _TransactionMemberDropdownState extends State<TransactionMemberDropdown> {
       padding: EdgeInsets.symmetric(vertical: h(8)),
       child: Consumer<CreateTransactionChangeNotifier>(
         builder: (_, createTransactionChangeNotifier, __) => Consumer<CreateTransactionData>(builder: (_, createTransactionData, __) {
-          createTransactionData.member == null ? createTransactionData.setMember(widget.options.entries.first.value) : null;
           return Row(
             children: [
               Text('member'.tr),

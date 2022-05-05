@@ -14,6 +14,7 @@ import 'package:spending_share/ui/groups/details/statistics/statistics.dart';
 import 'package:spending_share/ui/groups/details/transactions/transactions_list.dart';
 import 'package:spending_share/ui/helpers/fab/create_transaction_fab.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
+import 'package:spending_share/ui/transactions/create_transaction_page.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
@@ -46,13 +47,8 @@ class GroupDetailsPage extends StatelessWidget {
               titleText: group.name,
               onForward: () => Get.to(() => GroupSettingsPage(
                     firestore: firestore,
-                    groupData: GroupData(
-                      color: group.color,
-                      icon: group.icon,
-                      groupId: groupId,
-                      name: group.name,
-                      currency: group.currency
-                    ),
+                    groupData:
+                        GroupData(color: group.color, icon: group.icon, groupId: groupId, name: group.name, currency: group.currency),
                     isAdmin: group.adminId == currentUser.userFirebaseId,
                   )),
             ),
@@ -80,12 +76,22 @@ class GroupDetailsPage extends StatelessWidget {
                               builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                                 if (snapshot.connectionState == ConnectionState.done) {
                                   var member = Member.fromDocument(snapshot.data!);
-                                  return CircleIconButton(
-                                    width: (MediaQuery.of(context).size.width - 197) / 8,
-                                    //-padding*2 -iconWidth*4 -spacing*3
-                                    color: group.color,
-                                    name: member.name,
-                                    icon: member.icon ?? group.icon,
+                                  return LongPressDraggable<Member>(
+                                    data: member,
+                                    dragAnchorStrategy: childDragAnchorStrategy,
+                                    feedback: CircleIconButton(
+                                      width: (MediaQuery.of(context).size.width - 197) / 7,
+                                      //-padding*2 -iconWidth*4 -spacing*3
+                                      color: group.color,
+                                      icon: member.icon ?? group.icon,
+                                    ),
+                                    child: CircleIconButton(
+                                      width: (MediaQuery.of(context).size.width - 197) / 8,
+                                      //-padding*2 -iconWidth*4 -spacing*3
+                                      color: group.color,
+                                      name: member.name,
+                                      icon: member.icon ?? group.icon,
+                                    ),
                                   );
                                 }
                                 return OnFutureBuildError(snapshot);
@@ -113,21 +119,37 @@ class GroupDetailsPage extends StatelessWidget {
                                   if (snapshot.connectionState == ConnectionState.done) {
                                     var category = Category.fromDocument(snapshot.data!);
                                     return Padding(
-                                      padding: EdgeInsets.only(right: h(10)),
-                                      child: CircleIconButton(
-                                        onTap: () => Get.to(() => CategoryDetails(
-                                              firestore: firestore,
-                                              category: category,
+                                        padding: EdgeInsets.only(right: h(10)),
+                                        child: DragTarget<Member>(
+                                          builder: (context, candidateItems, rejectedItems) {
+                                            return CircleIconButton(
+                                              onTap: () => Get.to(() => CategoryDetails(
+                                                    firestore: firestore,
+                                                    category: category,
+                                                    color: group.color,
+                                                    groupId: groupId,
+                                                  )),
+                                              width: (MediaQuery.of(context).size.width - 197) / 8,
+                                              //-padding*2 -iconWidth*4 -spacing*3
                                               color: group.color,
-                                          groupId: groupId,
-                                            )),
-                                        width: (MediaQuery.of(context).size.width - 197) / 8,
-                                        //-padding*2 -iconWidth*4 -spacing*3
-                                        color: group.color,
-                                        name: category.name,
-                                        icon: category.icon ?? group.icon,
-                                      ),
-                                    );
+                                              name: category.name,
+                                              icon: category.icon ?? group.icon,
+                                            );
+                                          },
+                                          onAccept: (member) {
+                                            Get.to(() => CreateTransactionPage(
+                                                  category: category,
+                                                  member: member,
+                                                  firestore: firestore,
+                                                  groupData: GroupData(
+                                                      groupId: groupId,
+                                                      color: group.color,
+                                                      icon: group.icon,
+                                                      currency: group.currency,
+                                                      name: group.name),
+                                                ));
+                                          },
+                                        ));
                                   }
                                   return OnFutureBuildError(snapshot);
                                 },

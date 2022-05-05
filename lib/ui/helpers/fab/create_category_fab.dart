@@ -62,7 +62,7 @@ class CreateCategoryFab extends StatelessWidget {
                     ),
                   ),
                   Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
-                  SelectCategoryIcon(defaultIcon: selectIconChangeNotifier.icon!, color: groupData.color),
+                  SelectCategoryIcon(defaultIcon: groupData.icon!, color: groupData.color),
                   Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
                   Button(
                     buttonColor: groupData.color,

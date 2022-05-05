@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:spending_share/models/category.dart';
 import 'package:spending_share/models/data/create_transaction_data.dart';
 import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
+import 'package:spending_share/models/member.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/create/select_currency.dart';
@@ -26,10 +28,12 @@ import '../../utils/number_helper.dart';
 import 'income/add_income.dart';
 
 class CreateTransactionPage extends StatefulWidget {
-  const CreateTransactionPage({Key? key, required this.firestore, required this.groupData}) : super(key: key);
+  const CreateTransactionPage({Key? key, required this.firestore, required this.groupData, this.category, this.member}) : super(key: key);
 
   final FirebaseFirestore firestore;
   final GroupData groupData;
+  final Member? member;
+  final Category? category;
 
   @override
   State<CreateTransactionPage> createState() => _CreateTransactionPageState();
@@ -143,13 +147,17 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                                 category as DocumentSnapshot<Map<String, dynamic>>;
                                 options.addAll({category.data()!['name']: category.reference});
                               }
-                              createTransactionData.category == null
-                                  ? createTransactionData.setCategory(options.entries.first.value)
-                                  : null;
+                              if (widget.category != null && options.keys.contains(widget.category!.name)) {
+                                createTransactionData
+                                    .setCategory(options.entries.where((element) => element.key == widget.category!.name).first.value);
+                              }
+                              if (createTransactionData.category == null) createTransactionData.setCategory(options.entries.first.value);
+
                               return CreateTransactionDropdown(
                                 title: 'category'.tr,
                                 options: options,
                                 color: widget.groupData.color,
+                                defaultValue: widget.category?.name,
                                 onSelect: (value) {
                                   createTransactionData.setCategory(value);
                                 },
@@ -173,9 +181,17 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                             member as DocumentSnapshot<Map<String, dynamic>>;
                             options.addAll({member.data()!['name']: member.reference});
                           }
+
+                          if (widget.member != null && options.keys.contains(widget.member!.name)) {
+                            createTransactionData
+                                .setMember(options.entries.where((element) => element.key == widget.member!.name).first.value);
+                          }
+                          if (createTransactionData.member == null) createTransactionData.setMember(options.entries.first.value);
+
                           return TransactionMemberDropdown(
                             options: options,
                             color: widget.groupData.color,
+                            defaultValue: widget.member?.name,
                           );
                         } else if (memberListSnapshot.hasData && memberListSnapshot.data!.isEmpty) {
                           return Text('no_member_found'.tr);
