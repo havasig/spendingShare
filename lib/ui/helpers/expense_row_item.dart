@@ -20,6 +20,10 @@ class ExpenseRowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<DocumentReference> paidFor = [];
+    for (int i = 0; i < expense.toAmounts!.length; i++) {
+      if (expense.toAmounts![i] != '0') paidFor.add(expense.to[i]);
+    }
     return FutureBuilder<DocumentSnapshot>(
       future: expense.from!.get(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -64,10 +68,10 @@ class ExpenseRowItem extends StatelessWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
-                      itemCount: expense.to.length,
+                      itemCount: paidFor.length,
                       itemBuilder: (context, index) {
                         return FutureBuilder<DocumentSnapshot>(
-                          future: expense.to[index].get(),
+                          future: paidFor[index].get(),
                           builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                             if (snapshot.connectionState == ConnectionState.done) {
                               var member = Member.fromDocument(snapshot.data!);

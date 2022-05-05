@@ -140,5 +140,6 @@
   "current_money_with_debts": "Current money with debts",
   "default_currency": "Default currency",
   "default_icon": "Default icon",
-  "default_color": "Default color"
+  "default_color": "Default color",
+  "income_from": "Income from "
 }

@@ -5,7 +5,11 @@ import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/helpers/expense_row_item.dart';
+import 'package:spending_share/ui/helpers/income_row_item.dart';
+import 'package:spending_share/ui/helpers/transfer_row_item.dart';
 import 'package:spending_share/ui/transactions/expense/expense_details.dart';
+import 'package:spending_share/ui/transactions/income/income_details.dart';
+import 'package:spending_share/ui/transactions/transfer/transfer_details.dart';
 
 class TransactionRowItem extends StatelessWidget {
   const TransactionRowItem(this.transaction, {Key? key, required this.firestore, required this.groupData}) : super(key: key);
@@ -38,15 +42,13 @@ class TransactionRowItem extends StatelessWidget {
             },
             child: ExpenseRowItem(expense: transaction, groupData: groupData));
       case TransactionType.transfer:
-        return Text('asd');
-      /*return GestureDetector(
-            onTap: () => Get.to(() => TransferDetails(firestore: firestore, expense: transaction, groupData: groupData)),
-            child: TransferRowItem(transfer: transaction, groupData: groupData));*/
+        return GestureDetector(
+            onTap: () => Get.to(() => TransferDetails(firestore: firestore, transfer: transaction, groupData: groupData)),
+            child: TransferRowItem(transfer: transaction, groupData: groupData,));
       case TransactionType.income:
-        return Text('asd');
-      /*return GestureDetector(
+        return GestureDetector(
             onTap: () => Get.to(() => IncomeDetails(firestore: firestore, expense: transaction, groupData: groupData)),
-            child: IncomeRowItem(expense: transaction, groupData: groupData));*/
+            child: IncomeRowItem(income: transaction, groupData: groupData));
     }
   }
 }

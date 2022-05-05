@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
 
 class IncomeDetails extends StatelessWidget {
-  const IncomeDetails({Key? key, required this.firestore, required this.expense, required this.color}) : super(key: key);
+  const IncomeDetails({Key? key, required this.firestore, required this.expense, required this.groupData}) : super(key: key);
 
   final FirebaseFirestore firestore;
   final spending_share_transaction.Transaction expense;
-  final MaterialColor color;
+  final GroupData groupData;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class IncomeDetails extends StatelessWidget {
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         firestore: firestore,
         selectedIndex: 1,
-        color: color,
+        color: groupData.color,
       ),
     );
   }

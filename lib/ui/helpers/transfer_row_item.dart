@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/constants/text_style_constants.dart';
@@ -11,11 +12,10 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'on_future_build_error.dart';
 
 class TransferRowItem extends StatelessWidget {
-  const TransferRowItem({Key? key, required this.transfer, required this.color, this.icon}) : super(key: key);
+  const TransferRowItem({Key? key, required this.transfer, required this.groupData}) : super(key: key);
 
   final spending_share_transaction.Transaction transfer;
-  final MaterialColor color;
-  final IconData? icon;
+  final GroupData groupData;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +29,8 @@ class TransferRowItem extends StatelessWidget {
               CircleIconButton(
                 width: (MediaQuery.of(context).size.width - 197) / 8,
                 //-padding*2 -iconWidth*4 -spacing*3
-                color: color,
-                icon: icon ?? member.icon ?? globals.icons['default'],
+                color: groupData.color,
+                icon: groupData.icon ?? member.icon ?? globals.icons['default'],
               ),
               Column(
                 children: [
@@ -44,9 +44,9 @@ class TransferRowItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (transfer.value.floor() == transfer.value)
-                    Text(transfer.value.toInt().toString() + ' ' + transfer.currency, style: TextStyleConstants.value(color))
+                    Text(transfer.value.toInt().toString() + ' ' + transfer.currency, style: TextStyleConstants.value(groupData.color))
                   else
-                    Text(transfer.value.toString() + ' ' + transfer.currency, style: TextStyleConstants.value(color)),
+                    Text(transfer.value.toString() + ' ' + transfer.currency, style: TextStyleConstants.value(groupData.color)),
                   SizedBox(
                     height: h(30),
                     child: FutureBuilder<DocumentSnapshot>(
@@ -56,8 +56,8 @@ class TransferRowItem extends StatelessWidget {
                           var member = Member.fromDocument(snapshot.data!);
                           return CircleIconButton(
                             width: 7,
-                            color: color,
-                            icon: member.icon ?? icon,
+                            color: groupData.color,
+                            icon: member.icon ?? groupData.icon,
                           );
                         }
                         return OnFutureBuildError(snapshot);
