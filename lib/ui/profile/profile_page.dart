@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/models/user.dart';
+import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/widgets/button.dart';
 import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
@@ -284,8 +286,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     textColor: user.color,
                     width: (MediaQuery.of(context).size.width / 2) - 32,
                     text: 'logout'.tr,
-                    onPressed: () async {
-                      //TODO logout
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                      Get.offAll(() => LoginPage(firestore: widget.firestore));
                     },
                   ),
                 ],

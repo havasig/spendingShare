@@ -89,7 +89,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
           ),
           GestureDetector(
             onTap: () {
-              Get.offAll(() => SettingsPage(firestore: widget.firestore));
+              Get.offAll(() => SettingsPage(firestore: widget.firestore, color: widget.color!));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:spending_share/models/category_data.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/groups/my_groups_page.dart';
@@ -30,8 +31,12 @@ class Authentication extends StatelessWidget {
     user.currentMoney = firestoreUser.docs.first['currentMoney'].toDouble();
     user.color = globals.colors[firestoreUser.docs.first['color']] ?? globals.colors['default']!;
     user.currency = firestoreUser.docs.first['currency'];
+    user.language = firestoreUser.docs.first['language'];
     user.icon = globals.icons[firestoreUser.docs.first['icon']] ?? globals.icons['default']!;
     user.databaseId = firestoreUser.docs.first.id;
+    QuerySnapshot<Map<String, dynamic>> categoryDataList =
+        await firestore.collection('users').doc(user.databaseId).collection('categoryData').get();
+    user.categoryData = categoryDataList.docs.map((doc) => CategoryData.fromDocument(doc)).toList();
   }
 
   @override

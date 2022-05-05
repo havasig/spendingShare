@@ -111,7 +111,7 @@
   "group_edit_failed": "Group edit failed",
   "create_category": "Create category",
   "add_new_category_name": "Add the new category's name",
-  "type_name_and_add_member" : "Type a name, and add member easily",
+  "type_name_and_add_member": "Type a name, and add member easily",
   "incorrect_group_id": "Incorrect group id",
   "select_member": "Select a member and join with clicking on it",
   "ok": "ok",
@@ -133,5 +133,12 @@
   "must_be_zero_or_greater": "Must be zero or greater",
   "rename_category": "Rename category",
   "set_new_category_name": "Set new name from: ",
-  "new_name": "New name"
+  "new_name": "New name",
+  "delete_account": "Delete account",
+  "logout": "Logout",
+  "current_money": "Current money",
+  "current_money_with_debts": "Current money with debts",
+  "default_currency": "Default currency",
+  "default_icon": "Default icon",
+  "default_color": "Default color"
 }

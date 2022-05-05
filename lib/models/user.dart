@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:spending_share/models/category_data.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 
 class SpendingShareUser {
@@ -11,6 +12,8 @@ class SpendingShareUser {
   String userFirebaseId;
   String databaseId;
   double? currentMoney;
+  String language;
+  List<CategoryData> categoryData;
 
   SpendingShareUser({
     required this.color,
@@ -19,8 +22,10 @@ class SpendingShareUser {
     this.name = '',
     this.userFirebaseId = '',
     this.databaseId = '',
+    this.language = '',
     this.currentMoney = 0.0,
     required this.groups,
+    required this.categoryData,
   });
 
   factory SpendingShareUser.fromDocument(DocumentSnapshot doc) {
@@ -33,7 +38,9 @@ class SpendingShareUser {
       currency: doc.data()?['currency'],
       userFirebaseId: doc.data()?['userFirebaseId'],
       groups: doc.data()?['groups'],
+      language: doc.data()?['language'],
       currentMoney: doc.data()?['currentMoney'],
+      categoryData: [],
     );
   }
 }

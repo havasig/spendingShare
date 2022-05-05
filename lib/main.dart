@@ -42,6 +42,7 @@ void main() async {
         Provider(
             create: (context) => SpendingShareUser(
                   groups: [],
+                  categoryData: [],
                   color: globals.colors['default']!,
                   icon: globals.icons['default']!,
                 )),

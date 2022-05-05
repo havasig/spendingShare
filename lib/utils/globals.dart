@@ -62,4 +62,6 @@ const int circleShade = 500;
 const int iconShade = 100;
 const int decimals = 3;
 
+List<String> languages = ['EN', 'HU'];
+
 SplayTreeMap<String, dynamic> currencies = SplayTreeMap.from({"EUR": "Euro", "HUF": "Hungarian forint", "USD": "United States dollar"});

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/models/data/create_transaction_data.dart';
+import 'package:spending_share/models/debt.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/groups/details/group_details_page.dart';
@@ -14,7 +15,9 @@ import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
+import 'package:spending_share/utils/debt_calculator.dart';
 import 'package:spending_share/utils/screen_util_helper.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../constants/text_style_constants.dart';
 import '../../helpers/on_future_build_error.dart';
@@ -197,10 +200,54 @@ class AddTransfer extends StatelessWidget {
                         List<dynamic> newTransactionReferenceList = groupSnapshot.data()!['transactions'];
                         newTransactionReferenceList.add(transferReference);
 
-                        await firestore
-                            .collection('groups')
-                            .doc(createTransactionData.groupId)
-                            .set({'transactions': newTransactionReferenceList}, SetOptions(merge: true));
+                        //calculate debts
+                        List<dynamic> members = groupSnapshot.data()!['members'];
+
+                        List<List<double>> graph =
+                            List<List<double>>.generate(members.length, (index) => List<double>.generate(members.length, (i) => 0));
+
+                        //load old debts
+                        List<dynamic> oldDebts = groupSnapshot.data()!['debts'];
+                        List<Debt> debts = [];
+                        for (var element in oldDebts) {
+                          debts.add(Debt.fromDocument(await element.get()));
+                        }
+                        for (var debt in debts) {
+                          int row = members.lastIndexWhere((member) => member.id == debt.to.id);
+                          int column = members.lastIndexWhere((member) => member.id == debt.from.id);
+                          graph[row][column] = debt.value;
+                        }
+
+                        //add current expense
+                        for (var to in createTransactionChangeNotifier.to.entries) {
+                          graph[members.indexWhere((member) => member.id == createTransactionData.member!.id)]
+                                  [members.indexWhere((member) => member.id == to.key.id)] +=
+                              double.tryParse(to.value.item1)! * (createTransactionChangeNotifier.exchangeRate ?? 1);
+                        }
+
+                        //calculate new debts
+                        List<Tuple3<int, int, double>> newDebts = GFG(groupSnapshot.data()!['members'].length).minCashFlow(graph);
+
+                        //save new debts
+                        var newDebtDocumentReferenceList = [];
+                        for (var element in newDebts) {
+                          DocumentReference<Map<String, dynamic>> newDebtDocumentReference = await firestore.collection('debts').add({
+                            'from': members[element.item2],
+                            'to': members[element.item1],
+                            'value': element.item3,
+                          });
+                          newDebtDocumentReferenceList.add(newDebtDocumentReference);
+                        }
+
+                        //delete old debts
+                        for (var element in oldDebts) {
+                          await firestore.collection('debts').doc(element.id).delete();
+                        }
+
+                        await firestore.collection('groups').doc(createTransactionData.groupId).set({
+                          'transactions': newTransactionReferenceList,
+                          'debts': newDebtDocumentReferenceList,
+                        }, SetOptions(merge: true));
 
                         var groupId = createTransactionData.groupId!;
                         createTransactionData.clear();
