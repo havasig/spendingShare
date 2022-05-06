@@ -100,21 +100,32 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                   onPressed: () async {
                     if (createGroupChangeNotifier.members.isNotEmpty) {
                       try {
-                        List<DocumentReference> memberReferences = [];
-                        for(int i = 0; i < createGroupChangeNotifier.members.length; i++) {
-                          memberReferences.add(await widget.firestore.collection('members').add({
-                            'name': createGroupChangeNotifier.members[i],
-                            'userFirebaseId': i == 0 ? createGroupChangeNotifier.adminId : null,
+                        SpendingShareUser user = Provider.of(context, listen: false);
+                        DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+                            await widget.firestore.collection('users').doc(user.databaseId).get();
+
+                        QuerySnapshot querySnapshot =
+                            await widget.firestore.collection('users').doc(user.databaseId).collection('categoryData').get();
+                        List<dynamic> allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+                        List<DocumentReference> categoryReferences = [];
+                        for (var categoryData in allData) {
+                          categoryReferences.add(await widget.firestore.collection('categories').add({
+                            'icon': categoryData['icon'],
+                            'name': categoryData['name'],
                             'transactions': [],
                           }));
                         }
 
-                        // TODO add default categories
-                        List<DocumentReference> categoryReferences = [];
-                        categoryReferences.add(await widget.firestore.collection('categories').add({
-                          'name': 'other'.tr,
-                          'transactions': [],
-                        }));
+                        List<DocumentReference> memberReferences = [];
+                        for (int i = 0; i < createGroupChangeNotifier.members.length; i++) {
+                          memberReferences.add(await widget.firestore.collection('members').add({
+                            'name': createGroupChangeNotifier.members[i],
+                            'userFirebaseId': i == 0 ? createGroupChangeNotifier.adminId : null,
+                            'transactions': [],
+                            'icon': globals.icons.entries.firstWhere((element) => element.value == createGroupChangeNotifier.icon).key,
+                          }));
+                        }
 
                         DocumentReference groupReference = await widget.firestore.collection('groups').add({
                           'adminId': createGroupChangeNotifier.adminId,
@@ -128,11 +139,6 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                           'debts': [],
                         });
 
-                        SpendingShareUser user = Provider.of(context, listen: false);
-
-                        DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-                            await widget.firestore.collection('users').doc(user.databaseId).get();
-
                         List<dynamic> newGroupReferenceList = userSnapshot.data()!['groups'];
                         newGroupReferenceList.add(groupReference);
 
@@ -140,6 +146,8 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                             .collection('users')
                             .doc(user.databaseId)
                             .set({'groups': newGroupReferenceList}, SetOptions(merge: true));
+
+                        createGroupChangeNotifier.clear();
 
                         Get.offAll(() => GroupDetailsPage(firestore: widget.firestore, hasBack: false, groupId: groupReference.id));
                       } catch (e) {

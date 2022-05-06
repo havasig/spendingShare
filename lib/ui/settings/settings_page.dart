@@ -23,10 +23,9 @@ import 'package:spending_share/utils/text_validator.dart';
 import 'package:tuple/tuple.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key? key, required this.firestore, required this.color}) : super(key: key);
+  SettingsPage({Key? key, required this.firestore}) : super(key: key);
 
   final FirebaseFirestore firestore;
-  MaterialColor color;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -35,11 +34,12 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   int selectedColorIndex = 0;
   int selectedIconIndex = 0;
+  late SpendingShareUser currentUser;
 
   @override
   void initState() {
-    SpendingShareUser currentUser = Provider.of(context, listen: false);
-    globals.colors.values.toList().asMap().forEach((index, value) => {if (value == widget.color) selectedColorIndex = index});
+    currentUser = Provider.of(context, listen: false);
+    globals.colors.values.toList().asMap().forEach((index, value) => {if (value == currentUser.color) selectedColorIndex = index});
     globals.icons.values.toList().asMap().forEach((index, value) => {if (value == currentUser.icon) selectedIconIndex = index});
     super.initState();
   }
@@ -67,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: h(6)),
                       decoration: BoxDecoration(
-                        border: Border.all(color: widget.color),
+                        border: Border.all(color: currentUser.color),
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10),
                         ),
@@ -79,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         elevation: 6,
                         icon: Icon(
                           Icons.keyboard_arrow_down_outlined,
-                          color: widget.color,
+                          color: currentUser.color,
                         ),
                         underline: Container(height: 0),
                         onChanged: (String? newValue) {
@@ -102,7 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             value: key,
                             child: Text(
                               key,
-                              style: _currencyDropdownValue == key ? TextStyle(color: widget.color) : null,
+                              style: _currencyDropdownValue == key ? TextStyle(color: currentUser.color) : null,
                             ),
                           );
                         }).toList(),
@@ -120,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: h(6)),
                       decoration: BoxDecoration(
-                        border: Border.all(color: widget.color),
+                        border: Border.all(color: currentUser.color),
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10),
                         ),
@@ -132,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         elevation: 6,
                         icon: Icon(
                           Icons.keyboard_arrow_down_outlined,
-                          color: widget.color,
+                          color: currentUser.color,
                         ),
                         underline: Container(height: 0),
                         onChanged: (String? newValue) {
@@ -155,7 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             value: key,
                             child: Text(
                               key,
-                              style: _languageDropdownValue == key ? TextStyle(color: widget.color) : null,
+                              style: _languageDropdownValue == key ? TextStyle(color: currentUser.color) : null,
                             ),
                           );
                         }).toList(),
@@ -198,7 +198,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   onTap: () {
                                     setState(() {
                                       selectedColorIndex = index;
-                                      widget.color = value;
+                                      currentUser.color = value;
                                       user.color = value;
                                       widget.firestore.collection('users').doc(user.databaseId).set(
                                           {'color': globals.colors.entries.firstWhere((element) => element.value == value).key},
@@ -253,7 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               child: Icon(
                                 globals.icons.values.toList()[index],
                                 size: h(34),
-                                color: selectedIconIndex == index ? widget.color[globals.circleShade] : null,
+                                color: selectedIconIndex == index ? currentUser.color[globals.circleShade] : null,
                               ),
                             ),
                           );
@@ -299,21 +299,21 @@ class _SettingsPageState extends State<SettingsPage> {
                                               key: _formKey,
                                               child: InputField(
                                                 validator: TextValidator.validateIsNotEmpty,
-                                                labelColor: widget.color,
-                                                focusColor: widget.color,
+                                                labelColor: currentUser.color,
+                                                focusColor: currentUser.color,
                                                 key: const Key('category_rename_input'),
                                                 focusNode: _focusNode,
                                                 textEditingController: _textEditingController,
-                                                prefixIcon: Icon(Icons.mail, color: widget.color),
+                                                prefixIcon: Icon(Icons.mail, color: currentUser.color),
                                                 labelText: 'new_name'.tr,
                                                 hintText: 'new_name'.tr,
                                               ),
                                             ),
                                             Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
-                                            SelectCategoryIcon(defaultIcon: categoryData.icon, color: widget.color),
+                                            SelectCategoryIcon(defaultIcon: categoryData.icon, color: currentUser.color),
                                             Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
                                             Button(
-                                              buttonColor: widget.color,
+                                              buttonColor: currentUser.color,
                                               onPressed: () {
                                                 if (_formKey.currentState!.validate()) {
                                                   Navigator.of(context)
@@ -357,7 +357,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       setState(() {});
                                     }
                                   }),
-                                  color: widget.color,
+                                  color: currentUser.color,
                                   width: 20,
                                   name: categoryData.name,
                                   icon: categoryData.icon,
@@ -380,7 +380,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 return ErrorDialog(
                                                   message: 'cannot_delete'.tr,
                                                   title: 'least_one_category'.tr,
-                                                  color: widget.color,
+                                                  color: currentUser.color,
                                                 );
                                               });
                                         } else {
@@ -392,7 +392,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   title: 'are_you_sure'.tr,
                                                   okText: 'delete'.tr,
                                                   cancelText: 'cancel'.tr,
-                                                  color: widget.color,
+                                                  color: currentUser.color,
                                                 );
                                               }).then((value) async {
                                             if (value) {
@@ -431,7 +431,7 @@ class _SettingsPageState extends State<SettingsPage> {
         key: const Key('bottom_navigation'),
         selectedIndex: 2,
         firestore: widget.firestore,
-        color: widget.color,
+        color: currentUser.color,
       ),
     );
   }

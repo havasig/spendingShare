@@ -24,6 +24,7 @@ class CreateGroupChangeNotifier extends CreateChangeNotifier {
   }
 
   void init(GroupData groupData, String? memberName, String adminId) {
+    clear();
     setColorNoNotify(groupData.color);
     setCurrencyNoNotify(groupData.currency);
     if (memberName != null) _members.add(memberName);
@@ -63,5 +64,11 @@ class CreateGroupChangeNotifier extends CreateChangeNotifier {
     if (_icon == null) return false;
     if (currency == null) return false;
     return true;
+  }
+
+  clear() {
+    _adminId = null;
+    _icon = null;
+    _members.clear();
   }
 }

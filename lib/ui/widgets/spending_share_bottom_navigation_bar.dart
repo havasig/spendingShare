@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/my_groups_page.dart';
@@ -75,9 +77,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
                   Icons.group,
                   color: widget.selectedIndex == 1 ? widget.color : ColorConstants.white.withOpacity(0.6),
                 ),
-                const SizedBox(
-                  height: 4,
-                ),
+                const SizedBox(height: 4),
                 Text(
                   'groups'.tr,
                   style: TextStyleConstants.sub_1.copyWith(
@@ -90,7 +90,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
           ),
           GestureDetector(
             onTap: () {
-              if (widget.selectedIndex != 2) Get.offAll(() => SettingsPage(firestore: widget.firestore, color: widget.color!));
+              if (widget.selectedIndex != 2) Get.offAll(() => SettingsPage(firestore: widget.firestore));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,

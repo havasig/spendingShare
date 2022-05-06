@@ -102,19 +102,31 @@ class WhoAreYou extends StatelessWidget {
                 key: const Key('join_button'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    String icon = globals.icons.entries.firstWhereOrNull((element) => element.value == currentUser.icon)?.key ?? 'default';
-                    DocumentReference memberReference = await firestore.collection('members').add({
-                      'icon': icon,
-                      'name': textEditingController.text,
-                      'userFirebaseId': currentUser.userFirebaseId,
-                      'transactions': [],
-                    });
+                    var alreadyMember = memberIdName.entries.firstWhereOrNull((element) => element.key == currentUser.userFirebaseId);
+                    if (alreadyMember != null) {
+                      showDialog(
+                          context: context,
+                          builder: (_) => ErrorDialog(
+                                title: 'already_member'.tr,
+                                message: 'already_member_of_the_group'.tr + alreadyMember.value,
+                                color: color,
+                              ));
+                    } else {
+                      String icon =
+                          globals.icons.entries.firstWhereOrNull((element) => element.value == currentUser.icon)?.key ?? 'default';
+                      DocumentReference memberReference = await firestore.collection('members').add({
+                        'icon': icon,
+                        'name': textEditingController.text,
+                        'userFirebaseId': currentUser.userFirebaseId,
+                        'transactions': [],
+                      });
 
-                    var groupReference = await firestore.collection('groups').doc(groupId).get();
-                    List<dynamic> memberList = groupReference.data()!['members'];
-                    memberList.add(memberReference);
-                    firestore.collection('groups').doc(groupId).update({'members': memberList});
-                    Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false, groupId: groupId));
+                      var groupReference = await firestore.collection('groups').doc(groupId).get();
+                      List<dynamic> memberList = groupReference.data()!['members'];
+                      memberList.add(memberReference);
+                      firestore.collection('groups').doc(groupId).update({'members': memberList});
+                      Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false, groupId: groupId));
+                    }
                   }
                 },
                 text: 'join'.tr,
