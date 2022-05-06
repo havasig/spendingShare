@@ -50,7 +50,7 @@ class AddExpense extends StatelessWidget {
       child: Consumer<CreateTransactionData>(
         builder: (_, createTransactionData, __) => Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: SpendingShareAppBar(titleText: 'add_expense'.tr),
+          appBar: SpendingShareAppBar(titleText: oldExpense?.name ?? 'add_expense'.tr),
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.all(h(16)),
