@@ -69,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: h(16)),
                   InputField(
-                    validator: TextValidator.validatePasswordText,
                     key: const Key('password_input'),
                     focusNode: _passwordFocusNode,
                     textEditingController: _passwordTextEditingController,

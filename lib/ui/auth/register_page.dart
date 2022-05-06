@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:spending_share/ui/auth/login_page.dart';
 import 'package:spending_share/ui/auth/sign_up_with_google_button.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
@@ -84,7 +83,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 SizedBox(height: h(16)),
                 InputField(
-                  validator: TextValidator.validatePasswordText,
                   key: const Key('password_input'),
                   focusNode: _passwordFocusNode,
                   textEditingController: _passwordTextEditingController,
@@ -96,7 +94,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 InputField(
                   validator: (text) {
                     if (text?.isEmpty ?? true) return 'cant_be_empty'.tr;
-                    if (text!.length < 8) return 'password_is_too_short'.tr;
                     if (text != _passwordTextEditingController.text) return 'not_matching_passwords'.tr;
                   },
                   key: const Key('password_confirmation_input'),
@@ -110,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Button(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      registerAccount(_emailTextEditingController.text, _passwordTextEditingController.text);
+                      registerAccount(_emailTextEditingController.text, _passwordTextEditingController.text, widget.firestore);
                     }
                   },
                   text: 'sign_up'.tr,
@@ -146,9 +143,11 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future<void> registerAccount(String email, String password) async {
+  Future<void> registerAccount(String email, String password, FirebaseFirestore firestore) async {
     try {
       var credentials = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+
+      SingUpWithGoogleButton.createUserIfNotExists(credentials.user!, firestore);
 
       Authentication.loadUser(context, credentials.user!.uid, widget.firestore);
 
@@ -164,37 +163,5 @@ class _RegisterPageState extends State<RegisterPage> {
         },
       );
     }
-  }
-
-  Future<void> createUserIfNotExists(User firebaseUser) async {
-    QuerySnapshot<Map<String, dynamic>> firestoreUser =
-        await widget.firestore.collection('users').where('userFirebaseId', isEqualTo: firebaseUser.uid).get();
-    if (firestoreUser.size == 0) {
-      await widget.firestore.collection('users').add({
-        'color': 'default',
-        'icon': 'default',
-        'currency': 'USD', // TODO ???
-        'groups': [],
-        'name': firebaseUser.displayName,
-        'userFirebaseId': firebaseUser.uid,
-      });
-    }
-  }
-
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

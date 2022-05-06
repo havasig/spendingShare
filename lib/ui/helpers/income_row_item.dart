@@ -29,7 +29,7 @@ class IncomeRowItem extends StatelessWidget {
         Column(
           children: [
             Text(income.name),
-            Text(income.date.toDate().toString()),
+            TextFormat.date(income.date.toDate()),
             if (income.incomeFrom != null && income.incomeFrom!.isNotEmpty) Text('income_from'.tr + income.incomeFrom!),
           ],
         ),
@@ -37,10 +37,7 @@ class IncomeRowItem extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            if (income.value.floor() == income.value)
-              Text(income.value.toInt().toString() + ' ' + income.currency, style: TextStyleConstants.value(groupData.color))
-            else
-              Text(income.value.toString() + ' ' + income.currency, style: TextStyleConstants.value(groupData.color)),
+            TextFormat.roundedValueWithCurrencyAndColor(income.value, income.currency, groupData.color),
             SizedBox(
               height: h(30),
               child: ListView.separated(

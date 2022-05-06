@@ -6,6 +6,7 @@ import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/my_groups_page.dart';
 import 'package:spending_share/ui/profile/profile_page.dart';
 import 'package:spending_share/ui/settings/settings_page.dart';
+import 'package:spending_share/ui/statistics/statistics_page.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 
@@ -41,7 +42,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
         children: <Widget>[
           GestureDetector(
             onTap: () {
-              //TODO: Navigation
+              if (widget.selectedIndex != 0) Get.offAll(() => StatisticsPage(firestore: widget.firestore));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -65,7 +66,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
           ),
           GestureDetector(
             onTap: () {
-              Get.offAll(() => MyGroupsPage(firestore: widget.firestore), transition: Transition.noTransition);
+              Get.offAll(() => MyGroupsPage(firestore: widget.firestore));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -89,7 +90,7 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
           ),
           GestureDetector(
             onTap: () {
-              Get.offAll(() => SettingsPage(firestore: widget.firestore, color: widget.color!));
+              if (widget.selectedIndex != 2) Get.offAll(() => SettingsPage(firestore: widget.firestore, color: widget.color!));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -112,7 +113,9 @@ class _SpendingShareBottomNavigationBarState extends State<SpendingShareBottomNa
             ),
           ),
           GestureDetector(
-            onTap: () => Get.offAll(() => ProfilePage(firestore: widget.firestore)),
+            onTap: () {
+              if (widget.selectedIndex != 3) Get.offAll(() => ProfilePage(firestore: widget.firestore));
+            },
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

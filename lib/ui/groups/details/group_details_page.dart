@@ -76,7 +76,7 @@ class GroupDetailsPage extends StatelessWidget {
                               builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                                 if (snapshot.connectionState == ConnectionState.done) {
                                   var member = Member.fromDocument(snapshot.data!);
-                                  return LongPressDraggable<Member>(
+                                  return Draggable<Member>(
                                     data: member,
                                     dragAnchorStrategy: childDragAnchorStrategy,
                                     feedback: CircleIconButton(

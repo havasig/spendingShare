@@ -65,13 +65,21 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
           appBar: SpendingShareAppBar(
             titleText: 'add_transaction'.tr,
             hasForward: true,
+            onBack: () {
+              CreateTransactionChangeNotifier createTransactionChangeNotifier =
+                  Provider.of<CreateTransactionChangeNotifier>(context, listen: false);
+              createTransactionChangeNotifier.clear();
+              CreateTransactionData createTransactionData = Provider.of<CreateTransactionData>(context, listen: false);
+              createTransactionData.clear();
+              Get.back();
+            },
             forwardText: 'next'.tr,
             onForward: () async {
               CreateTransactionChangeNotifier createTransactionChangeNotifier =
                   Provider.of<CreateTransactionChangeNotifier>(context, listen: false);
               createTransactionChangeNotifier.setColorNoNotify(widget.groupData.color);
 
-              String? validate = createTransactionData.validateDateAndMember();
+              String? validate = createTransactionData.validateMember();
               if (validate != null) {
                 createTransactionChangeNotifier.setValue(validate);
                 return;
@@ -207,7 +215,7 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                         onTap: () async {
                           var selectedDate = await showDatePicker(
                             context: context,
-                            initialDate: createTransactionData.date,
+                            initialDate: createTransactionChangeNotifier.date,
                             firstDate: DateTime.now().add(const Duration(days: -365 * 5)),
                             lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
                             builder: (context, child) {
@@ -222,11 +230,11 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                               );
                             },
                           );
-                          if (selectedDate != null) createTransactionData.setDate(selectedDate);
+                          if (selectedDate != null) createTransactionChangeNotifier.setDate(selectedDate);
                         },
                         child: Row(
                           children: [
-                            Text(createTransactionData.date.toString()),
+                            TextFormat.date(createTransactionChangeNotifier.date),
                             Icon(
                               Icons.calendar_today,
                               color: widget.groupData.color,

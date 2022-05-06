@@ -101,10 +101,10 @@ class _CreateGroupMembersPageState extends State<CreateGroupMembersPage> {
                     if (createGroupChangeNotifier.members.isNotEmpty) {
                       try {
                         List<DocumentReference> memberReferences = [];
-                        for (var member in createGroupChangeNotifier.members) {
+                        for(int i = 0; i < createGroupChangeNotifier.members.length; i++) {
                           memberReferences.add(await widget.firestore.collection('members').add({
-                            'name': member,
-                            'userFirebaseId': createGroupChangeNotifier.adminId,
+                            'name': createGroupChangeNotifier.members[i],
+                            'userFirebaseId': i == 0 ? createGroupChangeNotifier.adminId : null,
                             'transactions': [],
                           }));
                         }

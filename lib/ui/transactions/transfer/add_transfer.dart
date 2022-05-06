@@ -122,7 +122,7 @@ class AddTransfer extends StatelessWidget {
                   Row(
                     children: [
                       const Spacer(),
-                      Text(createTransactionData.date.toString()),
+                      TextFormat.date(createTransactionChangeNotifier.date),
                       Icon(
                         Icons.calendar_today,
                         color: createTransactionData.color,
@@ -172,7 +172,7 @@ class AddTransfer extends StatelessWidget {
                         DocumentReference transferReference = await firestore.collection('transactions').add({
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
-                          'date': createTransactionData.date,
+                          'date': createTransactionChangeNotifier.date,
                           'exchangeRate': createTransactionChangeNotifier.exchangeRate,
                           'from': createTransactionData.member,
                           'name': createTransactionChangeNotifier.name,

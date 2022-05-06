@@ -35,7 +35,7 @@ class TransferRowItem extends StatelessWidget {
               Column(
                 children: [
                   Text(transfer.name),
-                  Text(transfer.date.toDate().toString()),
+                  TextFormat.date(transfer.date.toDate()),
                   Text(member.name + ' ' + 'gave'.tr),
                 ],
               ),
@@ -43,10 +43,7 @@ class TransferRowItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  if (transfer.value.floor() == transfer.value)
-                    Text(transfer.value.toInt().toString() + ' ' + transfer.currency, style: TextStyleConstants.value(groupData.color))
-                  else
-                    Text(transfer.value.toString() + ' ' + transfer.currency, style: TextStyleConstants.value(groupData.color)),
+                  TextFormat.roundedValueWithCurrencyAndColor(transfer.value, transfer.currency, groupData.color),
                   SizedBox(
                     height: h(30),
                     child: FutureBuilder<DocumentSnapshot>(

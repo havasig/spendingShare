@@ -11,6 +11,7 @@ import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/groups/settings/member_details_page.dart';
 import 'package:spending_share/ui/helpers/member_item.dart';
 import 'package:spending_share/ui/widgets/button.dart';
+import 'package:spending_share/ui/widgets/dialogs/are_you_sure_dialog.dart';
 import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
@@ -36,7 +37,7 @@ class GroupMembersPage extends StatelessWidget {
 
     return Scaffold(
       appBar: SpendingShareAppBar(
-        titleText: 'who-are-you'.tr,
+        titleText: 'members'.tr,
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -63,7 +64,29 @@ class GroupMembersPage extends StatelessWidget {
                               member: member,
                               onClick: () => Get.to(() => MemberDetailsPage(firestore: firestore, color: color)),
                               onDelete: () async {
-                                if (member.transactions.isEmpty) {
+                                if (member.userFirebaseId != null && member.transactions.isEmpty) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AreYouSureDialog(
+                                        title: 'member_delete_failed'.tr,
+                                        message: 'cannot_remove'.tr,
+                                        okText: 'delete'.tr,
+                                        cancelText: 'cancel'.tr,
+                                        color: color,
+                                      );
+                                    },
+                                  ).then((value) async {
+                                    if (value != null && value) {
+                                      await firestore.collection('members').doc(member.databaseId).delete();
+                                      var oldMemberData = await firestore.collection('groups').doc(groupId).get();
+                                      List<dynamic> memberList = oldMemberData.data()!['members'];
+                                      memberList.removeWhere((element) => element.id == member.databaseId);
+
+                                      firestore.collection('groups').doc(groupId).update({'members': memberList});
+                                    }
+                                  });
+                                } else if (member.transactions.isEmpty) {
                                   await firestore.collection('members').doc(member.databaseId).delete();
                                   var oldMemberData = await firestore.collection('groups').doc(groupId).get();
                                   List<dynamic> memberList = oldMemberData.data()!['members'];

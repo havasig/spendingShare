@@ -11,6 +11,7 @@ import 'package:spending_share/ui/widgets/dialogs/error_dialog.dart';
 import 'package:spending_share/ui/widgets/input_field.dart';
 import 'package:spending_share/ui/widgets/spending_share_appbar.dart';
 import 'package:spending_share/ui/widgets/spending_share_bottom_navigation_bar.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
@@ -18,7 +19,6 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key, required this.firestore}) : super(key: key);
 
   final FirebaseFirestore firestore;
-
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -116,7 +116,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     InputField(
                       validator: (text) {
                         if (text?.isEmpty ?? true) return 'cant_be_empty'.tr;
-                        if (text!.length < 8) return 'password_is_too_short'.tr;
                       },
                       key: const Key('password_input'),
                       focusNode: _pwdFocusNode,
@@ -131,7 +130,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     InputField(
                       validator: (text) {
                         if (text?.isEmpty ?? true) return 'cant_be_empty'.tr;
-                        if (text!.length < 8) return 'password_is_too_short'.tr;
                         if (text != _pwdTextEditingController.text) return 'not_matching_passwords'.tr;
                       },
                       key: const Key('password_confirmation_input'),
@@ -288,6 +286,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     text: 'logout'.tr,
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
+                      SpendingShareUser user = Provider.of(context, listen: false);
+                      user = SpendingShareUser(
+                        groups: [],
+                        categoryData: [],
+                        color: globals.colors['default']!,
+                        icon: globals.icons['default']!,
+                      );
                       Get.offAll(() => LoginPage(firestore: widget.firestore));
                     },
                   ),

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:spending_share/models/enums/transaction_type.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
+import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/ui/widgets/dialogs/are_you_sure_dialog.dart';
@@ -154,10 +155,7 @@ class DebtItem extends StatelessWidget {
                     Column(
                       children: [
                         Text(member.name),
-                        if (value.floor() == value)
-                          Text(value.toInt().toString() + ' ' + currency)
-                        else
-                          Text(value.toString() + ' ' + currency),
+                        TextFormat.roundedValueWithCurrencyAndColor(value, currency, null),
                       ],
                     )
                   ],

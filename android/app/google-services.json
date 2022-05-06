@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "538495696565-2lj916p0oe7mnuq53u72dc5btv0k7lnq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hu.havasig.spending_share",
+            "certificate_hash": "387638d8b7b51b570e1acb088767e36cac370ca8"
+          }
+        },
+        {
           "client_id": "538495696565-5dg424eueksl6b8ahivpdnp201mc4n1u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

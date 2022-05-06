@@ -40,7 +40,7 @@ class ExpenseRowItem extends StatelessWidget {
               Column(
                 children: [
                   Text(expense.name),
-                  Text(expense.date.toDate().toString()),
+                  TextFormat.date(expense.date.toDate()),
                   FutureBuilder<DocumentSnapshot>(
                     future: expense.category?.get(),
                     builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -58,10 +58,7 @@ class ExpenseRowItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  if (expense.value.floor() == expense.value)
-                    Text(expense.value.toInt().toString() + ' ' + expense.currency, style: TextStyleConstants.value(groupData.color))
-                  else
-                    Text(expense.value.toString() + ' ' + expense.currency, style: TextStyleConstants.value(groupData.color)),
+                  TextFormat.roundedValueWithCurrencyAndColor(expense.value, expense.currency, groupData.color),
                   SizedBox(
                     height: h(30),
                     child: ListView.separated(

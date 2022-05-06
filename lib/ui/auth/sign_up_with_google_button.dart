@@ -22,7 +22,7 @@ class SingUpWithGoogleButton extends StatelessWidget {
       buttonColor: ColorConstants.lightGray,
       onPressed: () async {
         await signInWithGoogle().then((value) async {
-          await createUserIfNotExists(value.user!);
+          await createUserIfNotExists(value.user!, firestore);
           Authentication.loadUser(context, value.user!.uid, firestore);
           Get.offAll(() => MyGroupsPage(firestore: firestore));
         });
@@ -36,18 +36,21 @@ class SingUpWithGoogleButton extends StatelessWidget {
     );
   }
 
-  Future<void> createUserIfNotExists(User firebaseUser) async {
+  static Future<void> createUserIfNotExists(User firebaseUser, FirebaseFirestore firestore) async {
     QuerySnapshot<Map<String, dynamic>> firestoreUser =
         await firestore.collection('users').where('userFirebaseId', isEqualTo: firebaseUser.uid).get();
     if (firestoreUser.size == 0) {
-      await firestore.collection('users').add({
+      DocumentReference newUser = await firestore.collection('users').add({
         'color': 'default',
         'icon': 'default',
         'currency': 'USD', // TODO ???
+        'currentMoney': 0.0,
         'groups': [],
         'name': firebaseUser.displayName,
         'userFirebaseId': firebaseUser.uid,
+        'language': 'EN' //TODO get it from login
       });
+      await firestore.collection('users').doc(newUser.id).collection('categoryData').add({'icon': 'default', 'name': 'other'.tr});
     }
   }
 

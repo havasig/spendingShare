@@ -9,14 +9,6 @@ class TextValidator {
     return null;
   }
 
-  static String? validatePasswordText(String? text) {
-    if (text?.isEmpty ?? true) return 'cant_be_empty'.tr;
-    if (text!.length < 8) {
-      return 'password_is_too_short'.tr;
-    }
-    return null;
-  }
-
   static String? validateNameText(String? text) {
     return null; // TODO kell valamire validálni?
   }

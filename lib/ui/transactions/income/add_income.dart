@@ -101,7 +101,7 @@ class AddIncome extends StatelessWidget {
                           SizedBox(height: h(16)),
                           Row(
                             children: [
-                              Text(createTransactionData.date.toString()),
+                              TextFormat.date(createTransactionChangeNotifier.date),
                               Icon(
                                 Icons.calendar_today,
                                 color: createTransactionData.color,
@@ -150,7 +150,7 @@ class AddIncome extends StatelessWidget {
                           //'category': createTransactionData.category, // TODO select income category automatically (?)
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
-                          'date': createTransactionData.date,
+                          'date': createTransactionChangeNotifier.date,
                           'exchangeRate': createTransactionChangeNotifier.exchangeRate,
                           'incomeFrom': fromTextEditingController.text,
                           'name': createTransactionChangeNotifier.name,

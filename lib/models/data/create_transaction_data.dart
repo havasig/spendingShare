@@ -6,7 +6,6 @@ import 'package:spending_share/utils/globals.dart' as globals;
 class CreateTransactionData {
   DocumentReference? _category;
   DocumentReference? _member;
-  DateTime _date = DateTime.now();
   String? _groupId;
   final Set<DocumentReference> _allMembers = {};
   MaterialColor _color = globals.colors['default']!;
@@ -21,8 +20,6 @@ class CreateTransactionData {
   IconData get groupIcon => _groupIcon;
 
   DocumentReference? get member => _member;
-
-  DateTime get date => _date;
 
   Set<DocumentReference> get allMembers => _allMembers;
 
@@ -59,24 +56,16 @@ class CreateTransactionData {
     _member = member;
   }
 
-  setDate(DateTime date) {
-    _date = date;
-  }
-
   clear() {
     _category = null;
     _member = null;
-    _date = DateTime.now();
     _allMembers.clear();
     _groupId = null;
     _color = globals.colors['default']!;
     _groupIcon = globals.icons['default']!;
   }
 
-  String? validateDateAndMember() {
-    if (_date == null) {
-      return 'date_cannot_be_empty'.tr;
-    }
+  String? validateMember() {
     if (_member == null) {
       return 'member_cannot_be_empty'.tr;
     }

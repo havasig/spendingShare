@@ -17,11 +17,14 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
   final Map<DocumentReference, Tuple2<String, String>> _to = {};
   DocumentReference? _selectedMember;
   final Set<DocumentReference> _editedAmountMembers = {};
+  DateTime _date = DateTime.now();
   bool _disposed = false;
 
   TransactionType get type => _type;
 
   String get value => _value;
+
+  DateTime get date => _date;
 
   Map<DocumentReference, Tuple2<String, String>> get to => _to;
 
@@ -40,6 +43,11 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     if (!_disposed) {
       super.notifyListeners();
     }
+  }
+
+  setDate(DateTime date) {
+    _date = date;
+    notifyListeners();
   }
 
   setType(TransactionType type) {
@@ -234,6 +242,7 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     _type = TransactionType.expense;
     _value = '';
     _to.clear();
+    _date = DateTime.now();
     _selectedMember = null;
     setCurrencyNoNotify(null);
     setExchangeRate(null);

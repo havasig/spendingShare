@@ -1,12 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'color_constants.dart';
 
+class TextFormat {
+  static Text date(DateTime date) {
+    return Text(DateFormat('yyyy-MM-dd').format(date));
+  }
+
+  static Text roundedValueWithCurrencyAndColor(double value, String currency, MaterialColor? color) {
+    if (value.floor() == value) {
+      return Text(value.toInt().toString() + ' ' + currency, style: TextStyleConstants.value(color));
+    } else {
+      return Text(value.toString() + ' ' + currency, style: TextStyleConstants.value(color));
+    }
+  }
+}
+
 class TextStyleConstants {
-  static TextStyle value(MaterialColor color) {
+  static TextStyle value(MaterialColor? color) {
     return TextStyle(
-      color: color,
+      color: color ?? ColorConstants.white.withOpacity(0.8),
       fontSize: 18,
       fontWeight: FontWeight.bold,
     );

@@ -110,10 +110,9 @@ class WhoAreYou extends StatelessWidget {
                       'transactions': [],
                     });
 
-                    var oldMemberData = await firestore.collection('groups').doc(groupId).get();
-                    List<dynamic> memberList = oldMemberData.data()!['members'];
+                    var groupReference = await firestore.collection('groups').doc(groupId).get();
+                    List<dynamic> memberList = groupReference.data()!['members'];
                     memberList.add(memberReference);
-
                     firestore.collection('groups').doc(groupId).update({'members': memberList});
                     Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false, groupId: groupId));
                   }
@@ -133,13 +132,13 @@ class WhoAreYou extends StatelessWidget {
     );
   }
 
-  onMemberItemTap(Member memberData, SpendingShareUser currentUser, BuildContext context) {
+  onMemberItemTap(Member memberData, SpendingShareUser currentUser, BuildContext context) async {
     var alreadyMember = memberIdName.entries.firstWhereOrNull((element) => element.key == currentUser.userFirebaseId);
     if (alreadyMember != null) {
       showDialog(
           context: context,
           builder: (_) => ErrorDialog(
-                title: 'sign_in_failed'.tr,
+                title: 'already_member'.tr,
                 message: 'already_member_of_the_group'.tr + alreadyMember.value,
                 color: color,
               ));
@@ -147,12 +146,19 @@ class WhoAreYou extends StatelessWidget {
       showDialog(
           context: context,
           builder: (_) => ErrorDialog(
-                title: 'sign_in_failed'.tr,
-                message: 'member_is_taken'.tr,
+                title: 'member_is_taken'.tr,
+                message: 'member_is_taken_by'.tr,
                 color: color,
               ));
     } else {
       firestore.collection('members').doc(memberData.databaseId).update({'userFirebaseId': currentUser.userFirebaseId});
+
+      DocumentReference groupReference = firestore.collection('groups').doc(groupId);
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot = await firestore.collection('users').doc(currentUser.databaseId).get();
+      List<dynamic> newGroupReferenceList = userSnapshot.data()!['groups'];
+      newGroupReferenceList.add(groupReference);
+      await firestore.collection('users').doc(currentUser.databaseId).set({'groups': newGroupReferenceList}, SetOptions(merge: true));
+
       Get.to(() => GroupDetailsPage(firestore: firestore, hasBack: false, groupId: groupId));
     }
   }

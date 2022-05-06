@@ -57,12 +57,12 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
     CreateTransactionData createTransactionData = Provider.of(context, listen: false);
     createTransactionData.setAllMembers(List<DocumentReference>.from(widget.expense.to));
     createTransactionData.setMember(widget.expense.from!);
-    createTransactionData.setDate(DateTime.fromMicrosecondsSinceEpoch(widget.expense.date.microsecondsSinceEpoch));
     createTransactionData.setCategory(widget.expense.category!);
     createTransactionData.setColor(widget.groupData.color);
 
     CreateTransactionChangeNotifier createTransactionChangeNotifier = Provider.of(context, listen: false);
 
+    createTransactionChangeNotifier.setDate(DateTime.fromMicrosecondsSinceEpoch(widget.expense.date.microsecondsSinceEpoch));
     createTransactionChangeNotifier.setValueNoNotify(widget.expense.value.toString());
     createTransactionChangeNotifier.setCurrencyNoNotify(widget.expense.currency);
     createTransactionChangeNotifier.setDefaultCurrency(widget.groupData.currency!);
@@ -208,7 +208,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                         onTap: () async {
                                           var selectedDate = await showDatePicker(
                                             context: context,
-                                            initialDate: createTransactionData.date,
+                                            initialDate: createTransactionChangeNotifier.date,
                                             firstDate: DateTime.now().add(const Duration(days: -365 * 5)),
                                             lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
                                             builder: (context, child) {
@@ -223,11 +223,11 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                               );
                                             },
                                           );
-                                          if (selectedDate != null) createTransactionData.setDate(selectedDate);
+                                          if (selectedDate != null) createTransactionChangeNotifier.setDate(selectedDate);
                                         },
                                         child: Row(
                                           children: [
-                                            Text(createTransactionData.date.toString()),
+                                            TextFormat.date(createTransactionChangeNotifier.date),
                                             Icon(
                                               Icons.calendar_today,
                                               color: widget.groupData.color,
@@ -296,7 +296,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                             SizedBox(height: h(16)),
                             Row(
                               children: [
-                                Text(createTransactionData.date.toString()),
+                                TextFormat.date(createTransactionChangeNotifier.date),
                                 Icon(
                                   Icons.calendar_today,
                                   color: widget.groupData.color.shade500,
@@ -377,7 +377,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                           'category': createTransactionData.category,
                           'createdBy': userReference,
                           'currency': createTransactionChangeNotifier.currency,
-                          'date': createTransactionData.date,
+                          'date': createTransactionChangeNotifier.date,
                           'exchangeRate': createTransactionChangeNotifier.exchangeRate,
                           'from': createTransactionData.member,
                           'name': createTransactionChangeNotifier.name,
