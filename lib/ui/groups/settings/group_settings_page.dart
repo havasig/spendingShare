@@ -104,6 +104,8 @@ class GroupSettingsPage extends StatelessWidget {
                               return AreYouSureDialog(
                                 title: 'are_you_sure'.tr,
                                 message: 'if_you_delete_group'.tr,
+                                okText: 'delete'.tr,
+                                cancelText: 'cancel'.tr,
                                 color: groupData.color,
                               );
                             }).then((value) {
@@ -124,6 +126,8 @@ class GroupSettingsPage extends StatelessWidget {
                               return AreYouSureDialog(
                                 title: 'are_you_sure'.tr,
                                 message: 'if_you_leave_group'.tr,
+                                okText: 'leave'.tr,
+                                cancelText: 'cancel'.tr,
                                 color: groupData.color,
                               );
                             }).then((value) {

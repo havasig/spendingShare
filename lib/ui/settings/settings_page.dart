@@ -390,6 +390,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 return AreYouSureDialog(
                                                   message: 'if_you_delete_category'.tr,
                                                   title: 'are_you_sure'.tr,
+                                                  okText: 'delete'.tr,
+                                                  cancelText: 'cancel'.tr,
                                                   color: widget.color,
                                                 );
                                               }).then((value) async {

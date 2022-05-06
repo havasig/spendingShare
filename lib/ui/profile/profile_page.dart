@@ -19,16 +19,16 @@ class ProfilePage extends StatefulWidget {
 
   final FirebaseFirestore firestore;
 
-  static final _formKeyEmail = GlobalKey<FormState>(debugLabel: '_emailFormState');
-  static final _formKeyName = GlobalKey<FormState>(debugLabel: '_nameFormState');
-  static final _formKeyPwd = GlobalKey<FormState>(debugLabel: '_pwdFormState');
-  static final _formKeyCurrentMoney = GlobalKey<FormState>(debugLabel: '_currentMoneyFormState');
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  static final _formKeyEmail = GlobalKey<FormState>(debugLabel: '_emailFormState');
+  static final _formKeyName = GlobalKey<FormState>(debugLabel: '_nameFormState');
+  static final _formKeyPwd = GlobalKey<FormState>(debugLabel: '_pwdFormState');
+  static final _formKeyCurrentMoney = GlobalKey<FormState>(debugLabel: '_currentMoneyFormState');
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _pwdFocusNode = FocusNode();
@@ -74,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               SizedBox(height: h(8)),
               Form(
-                key: ProfilePage._formKeyEmail,
+                key: _formKeyEmail,
                 child: InputField(
                   validator: TextValidator.validateEmailText,
                   key: const Key('email_input'),
@@ -92,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: h(16)),
               Form(
-                key: ProfilePage._formKeyName,
+                key: _formKeyName,
                 child: InputField(
                   validator: TextValidator.validateIsNotEmpty,
                   key: const Key('name_input'),
@@ -110,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: h(16)),
               Form(
-                key: ProfilePage._formKeyPwd,
+                key: _formKeyPwd,
                 child: Column(
                   children: [
                     InputField(
@@ -151,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: h(16)),
               Form(
-                key: ProfilePage._formKeyCurrentMoney,
+                key: _formKeyCurrentMoney,
                 child: InputField(
                   validator: TextValidator.validateIsNotNegative,
                   key: const Key('current_money_input'),
@@ -190,7 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () async {
                   if (_emailTextEditingController.text.isNotEmpty &&
                       _emailTextEditingController.text != userEmail &&
-                      ProfilePage._formKeyEmail.currentState!.validate()) {
+                      _formKeyEmail.currentState!.validate()) {
                     try {
                       FirebaseAuth.instance.currentUser?.updateEmail(_emailTextEditingController.text);
                     } catch (e) {
@@ -208,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                   if (_nameTextEditingController.text.isNotEmpty &&
                       _nameTextEditingController.text != user.name &&
-                      ProfilePage._formKeyName.currentState!.validate()) {
+                      _formKeyName.currentState!.validate()) {
                     try {
                       //TODO remove username, use only firebase userdisplayname
                       user.name = _nameTextEditingController.text;
@@ -230,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     }
                   }
-                  if (_pwdTextEditingController.text.isNotEmpty && ProfilePage._formKeyPwd.currentState!.validate()) {
+                  if (_pwdTextEditingController.text.isNotEmpty && _formKeyPwd.currentState!.validate()) {
                     try {
                       FirebaseAuth.instance.currentUser?.updatePassword(_pwdTextEditingController.text);
                     } catch (e) {
@@ -247,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     }
                   }
                   if (_currentMoneyTextEditingController.text != userCurrentMoney.toString() &&
-                      ProfilePage._formKeyCurrentMoney.currentState!.validate()) {
+                      _formKeyCurrentMoney.currentState!.validate()) {
                     try {
                       widget.firestore.collection('users').doc(user.databaseId).set(
                         {'currentMoney': double.tryParse(_currentMoneyTextEditingController.text)},

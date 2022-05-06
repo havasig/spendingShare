@@ -141,5 +141,10 @@
   "default_currency": "Default currency",
   "default_icon": "Default icon",
   "default_color": "Default color",
-  "income_from": "Income from "
+  "income_from": "Income from ",
+  "settle_debt": "Settle debt",
+  "do_you_want_to_settle_debt": "Do you want to settle debt ",
+  "from": "from ",
+  "to": "to ",
+  "settle_debt_failed": "Settle debt failed"
 }

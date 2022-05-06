@@ -168,6 +168,8 @@ class GroupDetailsPage extends StatelessWidget {
                     ),
                     DebtsList(
                       group.debts,
+                      groupId: groupId,
+                      firestore: firestore,
                       currency: group.currency,
                       color: group.color,
                       icon: group.icon,
@@ -227,7 +229,7 @@ class GroupDetailsPage extends StatelessWidget {
   }
 
   double getCategoriesHeight(List list) {
-    int wholePart = list.length ~/ 4;
+    int wholePart = list.length ~/ 3;
     if (list.length % 4 == 0) {
       return wholePart * 100;
     }

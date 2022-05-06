@@ -174,6 +174,8 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
                                                   return AreYouSureDialog(
                                                     message: 'if_you_delete_category'.tr,
                                                     title: 'are_you_sure'.tr,
+                                                    okText: 'delete'.tr,
+                                                    cancelText: 'cancel'.tr,
                                                     color: widget.groupData.color,
                                                   );
                                                 }).then((value) async {
