@@ -147,5 +147,6 @@
   "from": "from ",
   "to": "to ",
   "settle_debt_failed": "Settle debt failed",
-  "if_you_delete_category_data": "If you delete this category, it won't be in your new groups automatically"
+  "if_you_delete_category_data": "If you delete this category, it won't be in your new groups automatically",
+  "edit_expense": "Edit expense"
 }

@@ -78,7 +78,13 @@ class CreateTransactionChangeNotifier extends CreateChangeNotifier {
     notifyListeners();
   }
 
+  addToWithAmountAndWeight(DocumentReference member, String amount, String weight) {
+    _to[member] = Tuple2(amount, weight);
+  }
+
   recalculateToEqualAdd(DocumentReference member) {
+    if (_to[member] == null) to[member] = const Tuple2('0', '1');
+
     _to[member] = _to[member]!.withItem1('1');
     int payingCount = _to.entries.where((element) => element.value.item1 != '0').length;
 

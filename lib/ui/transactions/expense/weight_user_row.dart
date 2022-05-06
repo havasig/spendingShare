@@ -5,6 +5,7 @@ import 'package:spending_share/models/data/create_transaction_data.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 import 'package:spending_share/utils/globals.dart' as globals;
+import 'package:tuple/tuple.dart';
 
 import '../../../models/member.dart';
 import '../../../utils/number_helper.dart';
@@ -34,6 +35,9 @@ class _WeightUserRowState extends State<WeightUserRow> {
           var member = Member.fromDocument(snapshot.data!);
           return Consumer<CreateTransactionChangeNotifier>(
               builder: (_, createTransactionChangeNotifier, __) => Consumer<CreateTransactionData>(builder: (_, createTransactionData, __) {
+                    if (createTransactionChangeNotifier.to[widget.memberReference] == null) {
+                      createTransactionChangeNotifier.to[widget.memberReference] = const Tuple2('0', '0');
+                    }
                     textEditingController.text =
                         formatNumberString(createTransactionChangeNotifier.to[widget.memberReference]!.item1.toString());
                     return GestureDetector(

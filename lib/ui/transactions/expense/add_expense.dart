@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:spending_share/models/data/create_transaction_data.dart';
 import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/debt.dart';
+import 'package:spending_share/models/transaction.dart' as spending_share_transaction;
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/transactions/expense/equally_user_row.dart';
 import 'package:spending_share/ui/transactions/expense/weight_user_row.dart';
@@ -33,14 +34,16 @@ import '../calculator.dart';
 import 'amount_user_row.dart';
 
 class AddExpense extends StatelessWidget {
-  const AddExpense({Key? key, required this.firestore}) : super(key: key);
+  const AddExpense({Key? key, required this.firestore, this.oldExpense}) : super(key: key);
 
   final FirebaseFirestore firestore;
+  final spending_share_transaction.Transaction? oldExpense;
 
   @override
   Widget build(BuildContext context) {
     FocusNode focusNode = FocusNode();
     TextEditingController textEditingController = TextEditingController();
+    textEditingController.text = oldExpense?.name ?? '';
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -160,25 +163,66 @@ class AddExpense extends StatelessWidget {
                         String name = textEditingController.text.isNotEmpty ? textEditingController.text : 'expense'.tr;
                         createTransactionChangeNotifier.setName(name);
                         try {
-                          SpendingShareUser user = Provider.of(context, listen: false);
-                          DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
+                          late DocumentReference expenseReference;
 
-                          //createTransactionChangeNotifier.to.removeWhere((key, value) => value.item1 == '0');
+                          DocumentSnapshot<Map<String, dynamic>> groupSnapshot =
+                              await firestore.collection('groups').doc(createTransactionData.groupId).get();
+                          List<dynamic> newTransactionReferenceList = groupSnapshot.data()!['transactions'];
 
-                          DocumentReference expenseReference = await firestore.collection('transactions').add({
-                            'category': createTransactionData.category,
-                            'createdBy': userReference,
-                            'currency': createTransactionChangeNotifier.currency,
-                            'date': createTransactionChangeNotifier.date,
-                            'exchangeRate': createTransactionChangeNotifier.exchangeRate,
-                            'from': createTransactionData.member,
-                            'name': createTransactionChangeNotifier.name,
-                            'to': createTransactionChangeNotifier.to.keys.toList(),
-                            'toAmounts': createTransactionChangeNotifier.to.values.map((e) => e.item1).toList(),
-                            'toWeights': createTransactionChangeNotifier.to.values.map((e) => e.item2).toList(),
-                            'type': createTransactionChangeNotifier.type.toString(),
-                            'value': double.parse(createTransactionChangeNotifier.value),
-                          });
+                          if (oldExpense != null) {
+                            await firestore.collection('transactions').doc(oldExpense!.databaseId).set({
+                              'category': createTransactionData.category,
+                              'currency': createTransactionChangeNotifier.currency,
+                              'date': createTransactionChangeNotifier.date,
+                              'exchangeRate': createTransactionChangeNotifier.exchangeRate,
+                              'from': createTransactionData.member,
+                              'name': createTransactionChangeNotifier.name,
+                              'to': createTransactionChangeNotifier.to.keys.toList(),
+                              'toAmounts': createTransactionChangeNotifier.to.values.map((e) => e.item1).toList(),
+                              'toWeights': createTransactionChangeNotifier.to.values.map((e) => e.item2).toList(),
+                              'value': double.parse(createTransactionChangeNotifier.value),
+                            }, SetOptions(merge: true));
+
+                            expenseReference = firestore.collection('transactions').doc(oldExpense!.databaseId);
+                            //remove from old members transcation list
+                            for (DocumentReference toItem in oldExpense!.to) {
+                              DocumentSnapshot memberSnapshot = await toItem.get();
+                              List<dynamic> newMemberTransactionReferenceList = memberSnapshot['transactions'];
+                              newMemberTransactionReferenceList.removeWhere((element) => element.id == expenseReference.id);
+                              toItem.set({'transactions': newMemberTransactionReferenceList}, SetOptions(merge: true));
+                            }
+
+                            //remove from old category transaction list
+                            DocumentSnapshot<Map<String, dynamic>> categorySnapshot =
+                                await oldExpense!.category!.get() as DocumentSnapshot<Map<String, dynamic>>;
+                            List<dynamic> newExpenseReferenceList = categorySnapshot.data()!['transactions'];
+                            newExpenseReferenceList.removeWhere((element) => element.id == expenseReference.id);
+                            await firestore
+                                .collection('categories')
+                                .doc(oldExpense!.category!.id)
+                                .set({'transactions': newExpenseReferenceList}, SetOptions(merge: true));
+                          } else {
+                            SpendingShareUser user = Provider.of(context, listen: false);
+                            DocumentReference userReference = firestore.collection('users').doc(user.databaseId);
+
+                            expenseReference = await firestore.collection('transactions').add({
+                              'category': createTransactionData.category,
+                              'createdBy': userReference,
+                              'currency': createTransactionChangeNotifier.currency,
+                              'date': createTransactionChangeNotifier.date,
+                              'exchangeRate': createTransactionChangeNotifier.exchangeRate,
+                              'from': createTransactionData.member,
+                              'name': createTransactionChangeNotifier.name,
+                              'to': createTransactionChangeNotifier.to.keys.toList(),
+                              'toAmounts': createTransactionChangeNotifier.to.values.map((e) => e.item1).toList(),
+                              'toWeights': createTransactionChangeNotifier.to.values.map((e) => e.item2).toList(),
+                              'type': createTransactionChangeNotifier.type.toString(),
+                              'value': double.parse(createTransactionChangeNotifier.value),
+                            });
+
+                            //update transactions in group
+                            newTransactionReferenceList.add(expenseReference);
+                          }
 
                           //update members
                           for (DocumentReference toItem in createTransactionChangeNotifier.to.keys.toList()) {
@@ -191,25 +235,15 @@ class AddExpense extends StatelessWidget {
                           //update category
                           DocumentSnapshot<Map<String, dynamic>> categorySnapshot =
                               await firestore.collection('categories').doc(createTransactionData.category?.id).get();
-
                           List<dynamic> newExpenseReferenceList = categorySnapshot.data()!['transactions'];
                           newExpenseReferenceList.add(expenseReference);
-
                           await firestore
                               .collection('categories')
                               .doc(createTransactionData.category?.id)
                               .set({'transactions': newExpenseReferenceList}, SetOptions(merge: true));
 
-                          DocumentSnapshot<Map<String, dynamic>> groupSnapshot =
-                              await firestore.collection('groups').doc(createTransactionData.groupId).get();
-
-                          //update transactions in group
-                          List<dynamic> newTransactionReferenceList = groupSnapshot.data()!['transactions'];
-                          newTransactionReferenceList.add(expenseReference);
-
                           //calculate debts
                           List<dynamic> members = groupSnapshot.data()!['members'];
-
                           List<List<double>> graph =
                               List<List<double>>.generate(members.length, (index) => List<double>.generate(members.length, (i) => 0));
 
@@ -230,6 +264,16 @@ class AddExpense extends StatelessWidget {
                             graph[members.indexWhere((member) => member.id == createTransactionData.member!.id)]
                                     [members.indexWhere((member) => member.id == to.key.id)] +=
                                 double.tryParse(to.value.item1)! * (createTransactionChangeNotifier.exchangeRate ?? 1);
+                          }
+
+                          //remove old expense
+                          if (oldExpense != null) {
+                            for (int i = 0; i < oldExpense!.to.length; i++) {
+                              graph[members.indexWhere((member) => member.id == oldExpense!.from!.id)]
+                                      [members.indexWhere((member) => member.id == oldExpense!.to[i].id)] -=
+                                  double.tryParse(oldExpense!.toAmounts![i])! *
+                                      (oldExpense?.exchangeRate != null ? double.tryParse(oldExpense!.exchangeRate!) ?? 1 : 1);
+                            }
                           }
 
                           //calculate new debts

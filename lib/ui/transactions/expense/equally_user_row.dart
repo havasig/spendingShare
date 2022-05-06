@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/src/iterable_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spending_share/models/data/create_transaction_data.dart';
@@ -6,7 +7,6 @@ import 'package:spending_share/ui/constants/text_style_constants.dart';
 import 'package:spending_share/ui/widgets/circle_icon_button.dart';
 
 import '../../../models/member.dart';
-import '../../../utils/number_helper.dart';
 import '../../helpers/change_notifiers/transaction_change_notifier.dart';
 import '../../helpers/on_future_build_error.dart';
 
@@ -30,9 +30,11 @@ class _EquallyUserRowState extends State<EquallyUserRow> {
           var member = Member.fromDocument(snapshot.data!);
           return Consumer<CreateTransactionChangeNotifier>(
             builder: (_, createTransactionChangeNotifier, __) => Consumer<CreateTransactionData>(builder: (_, createTransactionData, __) {
-              bool isChecked =
-                  createTransactionChangeNotifier.to.entries.firstWhere((element) => element.key == widget.memberReference).value.item1 !=
-                      '0';
+              String? paidAmount = createTransactionChangeNotifier.to.entries
+                  .firstWhereOrNull((element) => element.key == widget.memberReference)
+                  ?.value
+                  .item1;
+              bool isChecked = paidAmount != null && paidAmount != '0' && paidAmount != '0.0';
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -42,12 +44,10 @@ class _EquallyUserRowState extends State<EquallyUserRow> {
                     width: 20,
                   ),
                   Text(member.name),
-                  Text(
-                    formatNumberString(createTransactionChangeNotifier.to[widget.memberReference]!.item1.toString()) +
-                        ' ' +
-                        createTransactionChangeNotifier.currency,
-                    style: TextStyleConstants.value(widget.color),
-                  ),
+                  TextFormat.roundedValueWithCurrencyAndColor(
+                      double.tryParse(createTransactionChangeNotifier.to[widget.memberReference]?.item1 ?? '0') ?? 0.0,
+                      createTransactionChangeNotifier.currency,
+                      widget.color),
                   Checkbox(
                     checkColor: Colors.white,
                     fillColor: MaterialStateProperty.resolveWith(getColor),
