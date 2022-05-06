@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:spending_share/utils/number_helper.dart';
 
 import 'color_constants.dart';
 
@@ -13,7 +14,7 @@ class TextFormat {
     if (value.floor() == value) {
       return Text(value.toInt().toString() + ' ' + currency, style: TextStyleConstants.value(color));
     } else {
-      return Text(value.toString() + ' ' + currency, style: TextStyleConstants.value(color));
+      return Text(formatNumberString(value.toString()) + ' ' + currency, style: TextStyleConstants.value(color));
     }
   }
 }

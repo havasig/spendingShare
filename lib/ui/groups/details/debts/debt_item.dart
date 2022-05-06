@@ -127,7 +127,7 @@ class DebtItem extends StatelessWidget {
                   builder: (context) {
                     return ErrorDialog(
                       title: 'settle_debt_failed'.tr,
-                      message: e.toString(), // TODO '${(e as dynamic).message}'.tr,
+                      message: '${(e as dynamic).message}'.tr,
                     );
                   },
                 );
@@ -155,7 +155,7 @@ class DebtItem extends StatelessWidget {
                     Column(
                       children: [
                         Text(member.name),
-                        TextFormat.roundedValueWithCurrencyAndColor(value, currency, null),
+                        TextFormat.roundedValueWithCurrencyAndColor(value, currency, color),
                       ],
                     )
                   ],

@@ -176,8 +176,8 @@ class AddIncome extends StatelessWidget {
                             .set({'transactions': newTransactionReferenceList}, SetOptions(merge: true));
 
                         var groupId = createTransactionData.groupId!;
-                        createTransactionData.clear();
                         createTransactionChangeNotifier.clear();
+                        createTransactionData.clear();
 
                         Get.to(() => GroupDetailsPage(
                               firestore: firestore,

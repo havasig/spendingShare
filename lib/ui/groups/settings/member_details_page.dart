@@ -16,7 +16,7 @@ class MemberDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SpendingShareAppBar(
-        titleText: 'who-are-you'.tr,
+        titleText: 'who_are_you'.tr,
         suffixWidget: Text('del'),
       ),
       body: GestureDetector(

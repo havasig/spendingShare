@@ -29,7 +29,7 @@ void main() {
       testWidgets('WhoAreYou has Who are you header', (WidgetTester tester) async {
         var testWidget = testableWidget(child: WhoAreYou(firestore: firestore, groupId: 'group', color: Colors.orange));
         await tester.pumpWidget(testWidget);
-        final textFinder = find.text('who-are-you');
+        final textFinder = find.text('who_are_you');
         expect(textFinder, findsOneWidget);
       });
 
@@ -42,7 +42,7 @@ void main() {
 
         // TODO
 
-        final textFinder = find.text('who-are-you');
+        final textFinder = find.text('who_are_you');
         expect(textFinder, findsOneWidget);
       });
        */

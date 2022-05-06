@@ -12,6 +12,7 @@ import 'package:spending_share/ui/categories/categroy_details.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/groups/details/statistics/statistics.dart';
 import 'package:spending_share/ui/groups/details/transactions/transactions_list.dart';
+import 'package:spending_share/ui/groups/settings/member_details_page.dart';
 import 'package:spending_share/ui/helpers/fab/create_transaction_fab.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
 import 'package:spending_share/ui/transactions/create_transaction_page.dart';
@@ -33,10 +34,10 @@ class GroupDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SpendingShareUser currentUser = Provider.of(context);
-    return FutureBuilder<DocumentSnapshot>(
-      future: firestore.collection('groups').doc(groupId).get(),
+    return StreamBuilder(
+      stream: firestore.collection('groups').doc(groupId).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.active) {
           Group group = Group.fromDocument(snapshot.data!);
 
           return Scaffold(
@@ -76,21 +77,24 @@ class GroupDetailsPage extends StatelessWidget {
                               builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                                 if (snapshot.connectionState == ConnectionState.done) {
                                   var member = Member.fromDocument(snapshot.data!);
-                                  return Draggable<Member>(
-                                    data: member,
-                                    dragAnchorStrategy: childDragAnchorStrategy,
-                                    feedback: CircleIconButton(
-                                      width: (MediaQuery.of(context).size.width - 197) / 7,
-                                      //-padding*2 -iconWidth*4 -spacing*3
-                                      color: group.color,
-                                      icon: member.icon ?? group.icon,
-                                    ),
-                                    child: CircleIconButton(
-                                      width: (MediaQuery.of(context).size.width - 197) / 8,
-                                      //-padding*2 -iconWidth*4 -spacing*3
-                                      color: group.color,
-                                      name: member.name,
-                                      icon: member.icon ?? group.icon,
+                                  return GestureDetector(
+                                    onTap: () => Get.to(() => MemberDetailsPage(firestore: firestore, color: group.color)),
+                                    child: Draggable<Member>(
+                                      data: member,
+                                      dragAnchorStrategy: childDragAnchorStrategy,
+                                      feedback: CircleIconButton(
+                                        width: (MediaQuery.of(context).size.width - 197) / 7,
+                                        //-padding*2 -iconWidth*4 -spacing*3
+                                        color: group.color,
+                                        icon: member.icon ?? group.icon,
+                                      ),
+                                      child: CircleIconButton(
+                                        width: (MediaQuery.of(context).size.width - 197) / 8,
+                                        //-padding*2 -iconWidth*4 -spacing*3
+                                        color: group.color,
+                                        name: member.name,
+                                        icon: member.icon ?? group.icon,
+                                      ),
                                     ),
                                   );
                                 }
@@ -183,7 +187,7 @@ class GroupDetailsPage extends StatelessWidget {
                       child: Text('transactions'.tr),
                     ),
                     TransactionsList(
-                      group.transactions,
+                      group.transactions.reversed.toList(),
                       groupData: GroupData(
                         color: group.color,
                         icon: group.icon,

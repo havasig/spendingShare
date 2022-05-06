@@ -22,6 +22,8 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 import 'package:tuple/tuple.dart';
 
+import 'create_category_data_fab.dart';
+
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key? key, required this.firestore}) : super(key: key);
 
@@ -262,170 +264,181 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
               Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
-              Wrap(
-                  alignment: WrapAlignment.start,
-                  runSpacing: 10,
-                  spacing: 15,
-                  children: user.categoryData.map((categoryData) {
-                    List<CategoryData> categoryListWithoutCurrent = [];
-                    categoryListWithoutCurrent.addAll(user.categoryData);
-                    categoryListWithoutCurrent.removeWhere((value) => value == categoryData);
-                    final FocusNode _focusNode = FocusNode();
-                    final TextEditingController _textEditingController = TextEditingController();
-                    final _formKey = GlobalKey<FormState>(debugLabel: '_CategoryRenameFormState');
-                    var selectIconChangeNotifier = Provider.of<SelectIconChangeNotifier>(context, listen: false);
-                    selectIconChangeNotifier.icon = categoryData.icon;
-                    _textEditingController.text = categoryData.name;
-                    bool deleted = false;
-                    return !deleted
-                        ? Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(h(6)),
-                                child: CircleIconButton(
-                                  onTap: () => showBarModalBottomSheet(
-                                    expand: true,
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding: EdgeInsets.all(h(16)),
-                                        child: Column(
-                                          children: [
-                                            Text('rename_category'.tr, style: TextStyleConstants.h_5),
-                                            Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
-                                            Text('set_new_category_name'.tr + categoryData.name, style: TextStyleConstants.body_1),
-                                            Form(
-                                              key: _formKey,
-                                              child: InputField(
-                                                validator: TextValidator.validateIsNotEmpty,
-                                                labelColor: currentUser.color,
-                                                focusColor: currentUser.color,
-                                                key: const Key('category_rename_input'),
-                                                focusNode: _focusNode,
-                                                textEditingController: _textEditingController,
-                                                prefixIcon: Icon(Icons.mail, color: currentUser.color),
-                                                labelText: 'new_name'.tr,
-                                                hintText: 'new_name'.tr,
-                                              ),
-                                            ),
-                                            Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
-                                            SelectCategoryIcon(defaultIcon: categoryData.icon, color: currentUser.color),
-                                            Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
-                                            Button(
-                                              buttonColor: currentUser.color,
-                                              onPressed: () {
-                                                if (_formKey.currentState!.validate()) {
-                                                  Navigator.of(context)
-                                                      .pop(Tuple2(_textEditingController.text, selectIconChangeNotifier.icon));
-                                                }
-                                              },
-                                              text: 'create'.tr,
-                                              textStyle: TextStyleConstants.sub_1_medium.copyWith(color: ColorConstants.textBlack),
-                                            ),
-                                            Button(
-                                              onPressed: () => Navigator.of(context).pop(),
-                                              text: 'close'.tr,
-                                              textStyle: TextStyleConstants.sub_1,
-                                              buttonColor: Colors.transparent,
-                                              borderSide: BorderSide(
-                                                color: ColorConstants.white.withOpacity(0.5),
-                                              ),
-                                              textColor: ColorConstants.white.withOpacity(0.8),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ).then((value) async {
-                                    if (value != null) {
-                                      value as Tuple2<String, IconData?>;
-                                      String? iconString =
-                                          globals.icons.entries.firstWhereOrNull((element) => element.value == value.item2)?.key;
-                                      await widget.firestore
-                                          .collection('users')
-                                          .doc(user.databaseId)
-                                          .collection('categoryData')
-                                          .doc(categoryData.databaseId)
-                                          .set({
-                                        'name': value.item1,
-                                        'icon': iconString ?? 'default',
-                                      }, SetOptions(merge: true));
-                                      user.categoryData
-                                          .firstWhere((element) => element.name == value.item1 && element.icon == value.item2)
-                                          .reInit(value.item1, value.item2!);
-                                      setState(() {});
-                                    }
-                                  }),
-                                  color: currentUser.color,
-                                  width: 20,
-                                  name: categoryData.name,
-                                  icon: categoryData.icon,
-                                ),
-                              ),
-                              Material(
-                                  type: MaterialType.transparency,
-                                  child: Ink(
-                                    decoration: const BoxDecoration(
-                                      color: ColorConstants.gray,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(1000),
-                                      onTap: () async {
-                                        if (categoryListWithoutCurrent.isEmpty) {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return ErrorDialog(
-                                                  message: 'cannot_delete'.tr,
-                                                  title: 'least_one_category'.tr,
-                                                  color: currentUser.color,
-                                                );
-                                              });
-                                        } else {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AreYouSureDialog(
-                                                  message: 'if_you_delete_category'.tr,
-                                                  title: 'are_you_sure'.tr,
-                                                  okText: 'delete'.tr,
-                                                  cancelText: 'cancel'.tr,
-                                                  color: currentUser.color,
-                                                );
-                                              }).then((value) async {
-                                            if (value) {
-                                              deleted = true;
+              StreamBuilder(
+                  stream: widget.firestore.collection('users').doc(user.databaseId).collection('categoryData').snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> categoryDataListSnapshot) {
+                    if (categoryDataListSnapshot.hasData) {
+                      return Wrap(
+                          alignment: WrapAlignment.start,
+                          runSpacing: 10,
+                          spacing: 15,
+                          children: categoryDataListSnapshot.data!.docs.map((cd) {
+                            var categoryData = CategoryData.fromDocument(cd);
+                            List<CategoryData> categoryListWithoutCurrent = [];
+                            categoryListWithoutCurrent.addAll(user.categoryData);
+                            categoryListWithoutCurrent.removeWhere((value) => value == categoryData);
+                            final FocusNode _focusNode = FocusNode();
+                            final TextEditingController _textEditingController = TextEditingController();
+                            final _formKey = GlobalKey<FormState>(debugLabel: '_CategoryRenameFormState');
+                            var selectIconChangeNotifier = Provider.of<SelectIconChangeNotifier>(context, listen: false);
+                            selectIconChangeNotifier.icon = categoryData.icon;
+                            _textEditingController.text = categoryData.name;
+                            bool deleted = false;
+                            return !deleted
+                                ? Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(h(6)),
+                                        child: CircleIconButton(
+                                          onTap: () => showBarModalBottomSheet(
+                                            expand: true,
+                                            context: context,
+                                            builder: (context) {
+                                              return Padding(
+                                                padding: EdgeInsets.all(h(16)),
+                                                child: Column(
+                                                  children: [
+                                                    Text('rename_category'.tr, style: TextStyleConstants.h_5),
+                                                    Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
+                                                    Text('set_new_category_name'.tr + categoryData.name, style: TextStyleConstants.body_1),
+                                                    Form(
+                                                      key: _formKey,
+                                                      child: InputField(
+                                                        validator: TextValidator.validateIsNotEmpty,
+                                                        labelColor: currentUser.color,
+                                                        focusColor: currentUser.color,
+                                                        key: const Key('category_rename_input'),
+                                                        focusNode: _focusNode,
+                                                        textEditingController: _textEditingController,
+                                                        prefixIcon: Icon(Icons.mail, color: currentUser.color),
+                                                        labelText: 'new_name'.tr,
+                                                        hintText: 'new_name'.tr,
+                                                      ),
+                                                    ),
+                                                    Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
+                                                    SelectCategoryIcon(defaultIcon: categoryData.icon, color: currentUser.color),
+                                                    Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
+                                                    Button(
+                                                      buttonColor: currentUser.color,
+                                                      onPressed: () {
+                                                        if (_formKey.currentState!.validate()) {
+                                                          Navigator.of(context)
+                                                              .pop(Tuple2(_textEditingController.text, selectIconChangeNotifier.icon));
+                                                        }
+                                                      },
+                                                      text: 'save'.tr,
+                                                      textStyle: TextStyleConstants.sub_1_medium.copyWith(color: ColorConstants.textBlack),
+                                                    ),
+                                                    Button(
+                                                      onPressed: () => Navigator.of(context).pop(),
+                                                      text: 'close'.tr,
+                                                      textStyle: TextStyleConstants.sub_1,
+                                                      buttonColor: Colors.transparent,
+                                                      borderSide: BorderSide(
+                                                        color: ColorConstants.white.withOpacity(0.5),
+                                                      ),
+                                                      textColor: ColorConstants.white.withOpacity(0.8),
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ).then((value) async {
+                                            if (value != null) {
+                                              value as Tuple2<String, IconData?>;
+                                              String? iconString =
+                                                  globals.icons.entries.firstWhereOrNull((element) => element.value == value.item2)?.key;
                                               await widget.firestore
                                                   .collection('users')
                                                   .doc(user.databaseId)
                                                   .collection('categoryData')
                                                   .doc(categoryData.databaseId)
-                                                  .delete();
-                                              user.categoryData.remove(categoryData);
-                                              setState(() {});
+                                                  .set({
+                                                'name': value.item1,
+                                                'icon': iconString ?? 'default',
+                                              }, SetOptions(merge: true));
                                             }
-                                          });
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(h(4)),
-                                        child: Icon(
-                                          Icons.close,
-                                          size: h(14),
-                                          color: ColorConstants.backgroundBlack,
+                                          }),
+                                          color: currentUser.color,
+                                          width: 20,
+                                          name: categoryData.name,
+                                          icon: categoryData.icon,
                                         ),
                                       ),
-                                    ),
-                                  )),
-                            ],
-                          )
-                        : const SizedBox.shrink();
-                  }).toList()),
+                                      Material(
+                                          type: MaterialType.transparency,
+                                          child: Ink(
+                                            decoration: const BoxDecoration(
+                                              color: ColorConstants.gray,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: InkWell(
+                                              borderRadius: BorderRadius.circular(1000),
+                                              onTap: () async {
+                                                if (categoryListWithoutCurrent.isEmpty) {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return ErrorDialog(
+                                                          message: 'cannot_delete'.tr,
+                                                          title: 'least_one_category'.tr,
+                                                          color: currentUser.color,
+                                                        );
+                                                      });
+                                                } else {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return AreYouSureDialog(
+                                                          title: 'are_you_sure'.tr,
+                                                          message: 'if_you_delete_category_data'.tr,
+                                                          okText: 'delete'.tr,
+                                                          cancelText: 'cancel'.tr,
+                                                          color: currentUser.color,
+                                                        );
+                                                      }).then((value) async {
+                                                    if (value) {
+                                                      deleted = true;
+                                                      await widget.firestore
+                                                          .collection('users')
+                                                          .doc(user.databaseId)
+                                                          .collection('categoryData')
+                                                          .doc(categoryData.databaseId)
+                                                          .delete();
+                                                      user.categoryData.remove(categoryData);
+                                                      setState(() {});
+                                                    }
+                                                  });
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding: EdgeInsets.all(h(4)),
+                                                child: Icon(
+                                                  Icons.close,
+                                                  size: h(14),
+                                                  color: ColorConstants.backgroundBlack,
+                                                ),
+                                              ),
+                                            ),
+                                          )),
+                                    ],
+                                  )
+                                : const SizedBox.shrink();
+                          }).toList());
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  }),
             ],
           ),
         ),
+      ),
+      floatingActionButton: CreateCategoryDataFab(
+        firestore: widget.firestore,
+        color: currentUser.color,
+        icon: currentUser.icon,
+        userId: currentUser.databaseId,
       ),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
         key: const Key('bottom_navigation'),

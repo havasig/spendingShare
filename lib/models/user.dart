@@ -43,4 +43,17 @@ class SpendingShareUser {
       categoryData: [],
     );
   }
+
+  clear() {
+    color = globals.colors['default']!;
+    currency = '';
+    groups = [];
+    icon = globals.icons['default']!;
+    name = '';
+    userFirebaseId = '';
+    databaseId = '';
+    currentMoney = 0.0;
+    language = '';
+    categoryData = [];
+  }
 }

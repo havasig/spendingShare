@@ -37,7 +37,7 @@ class WhoAreYou extends StatelessWidget {
 
     return Scaffold(
       appBar: SpendingShareAppBar(
-        titleText: 'who-are-you'.tr,
+        titleText: 'who_are_you'.tr,
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),

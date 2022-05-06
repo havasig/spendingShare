@@ -237,10 +237,10 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
       var oldCategoryData = await widget.firestore.collection('categories').doc(databaseId).get();
       List<dynamic> oldTransactionList = oldCategoryData.data()!['transactions'];
 
-      for (var _ in oldTransactionList) {
+      for (var transaction in oldTransactionList) {
         widget.firestore
             .collection('transactions')
-            .doc((oldTransactionList.first as DocumentReference).id)
+            .doc((transaction as DocumentReference).id)
             .set({'category': newCategory}, SetOptions(merge: true));
       }
 

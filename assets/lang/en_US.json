@@ -118,7 +118,6 @@
   "already_member_of_the_group": "You are already member of this group with name: ",
   "member_is_taken": "This member is taken",
   "member_is_taken_by": "This member is taken by someone else. Choose another or join by input.",
-  "who-are-you": "Who are your?",
   "paste_from_clipboard": "Paste from clipboard",
   "add_member_by_typing": "Add member by typing it's name",
   "member_delete_failed": "Member delete failed",
@@ -147,5 +146,6 @@
   "do_you_want_to_settle_debt": "Do you want to settle debt ",
   "from": "from ",
   "to": "to ",
-  "settle_debt_failed": "Settle debt failed"
+  "settle_debt_failed": "Settle debt failed",
+  "if_you_delete_category_data": "If you delete this category, it won't be in your new groups automatically"
 }

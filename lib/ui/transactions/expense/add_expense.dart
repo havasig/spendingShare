@@ -259,8 +259,8 @@ class AddExpense extends StatelessWidget {
 
                           var groupId = createTransactionData.groupId!;
 
-                          createTransactionData.clear();
                           createTransactionChangeNotifier.clear();
+                          createTransactionData.clear();
 
                           Get.to(() => GroupDetailsPage(
                                 firestore: firestore,
