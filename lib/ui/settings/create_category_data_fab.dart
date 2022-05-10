@@ -16,7 +16,8 @@ import 'package:spending_share/utils/text_validator.dart';
 import 'package:tuple/tuple.dart';
 
 class CreateCategoryDataFab extends StatelessWidget {
-  const CreateCategoryDataFab({Key? key, required this.firestore, required this.color, required this.icon, required this.userId}) : super(key: key);
+  const CreateCategoryDataFab({Key? key, required this.firestore, required this.color, required this.icon, required this.userId})
+      : super(key: key);
 
   final FirebaseFirestore firestore;
   final MaterialColor color;

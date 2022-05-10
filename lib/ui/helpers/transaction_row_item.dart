@@ -9,7 +9,6 @@ import 'package:spending_share/models/transaction.dart' as spending_share_transa
 import 'package:spending_share/ui/helpers/expense_row_item.dart';
 import 'package:spending_share/ui/helpers/income_row_item.dart';
 import 'package:spending_share/ui/helpers/transfer_row_item.dart';
-import 'package:spending_share/ui/transactions/expense/expense_details.dart';
 import 'package:spending_share/ui/transactions/expense/expense_details_first_page.dart';
 import 'package:spending_share/ui/transactions/income/income_details.dart';
 import 'package:spending_share/ui/transactions/transfer/transfer_details.dart';

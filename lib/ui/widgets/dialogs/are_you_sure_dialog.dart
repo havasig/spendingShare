@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
 
@@ -13,7 +12,8 @@ class AreYouSureDialog extends StatelessWidget {
   final String cancelText;
   final MaterialColor? color;
 
-  const AreYouSureDialog({Key? key, required this.title, required this.message, required this.okText, required this.cancelText, this.color}) : super(key: key);
+  const AreYouSureDialog({Key? key, required this.title, required this.message, required this.okText, required this.cancelText, this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/group.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
-import 'package:spending_share/ui/categories/categroy_details.dart';
+import 'package:spending_share/ui/categories/categroy_details_page.dart';
 import 'package:spending_share/ui/constants/color_constants.dart';
 import 'package:spending_share/ui/groups/details/statistics/statistics.dart';
 import 'package:spending_share/ui/groups/details/transactions/transactions_list.dart';
@@ -127,11 +127,12 @@ class GroupDetailsPage extends StatelessWidget {
                                         child: DragTarget<Member>(
                                           builder: (context, candidateItems, rejectedItems) {
                                             return CircleIconButton(
-                                              onTap: () => Get.to(() => CategoryDetails(
+                                              onTap: () => Get.to(() => CategoryDetailsPage(
                                                     firestore: firestore,
                                                     category: category,
                                                     color: group.color,
                                                     groupId: groupId,
+                                                currency: group.currency,
                                                   )),
                                               width: (MediaQuery.of(context).size.width - 197) / 8,
                                               //-padding*2 -iconWidth*4 -spacing*3

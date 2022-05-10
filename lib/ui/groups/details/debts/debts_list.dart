@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:spending_share/models/debt.dart';
 import 'package:spending_share/ui/helpers/on_future_build_error.dart';
-import 'package:spending_share/ui/widgets/dialogs/are_you_sure_dialog.dart';
 
 import 'debt_item.dart';
 

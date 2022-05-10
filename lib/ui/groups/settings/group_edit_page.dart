@@ -109,7 +109,7 @@ class _GroupEditPageState extends State<GroupEditPage> {
                         if (createGroupChangeNotifier.currency != widget.groupData.currency) {
                           DocumentSnapshot groupSnapshot = await widget.firestore.collection('groups').doc(widget.groupData.groupId).get();
                           double? defaultExchangeRate =
-                              await getExchangeRate(  createGroupChangeNotifier.currency,widget.groupData.currency!);
+                              await getExchangeRate(createGroupChangeNotifier.currency, widget.groupData.currency!);
                           for (DocumentReference t in groupSnapshot['transactions']) {
                             spending_share_transaction.Transaction transaction =
                                 spending_share_transaction.Transaction.fromDocument(await t.get());
@@ -121,14 +121,13 @@ class _GroupEditPageState extends State<GroupEditPage> {
                               t.set({'exchangeRate': defaultExchangeRate}, SetOptions(merge: true));
                             } else {
                               //valami más volt eddig is a valuta, arról kell kiszámolni az exchange rate-t
-                              double? newExchangeRate = await getExchangeRate( createGroupChangeNotifier.currency,transaction.currency);
+                              double? newExchangeRate = await getExchangeRate(createGroupChangeNotifier.currency, transaction.currency);
                               t.set({'exchangeRate': newExchangeRate}, SetOptions(merge: true));
                             }
                           }
                         }
 
                         // TODO change debts to this currency lol
-
 
                         Get.offAll(() => GroupDetailsPage(firestore: widget.firestore, hasBack: false, groupId: widget.groupData.groupId));
                       } catch (e) {

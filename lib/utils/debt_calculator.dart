@@ -16,11 +16,9 @@ void main() async {
   ];
 
   List<List<double>> graphh = [
-    [120,20],
-    [120,20],
+    [120, 20],
+    [120, 20],
   ];
-
-
 
   // Print the solution
   GFG(2).minCashFlow(graphh);
@@ -93,7 +91,7 @@ class GFG {
     amount[mxDebit] += min;
 
     // If minimum is the maximum amount to be
-      print("Person " + mxDebit.toString() + " pays " + min.toString() + " to " + "Person " + mxCredit.toString());
+    print("Person " + mxDebit.toString() + " pays " + min.toString() + " to " + "Person " + mxCredit.toString());
 
     result.add(Tuple3(mxDebit, mxCredit, min));
 
