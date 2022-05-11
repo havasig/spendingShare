@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:spending_share/models/data/group_data.dart';
 import 'package:spending_share/models/member.dart';
 import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/constants/text_style_constants.dart';
@@ -21,10 +22,9 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
 class GroupMembersPage extends StatelessWidget {
-  GroupMembersPage({Key? key, required this.firestore, required this.groupId, required this.color}) : super(key: key);
+  GroupMembersPage({Key? key, required this.firestore, required this.groupData}) : super(key: key);
 
-  final String groupId;
-  final MaterialColor color;
+  final GroupData groupData;
   final FirebaseFirestore firestore;
   final Map<String, String> memberIdName = {};
 
@@ -48,7 +48,7 @@ class GroupMembersPage extends StatelessWidget {
             children: [
               Expanded(
                 child: StreamBuilder<List<DocumentSnapshot>>(
-                    stream: firestore.collection('groups').doc(groupId).snapshots().switchMap((group) {
+                    stream: firestore.collection('groups').doc(groupData.groupId).snapshots().switchMap((group) {
                       return CombineLatestStream.list(
                           group.data()!['members'].map<Stream<DocumentSnapshot>>((member) => (member as DocumentReference).snapshots()));
                     }),
@@ -62,51 +62,55 @@ class GroupMembersPage extends StatelessWidget {
                             if (member.userFirebaseId != null) memberIdName[member.userFirebaseId!] = member.name;
                             return MemberItem(
                               member: member,
-                              onClick: () => Get.to(() => MemberDetailsPage(firestore: firestore, color: color)),
+                              onClick: () => Get.to(() => MemberDetailsPage(firestore: firestore, groupData: groupData, member: member)),
                               onDelete: () async {
-                                if (member.userFirebaseId != null && member.transactions.isEmpty) {
+                                if (member.userFirebaseId != null) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return ErrorDialog(
+                                        title: 'member_delete_failed'.tr,
+                                        message: 'member_delete_has_person'.tr,
+                                        color: groupData.color,
+                                      );
+                                    },
+                                  );
+                                } else if (member.transactions.isEmpty) {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
                                       return AreYouSureDialog(
-                                        title: 'member_delete_failed'.tr,
-                                        message: 'cannot_remove'.tr,
+                                        title: 'are_you_sure'.tr,
+                                        message: 'member_delete_no_transactions_no_person'.tr,
                                         okText: 'delete'.tr,
                                         cancelText: 'cancel'.tr,
-                                        color: color,
+                                        color: groupData.color,
                                       );
                                     },
                                   ).then((value) async {
                                     if (value != null && value) {
                                       await firestore.collection('members').doc(member.databaseId).delete();
-                                      var oldMemberData = await firestore.collection('groups').doc(groupId).get();
+                                      var oldMemberData = await firestore.collection('groups').doc(groupData.groupId).get();
                                       List<dynamic> memberList = oldMemberData.data()!['members'];
                                       memberList.removeWhere((element) => element.id == member.databaseId);
 
-                                      firestore.collection('groups').doc(groupId).update({'members': memberList});
+                                      firestore.collection('groups').doc(groupData.groupId).update({'members': memberList});
                                     }
                                   });
-                                } else if (member.transactions.isEmpty) {
-                                  await firestore.collection('members').doc(member.databaseId).delete();
-                                  var oldMemberData = await firestore.collection('groups').doc(groupId).get();
-                                  List<dynamic> memberList = oldMemberData.data()!['members'];
-                                  memberList.removeWhere((element) => element.id == member.databaseId);
-
-                                  firestore.collection('groups').doc(groupId).update({'members': memberList});
                                 } else {
-                                  showDialog<void>(
+                                  showDialog(
                                     context: context,
                                     builder: (context) {
                                       return ErrorDialog(
                                         title: 'member_delete_failed'.tr,
-                                        message: 'cannot_remove'.tr,
-                                        color: color,
+                                        message: 'member_delete_cannot_remove'.tr,
+                                        color: groupData.color,
                                       );
                                     },
                                   );
                                 }
                               },
-                              color: color,
+                              color: groupData.color,
                             );
                           }).toList()),
                         );
@@ -131,15 +135,15 @@ class GroupMembersPage extends StatelessWidget {
                   labelText: 'member_name'.tr,
                   prefixIcon: Icon(
                     Icons.group_add,
-                    color: color,
+                    color: groupData.color,
                   ),
-                  labelColor: color,
-                  focusColor: color,
+                  labelColor: groupData.color,
+                  focusColor: groupData.color,
                 ),
               ),
               SizedBox(height: h(16)),
               Button(
-                buttonColor: color,
+                buttonColor: groupData.color,
                 key: const Key('add_member_button'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
@@ -147,16 +151,16 @@ class GroupMembersPage extends StatelessWidget {
                     DocumentReference memberReference = await firestore.collection('members').add({
                       'icon': icon,
                       'name': textEditingController.text,
-                      'userFirebaseId': currentUser.userFirebaseId,
+                      'userFirebaseId': null,
                       'transactions': [],
                     });
                     textEditingController.text = '';
 
-                    var oldMemberData = await firestore.collection('groups').doc(groupId).get();
+                    var oldMemberData = await firestore.collection('groups').doc(groupData.groupId).get();
                     List<dynamic> memberList = oldMemberData.data()!['members'];
                     memberList.add(memberReference);
 
-                    firestore.collection('groups').doc(groupId).update({'members': memberList});
+                    firestore.collection('groups').doc(groupData.groupId).update({'members': memberList});
                   }
                 },
                 text: 'add_member'.tr,
@@ -169,7 +173,7 @@ class GroupMembersPage extends StatelessWidget {
         key: const Key('bottom_navigation'),
         selectedIndex: 1,
         firestore: firestore,
-        color: color,
+        color: groupData.color,
       ),
     );
   }

@@ -12,10 +12,6 @@ class OnFutureBuildError extends StatelessWidget {
       return Text('something_went_wrong'.tr);
     }
 
-    if (snapshot.hasData && !snapshot.data?.exists) {
-      return Text('document_does_not_exists'.tr);
-    }
-
     return const LoadingIndicator();
   }
 }

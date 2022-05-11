@@ -63,8 +63,7 @@ class GroupSettingsPage extends StatelessWidget {
                 borderSide: const BorderSide(color: Colors.grey),
                 onPressed: () => Get.to(() => GroupMembersPage(
                       firestore: firestore,
-                      color: groupData.color,
-                      groupId: groupData.groupId,
+                    groupData: groupData
                     )),
                 text: 'members'.tr,
               ),

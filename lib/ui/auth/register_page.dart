@@ -52,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 SizedBox(height: h(16)),
                 Text(
-                  'sign-up'.tr,
+                  'sign_up'.tr,
                   style: TextStyleConstants.h_3,
                 ),
                 SizedBox(height: h(16)),

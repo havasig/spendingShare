@@ -47,7 +47,7 @@ class TransactionsList extends StatelessWidget {
         Button(
           onPressed: () => Get.to(() => TransactionListPage(
                 firestore: firestore,
-                transactions: transactions,
+                transactionsDocumentReference: transactions,
                 groupData: groupData,
               )),
           text: 'show_all_transactions'.tr,

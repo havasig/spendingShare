@@ -285,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     text: 'logout'.tr,
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
-                      SpendingShareUser user = Provider.of(context);
+                      SpendingShareUser user = Provider.of(context, listen: false);
                       user.clear();
                       Get.offAll(() => LoginPage(firestore: widget.firestore));
                     },

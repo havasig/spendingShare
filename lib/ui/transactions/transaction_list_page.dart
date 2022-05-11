@@ -15,12 +15,14 @@ class TransactionListPage extends StatelessWidget {
     Key? key,
     required this.firestore,
     required this.groupData,
-    required this.transactions,
+    this.transactionsDocumentReference,
+    this.spendingShareTransactions,
   }) : super(key: key);
 
   final FirebaseFirestore firestore;
   final GroupData groupData;
-  final List<dynamic> transactions;
+  final List<dynamic>? transactionsDocumentReference;
+  final List<spending_share_transaction.Transaction>? spendingShareTransactions;
 
   @override
   Widget build(BuildContext context) {
@@ -33,28 +35,42 @@ class TransactionListPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const ScrollPhysics(),
-                itemCount: transactions.length,
-                itemBuilder: (context, index) {
-                  return FutureBuilder<DocumentSnapshot>(
-                    future: transactions[index].get(),
-                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        var transaction = spending_share_transaction.Transaction.fromDocument(snapshot.data!);
+              transactionsDocumentReference != null
+                  ? ListView.separated(
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(),
+                      itemCount: transactionsDocumentReference!.length,
+                      itemBuilder: (context, index) {
+                        return FutureBuilder<DocumentSnapshot>(
+                          future: transactionsDocumentReference![index].get(),
+                          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.done) {
+                              var transaction = spending_share_transaction.Transaction.fromDocument(snapshot.data!);
+                              return TransactionRowItem(
+                                transaction,
+                                groupData: groupData,
+                                firestore: firestore,
+                              );
+                            }
+                            return OnFutureBuildError(snapshot);
+                          },
+                        );
+                      },
+                      separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(),
+                      itemCount: spendingShareTransactions!.length,
+                      itemBuilder: (context, index) {
                         return TransactionRowItem(
-                          transaction,
+                          spendingShareTransactions![index],
                           groupData: groupData,
                           firestore: firestore,
                         );
-                      }
-                      return OnFutureBuildError(snapshot);
-                    },
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(height: h(10)),
-              ),
+                      },
+                      separatorBuilder: (context, index) => SizedBox(height: h(10)),
+                    ),
               SizedBox(height: h(65)),
             ],
           ),

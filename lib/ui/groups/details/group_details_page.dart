@@ -78,7 +78,15 @@ class GroupDetailsPage extends StatelessWidget {
                                 if (snapshot.connectionState == ConnectionState.done) {
                                   var member = Member.fromDocument(snapshot.data!);
                                   return GestureDetector(
-                                    onTap: () => Get.to(() => MemberDetailsPage(firestore: firestore, color: group.color)),
+                                    onTap: () => Get.to(() => MemberDetailsPage(
+                                        firestore: firestore,
+                                        groupData: GroupData(
+                                          color: group.color,
+                                          groupId: groupId,
+                                          currency: group.currency,
+                                          icon: group.icon,
+                                        ),
+                                        member: member)),
                                     child: Draggable<Member>(
                                       data: member,
                                       dragAnchorStrategy: childDragAnchorStrategy,
@@ -132,7 +140,7 @@ class GroupDetailsPage extends StatelessWidget {
                                                     category: category,
                                                     color: group.color,
                                                     groupId: groupId,
-                                                currency: group.currency,
+                                                    currency: group.currency,
                                                   )),
                                               width: (MediaQuery.of(context).size.width - 197) / 8,
                                               //-padding*2 -iconWidth*4 -spacing*3

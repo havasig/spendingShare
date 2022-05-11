@@ -121,7 +121,7 @@
   "paste_from_clipboard": "Paste from clipboard",
   "add_member_by_typing": "Add member by typing it's name",
   "member_delete_failed": "Member delete failed",
-  "cannot_remove": "This member is part of transactions, so cannot be removed.",
+  "member_delete_cannot_remove": "This member is part of transactions, so cannot be removed.",
   "are_you_sure": "Are you sure?",
   "if_you_delete_category": "If you delete this category, nobody can use it.",
   "delete": "delete",
@@ -150,5 +150,18 @@
   "if_you_delete_category_data": "If you delete this category, it won't be in your new groups automatically",
   "edit_expense": "Edit expense",
   "money_spent_by_person": "Money spent by person",
-  "all_spent_money": "All spent money"
+  "all_spent_money": "All spent money",
+  "delete_member": "Delete member",
+  "view_all_transactions": "View all transactions",
+  "money_spent_by_categories": "Money spent by categories",
+  "all_transfers": "All transfers",
+  "all_income": "All income",
+  "this_month": "This month",
+  "last_month": "Last month",
+  "today": "Today",
+  "all_time": "All time",
+  "member_delete_no_transactions_no_person": "This member has no transactions and no person belongs to it.",
+  "member_delete_has_person": "Member cannot be removed, because a person belongs to it.",
+  "member_no_transactions": "This member has no transactions.",
+  "no_transactions_this_period": "This member has no transactions in this time period"
 }
