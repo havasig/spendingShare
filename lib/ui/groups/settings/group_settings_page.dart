@@ -17,11 +17,13 @@ import 'group_members_page.dart';
 import 'group_statistics_page.dart';
 
 class GroupSettingsPage extends StatelessWidget {
-  const GroupSettingsPage({Key? key, required this.firestore, required this.groupData, required this.isAdmin}) : super(key: key);
+  const GroupSettingsPage({Key? key, required this.firestore, required this.groupData, required this.isAdmin, required this.groupName})
+      : super(key: key);
 
   final FirebaseFirestore firestore;
   final GroupData groupData;
   final bool isAdmin;
+  final String groupName;
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +63,7 @@ class GroupSettingsPage extends StatelessWidget {
                 textColor: ColorConstants.white.withOpacity(0.8),
                 buttonColor: ColorConstants.lightGray,
                 borderSide: const BorderSide(color: Colors.grey),
-                onPressed: () => Get.to(() => GroupMembersPage(
-                      firestore: firestore,
-                    groupData: groupData
-                    )),
+                onPressed: () => Get.to(() => GroupMembersPage(firestore: firestore, groupData: groupData)),
                 text: 'members'.tr,
               ),
               SizedBox(height: h(10)),
@@ -74,7 +73,11 @@ class GroupSettingsPage extends StatelessWidget {
                 textColor: ColorConstants.white.withOpacity(0.8),
                 buttonColor: ColorConstants.lightGray,
                 borderSide: const BorderSide(color: Colors.grey),
-                onPressed: () => Get.to(() => GroupStatisticsPage()),
+                onPressed: () => Get.to(() => GroupStatisticsPage(
+                      firestore: firestore,
+                      groupData: groupData,
+                      groupName: groupName,
+                    )),
                 text: 'group_statistics'.tr,
               ),
               SizedBox(height: h(10)),

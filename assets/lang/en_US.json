@@ -163,5 +163,8 @@
   "member_delete_no_transactions_no_person": "This member has no transactions and no person belongs to it.",
   "member_delete_has_person": "Member cannot be removed, because a person belongs to it.",
   "member_no_transactions": "This member has no transactions.",
-  "no_transactions_this_period": "This member has no transactions in this time period"
+  "member_no_transactions_this_period": "This member has no transactions in this time period",
+  "group_no_transactions_this_period": "This group has no transactions in this time period",
+  "group_no_transactions": "This group has no transactions.",
+  "money_spent_by_members": "Money spent by members"
 }

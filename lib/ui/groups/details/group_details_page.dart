@@ -47,6 +47,7 @@ class GroupDetailsPage extends StatelessWidget {
               forwardText: 'settings'.tr,
               titleText: group.name,
               onForward: () => Get.to(() => GroupSettingsPage(
+                    groupName: group.name,
                     firestore: firestore,
                     groupData:
                         GroupData(color: group.color, icon: group.icon, groupId: groupId, name: group.name, currency: group.currency),

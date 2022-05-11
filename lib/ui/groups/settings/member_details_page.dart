@@ -119,28 +119,6 @@ class MemberDetailsPage extends StatelessWidget {
                   transactions = transactions.reversed.toList();
                   return Column(
                     children: [
-                      /*Padding(
-                            padding: EdgeInsets.all(h(8)),
-                            child: Expanded(
-                              child: ListView.separated(
-                                shrinkWrap: true,
-                                physics: const ScrollPhysics(),
-                                itemCount: transactionListSnapshot.data!.length,
-                                itemBuilder: (context, index) {
-                                  return TransactionRowItem(
-                                    transactions[index],
-                                    groupData: GroupData(
-                                      groupId: groupData.groupId,
-                                      color: groupData.color,
-                                      icon: null,
-                                    ),
-                                    firestore: firestore,
-                                  );
-                                },
-                                separatorBuilder: (context, index) => SizedBox(height: h(10)),
-                              ),
-                            ),
-                          ),*/
                       Padding(
                         padding: EdgeInsets.all(h(8)),
                         child: StreamBuilder<List<DocumentSnapshot>>(
@@ -156,7 +134,7 @@ class MemberDetailsPage extends StatelessWidget {
                                 return TabNavigation(color: groupData.color, tabs: [
                                   SpendingShareTab(
                                     'this_month'.tr,
-                                    _StatisticTab(
+                                    _MemberStatisticsTab(
                                       firestore: firestore,
                                       start: DateTime(DateTime.now().year, DateTime.now().month, 1),
                                       end: DateTime(DateTime.now().year, DateTime.now().month + 1, 0),
@@ -168,7 +146,7 @@ class MemberDetailsPage extends StatelessWidget {
                                   ),
                                   SpendingShareTab(
                                     'last_month'.tr,
-                                    _StatisticTab(
+                                    _MemberStatisticsTab(
                                       firestore: firestore,
                                       start: DateTime(DateTime.now().year, DateTime.now().month - 1, 1),
                                       end: DateTime(DateTime.now().year, DateTime.now().month, 0, 23, 59, 59),
@@ -180,7 +158,7 @@ class MemberDetailsPage extends StatelessWidget {
                                   ),
                                   SpendingShareTab(
                                     'today'.tr,
-                                    _StatisticTab(
+                                    _MemberStatisticsTab(
                                       firestore: firestore,
                                       start: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
                                       end: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59),
@@ -192,7 +170,7 @@ class MemberDetailsPage extends StatelessWidget {
                                   ),
                                   SpendingShareTab(
                                     'all_time'.tr,
-                                    _StatisticTab(
+                                    _MemberStatisticsTab(
                                       firestore: firestore,
                                       categories: categories,
                                       transactions: transactions,
@@ -288,8 +266,8 @@ class MemberDetailsPage extends StatelessWidget {
   }
 }
 
-class _StatisticTab extends StatelessWidget {
-  _StatisticTab({
+class _MemberStatisticsTab extends StatelessWidget {
+  _MemberStatisticsTab({
     Key? key,
     this.start,
     this.end,
@@ -320,7 +298,7 @@ class _StatisticTab extends StatelessWidget {
     }).toList();
 
     if (transactions.isEmpty) {
-      return Center(child: Text('no_transactions_this_period'.tr));
+      return Center(child: Text('member_no_transactions_this_period'.tr));
     }
 
     return Column(
