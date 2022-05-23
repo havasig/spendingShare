@@ -35,6 +35,7 @@ class GroupSettingsPage extends StatelessWidget {
           child: Column(
             children: [
               Button(
+                key: const Key('edit_button'),
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: h(40),
                 textColor: ColorConstants.white.withOpacity(0.8),
@@ -45,6 +46,7 @@ class GroupSettingsPage extends StatelessWidget {
               ),
               SizedBox(height: h(10)),
               Button(
+                key: const Key('copy_invite_link_button'),
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: h(40),
                 textColor: ColorConstants.white.withOpacity(0.8),
@@ -58,6 +60,7 @@ class GroupSettingsPage extends StatelessWidget {
               ),
               SizedBox(height: h(10)),
               Button(
+                key: const Key('members_button'),
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: h(40),
                 textColor: ColorConstants.white.withOpacity(0.8),
@@ -68,6 +71,7 @@ class GroupSettingsPage extends StatelessWidget {
               ),
               SizedBox(height: h(10)),
               Button(
+                key: const Key('group_statistics_button'),
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: h(40),
                 textColor: ColorConstants.white.withOpacity(0.8),
@@ -82,6 +86,7 @@ class GroupSettingsPage extends StatelessWidget {
               ),
               SizedBox(height: h(10)),
               Button(
+                key: const Key('categories_button'),
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: h(40),
                 textColor: ColorConstants.white.withOpacity(0.8),
@@ -98,6 +103,7 @@ class GroupSettingsPage extends StatelessWidget {
               SizedBox(height: h(10)),
               isAdmin
                   ? Button(
+                      key: const Key('delete_button'),
                       height: h(40),
                       onPressed: () {
                         showDialog(
@@ -120,6 +126,7 @@ class GroupSettingsPage extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.9,
                     )
                   : Button(
+                      key: const Key('leave_button'),
                       height: h(40),
                       onPressed: () {
                         showDialog(
