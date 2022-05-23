@@ -51,6 +51,7 @@ class CircleIconButton extends StatelessWidget {
             width: width * 3,
             child: Text(
               name!,
+              key: Key(name!),
               style: TextStyleConstants.body_2_medium,
               textAlign: TextAlign.center,
             ),

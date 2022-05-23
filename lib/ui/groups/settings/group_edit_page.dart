@@ -86,8 +86,8 @@ class _GroupEditPageState extends State<GroupEditPage> {
                     focusColor: createGroupChangeNotifier.color!,
                   ),
                 ),
-                ChangeNotifierProvider(
-                  create: (context) => createGroupChangeNotifier as CreateChangeNotifier,
+                ChangeNotifierProvider.value(
+                  value: createGroupChangeNotifier as CreateChangeNotifier,
                   child: SelectCurrency(currency: createGroupChangeNotifier.currency),
                 ),
                 SelectColor(defaultColor: createGroupChangeNotifier.color!),

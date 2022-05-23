@@ -13,6 +13,7 @@ void main() {
     'MyGroups with one group',
     () {
       late FakeFirebaseFirestore firestore;
+      late MockFirebaseAuth auth;
 
       setUp(() async {
         // Mock sign in with Google.
@@ -30,53 +31,71 @@ void main() {
           email: 'test@email.com',
           displayName: 'Test',
         );
-        final auth = MockFirebaseAuth(mockUser: user);
+        auth = MockFirebaseAuth(mockUser: user);
         await auth.signInWithCredential(credential);
 
         firestore = FakeFirebaseFirestore();
-        await firestore.collection('users').doc('currentuserid').set({'name': 'Doe'});
-        var userr = firestore.collection('users').doc('currentuserid');
-        await firestore.collection('groups').add({'name': 'test group', 'icon': 'wallet', 'color': 'orange', 'admin': userr});
+        await firestore.collection('users').doc('currentuserid').set({
+          'name': 'Doe',
+          'userFirebaseId': 'test_uid',
+          'groups': [firestore.collection('groups').doc('new_group')]
+        });
+
+        await firestore.collection('groups').doc('new_group').set({
+          'name': 'test group',
+          'icon': 'wallet',
+          'color': 'orange',
+          'adminId': 'test_uid',
+          'categories': [],
+          'currency': 'HUF',
+          'members': [],
+          'transactions': [],
+          'debts': []
+        });
       });
 
       testWidgets('MyGroups has my groups header', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
         // Let the snapshots stream fire a snapshot.
         await tester.idle();
         // Re-render.
         await tester.pump();
-        final textFinder = find.text('my-groups');
+        final textFinder = find.text('my_groups');
         expect(textFinder, findsOneWidget);
       });
 
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
+        await tester.idle();
         await tester.pump();
         final textFinder = find.text('join');
-        expect(textFinder, findsOneWidget);
+        expect(textFinder, findsWidgets);
       });
 
       testWidgets('MyGroups has add button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
+        await tester.idle();
         await tester.pump();
         final createGroupFinder = find.byKey(const Key('create_group'));
         expect(createGroupFinder, findsOneWidget);
       });
 
       testWidgets('MyGroups has my group', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
+        await tester.idle();
         await tester.pump();
         final textFinder = find.text('test group');
         expect(textFinder, findsOneWidget);
       });
 
       testWidgets('MyGroups has picked icon', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
+        await tester.idle();
         await tester.pump();
         final textFinder = find.byIcon(Icons.account_balance_wallet);
         expect(textFinder, findsOneWidget);
@@ -87,25 +106,69 @@ void main() {
     'MyGroups with two group',
     () {
       late FakeFirebaseFirestore firestore;
+      late MockFirebaseAuth auth;
 
       setUp(() async {
+        // Mock sign in with Google.
+        final googleSignIn = MockGoogleSignIn();
+        final signinAccount = await googleSignIn.signIn();
+        final googleAuth = await signinAccount?.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+        // Sign in.
+        final user = MockUser(
+          isAnonymous: false,
+          uid: 'test_uid',
+          email: 'test@email.com',
+          displayName: 'Test',
+        );
+        auth = MockFirebaseAuth(mockUser: user);
+        await auth.signInWithCredential(credential);
+
         firestore = FakeFirebaseFirestore();
-        await firestore.collection('users').doc('currentuserid').set({'name': 'Doe'});
-        var user = firestore.collection('users').doc('currentuserid');
-        await firestore.collection('groups').add({'name': 'test group', 'icon': 'wallet', 'color': 'orange', 'admin': user});
-        await firestore.collection('groups').add({'name': 'test group 2', 'icon': 'sport', 'color': 'orange', 'admin': user});
+        await firestore.collection('users').doc('currentuserid').set({
+          'name': 'Doe',
+          'userFirebaseId': 'test_uid',
+          'groups': [firestore.collection('groups').doc('new_group1'),firestore.collection('groups').doc('new_group2')]
+        });
+
+        await firestore.collection('groups').doc('new_group1').set({
+          'name': 'test group',
+          'icon': 'wallet',
+          'color': 'orange',
+          'adminId': 'test_uid',
+          'categories': [],
+          'currency': 'HUF',
+          'members': [],
+          'transactions': [],
+          'debts': []
+        });
+
+        await firestore.collection('groups').doc('new_group2').set({
+          'name': 'test group 2',
+          'icon': 'sport',
+          'color': 'orange',
+          'adminId': 'test_uid',
+          'categories': [],
+          'currency': 'HUF',
+          'members': [],
+          'transactions': [],
+          'debts': []
+        });
       });
 
       testWidgets('MyGroups has my groups header', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
         await tester.pump();
-        final textFinder = find.text('my-groups');
+        final textFinder = find.text('my_groups');
         expect(textFinder, findsOneWidget);
       });
 
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final textFinder = find.text('join');
@@ -113,7 +176,7 @@ void main() {
       });
 
       testWidgets('MyGroups has add button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final createGroupFinder = find.byKey(const Key('create_group'));
@@ -121,7 +184,7 @@ void main() {
       });
 
       testWidgets('MyGroups has my groups', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final textFinder = find.text('test group');
@@ -131,7 +194,7 @@ void main() {
       });
 
       testWidgets('MyGroups has picked icons', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore));
+        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final iconFinder = find.byIcon(Icons.account_balance_wallet);

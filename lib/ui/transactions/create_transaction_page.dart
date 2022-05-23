@@ -123,8 +123,8 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  ChangeNotifierProvider(
-                    create: (context) => createTransactionChangeNotifier as CreateChangeNotifier,
+                  ChangeNotifierProvider.value(
+                    value: createTransactionChangeNotifier as CreateChangeNotifier,
                     child: SelectCurrency(currency: widget.groupData.currency!, color: widget.groupData.color),
                   ),
                   CreateTransactionDropdown(

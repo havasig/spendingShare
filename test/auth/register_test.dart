@@ -50,14 +50,14 @@ void main() {
     testWidgets('Register has sign up button', (WidgetTester tester) async {
       var testWidget = testableWidget(child: RegisterPage(firestore: firestore));
       await tester.pumpWidget(testWidget);
-      final buttonFinder = find.widgetWithText(Button, 'sign-up');
+      final buttonFinder = find.widgetWithText(Button, 'sign_up');
       expect(buttonFinder, findsOneWidget);
     });
 
     testWidgets('Register has already have account, login option', (WidgetTester tester) async {
       var testWidget = testableWidget(child: RegisterPage(firestore: firestore));
       await tester.pumpWidget(testWidget);
-      final noAccountTextFinder = find.text('already-have-account');
+      final noAccountTextFinder = find.text('already_have_account');
       final registrationFinder = find.widgetWithText(TextButton, 'login');
       expect(noAccountTextFinder, findsOneWidget);
       expect(registrationFinder, findsOneWidget);
@@ -66,7 +66,7 @@ void main() {
     testWidgets('Register has has sign up with google button', (WidgetTester tester) async {
       var testWidget = testableWidget(child: RegisterPage(firestore: firestore));
       await tester.pumpWidget(testWidget);
-      final signUpWithGoogleButton = find.widgetWithText(Button, 'sign-up-with-google');
+      final signUpWithGoogleButton = find.widgetWithText(Button, 'sign_up_with_google');
       expect(signUpWithGoogleButton, findsOneWidget);
     });
   });

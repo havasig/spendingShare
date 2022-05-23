@@ -41,15 +41,15 @@ void main() {
     testWidgets('Login has forgot password text button', (WidgetTester tester) async {
       var testWidget = testableWidget(child: LoginPage(firestore: firestore));
       await tester.pumpWidget(testWidget);
-      final forgotPasswordFinder = find.widgetWithText(TextButton, 'forgot-password');
+      final forgotPasswordFinder = find.widgetWithText(TextButton, 'forgot_password');
       expect(forgotPasswordFinder, findsOneWidget);
     });
 
     testWidgets('Login has no account, registration option', (WidgetTester tester) async {
       var testWidget = testableWidget(child: LoginPage(firestore: firestore));
       await tester.pumpWidget(testWidget);
-      final noAccountTextFinder = find.text('no-account');
-      final registrationFinder = find.widgetWithText(TextButton, 'registration-exclamation');
+      final noAccountTextFinder = find.text('no_account');
+      final registrationFinder = find.widgetWithText(TextButton, 'registration_exclamation');
       expect(noAccountTextFinder, findsOneWidget);
       expect(registrationFinder, findsOneWidget);
     });
@@ -57,7 +57,7 @@ void main() {
     testWidgets('Login has has login with google button', (WidgetTester tester) async {
       var testWidget = testableWidget(child: LoginPage(firestore: firestore));
       await tester.pumpWidget(testWidget);
-      final loginWithGoogleButton = find.widgetWithText(Button, 'login-with-google');
+      final loginWithGoogleButton = find.widgetWithText(Button, 'login_with_google');
       expect(loginWithGoogleButton, findsOneWidget);
     });
   });

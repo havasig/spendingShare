@@ -20,23 +20,22 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'join/join_group_input_and_buttons.dart';
 
 class MyGroupsPage extends StatelessWidget {
-  const MyGroupsPage({Key? key, required this.firestore}) : super(key: key);
+  const MyGroupsPage({Key? key, required this.firestore, this.auth}) : super(key: key);
 
   final FirebaseFirestore firestore;
+  final FirebaseAuth? auth;
 
   @override
   Widget build(BuildContext context) {
     SpendingShareUser currentUser = Provider.of(context, listen: false);
-    var currentUserFirebaseId = FirebaseAuth.instance.currentUser!.uid;
+    var currentUserFirebaseId = auth?.currentUser?.uid ?? FirebaseAuth.instance.currentUser!.uid;
     return StreamBuilder<List<dynamic>>(
         stream: firestore.collection('users').where('userFirebaseId', isEqualTo: currentUserFirebaseId).snapshots().switchMap((user) {
           if ((user.docs.first['groups'] as List).isNotEmpty) {
             return CombineLatestStream.list(
                 user.docs.first['groups'].map<Stream<dynamic>>((group) => (group as DocumentReference).snapshots()));
           } else {
-            return CombineLatestStream.list([
-              Stream.fromIterable([''])
-            ]);
+            return Stream.fromIterable([['']]);
           }
         }),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> groupListSnapshot) {

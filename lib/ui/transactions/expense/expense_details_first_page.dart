@@ -138,8 +138,8 @@ class _ExpenseDetailsFirstPageState extends State<ExpenseDetailsFirstPage> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  ChangeNotifierProvider(
-                    create: (context) => createTransactionChangeNotifier as CreateChangeNotifier,
+                  ChangeNotifierProvider.value(
+                    value: createTransactionChangeNotifier as CreateChangeNotifier,
                     child: SelectCurrency(currency: widget.expense.currency, color: widget.groupData.color),
                   ),
                   StreamBuilder<List<DocumentSnapshot>>(
