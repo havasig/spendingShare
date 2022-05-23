@@ -297,6 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
+        key: const Key('bottom_navigation'),
         selectedIndex: 3,
         firestore: widget.firestore,
         color: user.color,

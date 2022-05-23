@@ -28,6 +28,7 @@ class _SelectCurrencyState extends State<SelectCurrency> {
   @override
   Widget build(BuildContext context) {
     return Padding(
+      key: const Key('select_currency_dropdown'),
       padding: EdgeInsets.symmetric(vertical: h(12)),
       child: Consumer<CreateChangeNotifier>(
         builder: (_, createChangeNotifier, __) => Row(

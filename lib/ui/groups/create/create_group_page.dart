@@ -80,6 +80,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 SelectIcon(defaultIcon: currentUser.icon),
                 const Spacer(),
                 Button(
+                  key: const Key('next'),
                   buttonColor: createGroupChangeNotifier.color!,
                   onPressed: () {
                     createGroupChangeNotifier.setName(_groupNameTextEditingController.text);
@@ -93,6 +94,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             ),
           ),
           bottomNavigationBar: SpendingShareBottomNavigationBar(
+            key: const Key('bottom_navigation'),
             selectedIndex: 1,
             firestore: widget.firestore,
             color: createGroupChangeNotifier.color,

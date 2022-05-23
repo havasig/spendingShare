@@ -29,6 +29,7 @@ class TransferDetails extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
+        key: const Key('bottom_navigation'),
         firestore: firestore,
         selectedIndex: 1,
         color: groupData.color,

@@ -220,6 +220,7 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
             }),
       ),
       bottomNavigationBar: SpendingShareBottomNavigationBar(
+        key: const Key('bottom_navigation'),
         firestore: widget.firestore,
         selectedIndex: 1,
         color: widget.groupData.color,

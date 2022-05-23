@@ -233,7 +233,8 @@ class GroupDetailsPage extends StatelessWidget {
                 groupId: groupId,
               ),
             ),
-            bottomNavigationBar: SpendingShareBottomNavigationBar(firestore: firestore, selectedIndex: 1, color: group.color),
+            bottomNavigationBar: SpendingShareBottomNavigationBar(
+                key: const Key('bottom_navigation'),firestore: firestore, selectedIndex: 1, color: group.color),
           );
         }
 

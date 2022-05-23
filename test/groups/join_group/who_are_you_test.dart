@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spending_share/ui/groups/who_are_you.dart';
 
-import '../wrapper.dart';
+import '../../wrapper.dart';
 
 void main() {
   group(

@@ -26,6 +26,7 @@ class _SelectColorState extends State<SelectColor> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      key: const Key('select_color'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -48,6 +49,7 @@ class _SelectColorState extends State<SelectColor> {
                   child: Material(
                       type: MaterialType.transparency,
                       child: Ink(
+                        key: Key(value.toString()),
                         decoration: BoxDecoration(
                             color: value[globals.circleShade] ?? Colors.orange[globals.circleShade],
                             shape: BoxShape.circle,

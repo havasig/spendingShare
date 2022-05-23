@@ -4,9 +4,12 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
+import 'package:provider/provider.dart';
+import 'package:spending_share/models/user.dart';
 import 'package:spending_share/ui/groups/my_groups_page.dart';
+import 'package:spending_share/utils/globals.dart' as globals;
 
-import '../wrapper.dart';
+import '../../wrapper.dart';
 
 void main() {
   group(
@@ -160,7 +163,15 @@ void main() {
       });
 
       testWidgets('MyGroups has my groups header', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(
+            child: Provider(
+                create: (context) => SpendingShareUser(
+                  groups: [],
+                  categoryData: [],
+                  color: globals.colors['default']!,
+                  icon: globals.icons['default']!,
+                ),
+                child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final textFinder = find.text('my_groups');
@@ -168,7 +179,15 @@ void main() {
       });
 
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(
+            child: Provider(
+                create: (context) => SpendingShareUser(
+                  groups: [],
+                  categoryData: [],
+                  color: globals.colors['default']!,
+                  icon: globals.icons['default']!,
+                ),
+                child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final textFinder = find.text('join');
@@ -176,7 +195,15 @@ void main() {
       });
 
       testWidgets('MyGroups has add button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(
+            child: Provider(
+                create: (context) => SpendingShareUser(
+                  groups: [],
+                  categoryData: [],
+                  color: globals.colors['default']!,
+                  icon: globals.icons['default']!,
+                ),
+                child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final createGroupFinder = find.byKey(const Key('create_group'));
@@ -184,7 +211,15 @@ void main() {
       });
 
       testWidgets('MyGroups has my groups', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(
+            child: Provider(
+                create: (context) => SpendingShareUser(
+                  groups: [],
+                  categoryData: [],
+                  color: globals.colors['default']!,
+                  icon: globals.icons['default']!,
+                ),
+                child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final textFinder = find.text('test group');
@@ -194,7 +229,15 @@ void main() {
       });
 
       testWidgets('MyGroups has picked icons', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(
+            child: Provider(
+                create: (context) => SpendingShareUser(
+                  groups: [],
+                  categoryData: [],
+                  color: globals.colors['default']!,
+                  icon: globals.icons['default']!,
+                ),
+                child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.pump();
         final iconFinder = find.byIcon(Icons.account_balance_wallet);

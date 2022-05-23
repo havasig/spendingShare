@@ -206,6 +206,7 @@ class AddIncome extends StatelessWidget {
               ),
             ),
             bottomNavigationBar: SpendingShareBottomNavigationBar(
+              key: const Key('bottom_navigation'),
               selectedIndex: 1,
               firestore: firestore,
               color: createTransactionData.color,

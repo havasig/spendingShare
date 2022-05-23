@@ -452,6 +452,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
               ),
             ),
             bottomNavigationBar: SpendingShareBottomNavigationBar(
+              key: const Key('bottom_navigation'),
               selectedIndex: 1,
               firestore: widget.firestore,
               color: widget.groupData.color,

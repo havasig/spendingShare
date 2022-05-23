@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spending_share/ui/groups/join/join_page.dart';
 
-import '../wrapper.dart';
+import '../../wrapper.dart';
 
 void main() {
   group(
@@ -50,6 +50,13 @@ void main() {
         expect(joinInputField, findsOneWidget);
       });
 
+      testWidgets('JoinPage has paste code button', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: JoinPage(firestore: firestore, color: Colors.orange));
+        await tester.pumpWidget(testWidget);
+        final joinButton = find.byKey(const Key('paste_from_clipboard_button'));
+        expect(joinButton, findsOneWidget);
+      });
+
       testWidgets('JoinPage has join button', (WidgetTester tester) async {
         var testWidget = testableWidget(child: JoinPage(firestore: firestore, color: Colors.orange));
         await tester.pumpWidget(testWidget);
@@ -62,6 +69,13 @@ void main() {
         await tester.pumpWidget(testWidget);
         final bottomNavigationFinder = find.byKey(const Key('bottom_navigation'));
         expect(bottomNavigationFinder, findsOneWidget);
+      });
+
+      testWidgets('MyGroups has add button', (WidgetTester tester) async {
+        var testWidget = testableWidget(child: JoinPage(firestore: firestore, color: Colors.orange));
+        await tester.pumpWidget(testWidget);
+        final createGroupFinder = find.byKey(const Key('create_group'));
+        expect(createGroupFinder, findsOneWidget);
       });
     },
   );

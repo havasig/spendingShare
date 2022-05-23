@@ -28,6 +28,7 @@ class _SelectIconState extends State<SelectIcon> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      key: const Key('select_icon'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(

@@ -149,6 +149,7 @@ class _GroupEditPageState extends State<GroupEditPage> {
             ),
           ),
           bottomNavigationBar: SpendingShareBottomNavigationBar(
+            key: const Key('bottom_navigation'),
             selectedIndex: 1,
             firestore: widget.firestore,
             color: createGroupChangeNotifier.color,
