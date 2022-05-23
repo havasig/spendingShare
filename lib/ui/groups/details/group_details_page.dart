@@ -66,6 +66,7 @@ class GroupDetailsPage extends StatelessWidget {
                       child: Text('members'.tr),
                     ),
                     Container(
+                      key: const Key('members'),
                       alignment: Alignment.centerLeft,
                       height: h(120),
                       child: ListView.separated(
@@ -122,6 +123,7 @@ class GroupDetailsPage extends StatelessWidget {
                       child: Text('categories'.tr),
                     ),
                     SizedBox(
+                      key: const Key('categories'),
                       height: h(getCategoriesHeight(group.categories)),
                       child: Wrap(
                         children: group.categories
@@ -187,6 +189,7 @@ class GroupDetailsPage extends StatelessWidget {
                       currency: group.currency,
                       color: group.color,
                       icon: group.icon,
+                      key: const Key('debt_list'),
                     ),
                     Divider(
                       thickness: 1,
@@ -205,6 +208,7 @@ class GroupDetailsPage extends StatelessWidget {
                         groupId: groupId,
                       ),
                       firestore: firestore,
+                      key: const Key('transaction_list'),
                     ),
                     Divider(
                       thickness: 1,
@@ -214,7 +218,7 @@ class GroupDetailsPage extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text('statistics'.tr),
                     ),
-                    Statistics(color: group.color),
+                    Statistics(color: group.color, key: const Key('statistics')),
                     Divider(
                       thickness: 1,
                       color: ColorConstants.white.withOpacity(0.2),
@@ -232,9 +236,10 @@ class GroupDetailsPage extends StatelessWidget {
                 currency: group.currency,
                 groupId: groupId,
               ),
+              key: const Key('create_transaction_button'),
             ),
             bottomNavigationBar: SpendingShareBottomNavigationBar(
-                key: const Key('bottom_navigation'),firestore: firestore, selectedIndex: 1, color: group.color),
+                key: const Key('bottom_navigation'), firestore: firestore, selectedIndex: 1, color: group.color),
           );
         }
 
