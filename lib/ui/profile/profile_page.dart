@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +16,10 @@ import 'package:spending_share/utils/screen_util_helper.dart';
 import 'package:spending_share/utils/text_validator.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key, required this.firestore}) : super(key: key);
+  const ProfilePage({Key? key, required this.firestore, this.auth}) : super(key: key);
 
   final FirebaseFirestore firestore;
+  final FirebaseAuth? auth;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -48,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     user = Provider.of(context, listen: false);
-    userEmail = FirebaseAuth.instance.currentUser?.email;
+    userEmail = widget.auth?.currentUser?.uid ?? FirebaseAuth.instance.currentUser?.email;
     _emailTextEditingController.text = userEmail ?? '';
     _nameTextEditingController.text = user.name;
     if (user.currentMoney?.floor() == user.currentMoney) {
@@ -182,6 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: h(16)),
               Button(
+                key: const Key('save_button'),
                 buttonColor: user.color,
                 text: 'save_changes'.tr,
                 onPressed: () async {
@@ -270,6 +273,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Button(
+                    key: const Key('delete_button'),
                     buttonColor: user.color.withOpacity(0.2),
                     textColor: user.color,
                     width: (MediaQuery.of(context).size.width / 2) - 32,
@@ -279,6 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   Button(
+                    key: const Key('logout_button'),
                     buttonColor: user.color.withOpacity(0.2),
                     textColor: user.color,
                     width: (MediaQuery.of(context).size.width / 2) - 32,
