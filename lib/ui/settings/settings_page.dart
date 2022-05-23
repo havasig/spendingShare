@@ -75,6 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                       child: DropdownButton<String>(
+                        key: const Key('default_currency_dropdown'),
                         value: _currencyDropdownValue,
                         dropdownColor: ColorConstants.darkGray,
                         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -128,6 +129,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                       child: DropdownButton<String>(
+                        key: const Key('default_language_dropdown'),
                         value: _languageDropdownValue,
                         dropdownColor: ColorConstants.darkGray,
                         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -168,6 +170,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
               Column(
+                key: const Key('default_color_selector'),
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -221,6 +224,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Divider(thickness: 1, color: ColorConstants.white.withOpacity(0.2)),
               Column(
+                key: const Key('default_icon_selector'),
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -435,6 +439,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
       floatingActionButton: CreateCategoryDataFab(
+        key: const Key('create_category_data_fab'),
         firestore: widget.firestore,
         color: currentUser.color,
         icon: currentUser.icon,
