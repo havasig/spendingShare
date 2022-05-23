@@ -66,7 +66,7 @@ class _GroupEditPageState extends State<GroupEditPage> {
       child: Consumer<CreateGroupChangeNotifier>(
         builder: (_, createGroupChangeNotifier, __) => Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: SpendingShareAppBar(titleText: 'create_group'.tr),
+          appBar: SpendingShareAppBar(titleText: 'edit_group'.tr),
           body: Padding(
             padding: EdgeInsets.all(h(16)),
             child: Column(

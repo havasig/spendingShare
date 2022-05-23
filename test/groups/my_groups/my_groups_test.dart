@@ -58,7 +58,14 @@ void main() {
       });
 
       testWidgets('MyGroups has my groups header', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(child: Provider(
+            create: (context) => SpendingShareUser(
+              groups: [],
+              categoryData: [],
+              color: globals.colors['default']!,
+              icon: globals.icons['default']!,
+            ),
+            child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         // Let the snapshots stream fire a snapshot.
         await tester.idle();
@@ -69,7 +76,14 @@ void main() {
       });
 
       testWidgets('MyGroups has join button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(child: Provider(
+            create: (context) => SpendingShareUser(
+              groups: [],
+              categoryData: [],
+              color: globals.colors['default']!,
+              icon: globals.icons['default']!,
+            ),
+            child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.idle();
         await tester.pump();
@@ -78,7 +92,14 @@ void main() {
       });
 
       testWidgets('MyGroups has add button', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(child: Provider(
+            create: (context) => SpendingShareUser(
+              groups: [],
+              categoryData: [],
+              color: globals.colors['default']!,
+              icon: globals.icons['default']!,
+            ),
+            child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.idle();
         await tester.pump();
@@ -87,7 +108,14 @@ void main() {
       });
 
       testWidgets('MyGroups has my group', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(child: Provider(
+            create: (context) => SpendingShareUser(
+              groups: [],
+              categoryData: [],
+              color: globals.colors['default']!,
+              icon: globals.icons['default']!,
+            ),
+            child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.idle();
         await tester.pump();
@@ -96,7 +124,14 @@ void main() {
       });
 
       testWidgets('MyGroups has picked icon', (WidgetTester tester) async {
-        var testWidget = testableWidget(child: MyGroupsPage(firestore: firestore, auth: auth));
+        var testWidget = testableWidget(child: Provider(
+            create: (context) => SpendingShareUser(
+              groups: [],
+              categoryData: [],
+              color: globals.colors['default']!,
+              icon: globals.icons['default']!,
+            ),
+            child: MyGroupsPage(firestore: firestore, auth: auth)));
         await tester.pumpWidget(testWidget);
         await tester.idle();
         await tester.pump();

@@ -73,6 +73,7 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
                       _textEditingController.text = category.name;
                       return !deleted
                           ? Stack(
+                              key: Key(category.name + '_key'),
                               alignment: Alignment.topRight,
                               children: [
                                 Padding(
@@ -201,6 +202,7 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
                                           }
                                         },
                                         child: Padding(
+                                          key: Key(category.name + '_close_button'),
                                           padding: EdgeInsets.all(h(4)),
                                           child: Icon(
                                             Icons.close,
@@ -226,6 +228,7 @@ class _GroupCategoriesPageState extends State<GroupCategoriesPage> {
         color: widget.groupData.color,
       ),
       floatingActionButton: CreateCategoryFab(
+        key: const Key('create_category_button'),
         groupData: widget.groupData,
         firestore: widget.firestore,
       ),

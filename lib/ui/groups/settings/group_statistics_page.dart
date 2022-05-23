@@ -81,54 +81,58 @@ class GroupStatisticsPage extends StatelessWidget {
                                   if (memberListSnapshot.hasData) {
                                     List<Member> members = [];
                                     memberListSnapshot.data?.forEach((element) => members.add(Member.fromDocument(element)));
-                                    return TabNavigation(color: groupData.color, tabs: [
-                                      SpendingShareTab(
-                                        'this_month'.tr,
-                                        _GroupStatisticsTab(
-                                          firestore: firestore,
-                                          start: DateTime(DateTime.now().year, DateTime.now().month, 1),
-                                          end: DateTime(DateTime.now().year, DateTime.now().month + 1, 0),
-                                          categories: categories,
-                                          transactions: transactions,
-                                          groupData: groupData,
-                                          members: members,
+                                    return TabNavigation(
+                                      key: const Key('time_selector'),
+                                      color: groupData.color,
+                                      tabs: [
+                                        SpendingShareTab(
+                                          'this_month'.tr,
+                                          _GroupStatisticsTab(
+                                            firestore: firestore,
+                                            start: DateTime(DateTime.now().year, DateTime.now().month, 1),
+                                            end: DateTime(DateTime.now().year, DateTime.now().month + 1, 0),
+                                            categories: categories,
+                                            transactions: transactions,
+                                            groupData: groupData,
+                                            members: members,
+                                          ),
                                         ),
-                                      ),
-                                      SpendingShareTab(
-                                        'last_month'.tr,
-                                        _GroupStatisticsTab(
-                                          firestore: firestore,
-                                          start: DateTime(DateTime.now().year, DateTime.now().month - 1, 1),
-                                          end: DateTime(DateTime.now().year, DateTime.now().month, 0, 23, 59, 59),
-                                          categories: categories,
-                                          transactions: transactions,
-                                          groupData: groupData,
-                                          members: members,
+                                        SpendingShareTab(
+                                          'last_month'.tr,
+                                          _GroupStatisticsTab(
+                                            firestore: firestore,
+                                            start: DateTime(DateTime.now().year, DateTime.now().month - 1, 1),
+                                            end: DateTime(DateTime.now().year, DateTime.now().month, 0, 23, 59, 59),
+                                            categories: categories,
+                                            transactions: transactions,
+                                            groupData: groupData,
+                                            members: members,
+                                          ),
                                         ),
-                                      ),
-                                      SpendingShareTab(
-                                        'today'.tr,
-                                        _GroupStatisticsTab(
-                                          firestore: firestore,
-                                          start: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                                          end: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59),
-                                          categories: categories,
-                                          transactions: transactions,
-                                          groupData: groupData,
-                                          members: members,
+                                        SpendingShareTab(
+                                          'today'.tr,
+                                          _GroupStatisticsTab(
+                                            firestore: firestore,
+                                            start: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                                            end: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59),
+                                            categories: categories,
+                                            transactions: transactions,
+                                            groupData: groupData,
+                                            members: members,
+                                          ),
                                         ),
-                                      ),
-                                      SpendingShareTab(
-                                        'all_time'.tr,
-                                        _GroupStatisticsTab(
-                                          firestore: firestore,
-                                          categories: categories,
-                                          transactions: transactions,
-                                          groupData: groupData,
-                                          members: members,
+                                        SpendingShareTab(
+                                          'all_time'.tr,
+                                          _GroupStatisticsTab(
+                                            firestore: firestore,
+                                            categories: categories,
+                                            transactions: transactions,
+                                            groupData: groupData,
+                                            members: members,
+                                          ),
                                         ),
-                                      ),
-                                    ]);
+                                      ],
+                                    );
                                   } else {
                                     return OnFutureBuildError(categoryListSnapshot);
                                   }
@@ -155,7 +159,6 @@ class GroupStatisticsPage extends StatelessWidget {
     );
   }
 }
-
 
 class _GroupStatisticsTab extends StatelessWidget {
   _GroupStatisticsTab({
