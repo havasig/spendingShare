@@ -15,6 +15,7 @@ class MemberItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+        key: Key(member.name),
         onTap: () {
           onClick.call();
         },

@@ -17,25 +17,8 @@ void main() {
     'Create group page',
     () {
       late FakeFirebaseFirestore firestore;
-      late MockFirebaseAuth auth;
 
       setUp(() async {
-        final googleSignIn = MockGoogleSignIn();
-        final signinAccount = await googleSignIn.signIn();
-        final googleAuth = await signinAccount?.authentication;
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        final user = MockUser(
-          isAnonymous: false,
-          uid: 'test_uid',
-          email: 'test@email.com',
-          displayName: 'Test',
-        );
-        auth = MockFirebaseAuth(mockUser: user);
-        await auth.signInWithCredential(credential);
-
         firestore = FakeFirebaseFirestore();
       });
 
