@@ -275,6 +275,7 @@ class AddTransfer extends StatelessWidget {
                     },
                     text: 'save_transfer'.tr,
                     buttonColor: createTransactionData.color,
+                    key: const Key('save_transfer'),
                   ),
                 ],
               ),

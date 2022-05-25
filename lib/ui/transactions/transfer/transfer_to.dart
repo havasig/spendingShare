@@ -44,6 +44,7 @@ class TransferTo extends StatelessWidget {
                               return const SizedBox.shrink();
                             }
                             return MemberItem(
+                              key: Key(member.name+ '_member'),
                               member: member,
                               onClick: () {
                                 createTransactionChangeNotifier.clearTo();

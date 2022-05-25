@@ -128,6 +128,7 @@ class _CreateTransactionPageState extends State<CreateTransactionPage> {
                     child: SelectCurrency(currency: widget.groupData.currency!, color: widget.groupData.color),
                   ),
                   CreateTransactionDropdown(
+                    key: const Key('select_type_dropdown'),
                     defaultValue: 'expense'.tr,
                     options: {
                       'expense'.tr: TransactionType.expense,

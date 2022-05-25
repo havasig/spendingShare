@@ -45,6 +45,7 @@ class _CreateTransactionDropdownState extends State<CreateTransactionDropdown> {
               ),
             ),
             child: DropdownButton<String>(
+              key: Key('dropdown_button_' + widget.title),
               value: _dropdownValue,
               dropdownColor: ColorConstants.darkGray,
               borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -70,6 +71,7 @@ class _CreateTransactionDropdownState extends State<CreateTransactionDropdown> {
               },
               items: dropDownItems.keys.map<DropdownMenuItem<String>>((key) {
                 return DropdownMenuItem<String>(
+                  key: Key(key),
                   value: key,
                   child: Text(
                     key,

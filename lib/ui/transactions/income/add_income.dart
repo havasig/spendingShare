@@ -201,6 +201,7 @@ class AddIncome extends StatelessWidget {
                     },
                     text: 'save_income'.tr,
                     buttonColor: createTransactionData.color,
+                    key: const Key('save_income'),
                   ),
                 ],
               ),
