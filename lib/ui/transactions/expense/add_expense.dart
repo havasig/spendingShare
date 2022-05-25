@@ -329,6 +329,7 @@ class AddExpense extends StatelessWidget {
                       },
                       text: 'save_expense'.tr,
                       buttonColor: createTransactionData.color.shade500,
+                      key: const Key('save_expense'),
                     ),
                   ],
                 ),

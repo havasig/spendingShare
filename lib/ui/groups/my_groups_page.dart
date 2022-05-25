@@ -183,6 +183,7 @@ class HaveGroups extends StatelessWidget {
               children: groups.map((group) {
                 Group g = Group.fromDocument(group);
                 return CircleIconButton(
+                  key: Key(g.name + '_button'),
                   onTap: () => Get.to(() => GroupDetailsPage(firestore: firestore, groupId: group.id)),
                   width: (MediaQuery.of(context).size.width - 197) / 8,
                   //-padding*2 -iconWidth*4 -spacing*3

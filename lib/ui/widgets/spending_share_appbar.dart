@@ -55,6 +55,7 @@ class SpendingShareAppBar extends AppBar {
           actions: [
             hasForward
                 ? GestureDetector(
+                    key: Key(forwardText),
                     onTap: () {
                       onForward?.call();
                     },

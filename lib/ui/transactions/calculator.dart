@@ -53,6 +53,7 @@ class _CalculatorState extends State<Calculator> {
                 // Clear Button
                 if (index == 0) {
                   return MyButton(
+                    key: const Key('C'),
                     buttontapped: () {
                       setState(() {
                         userInput = '';
@@ -67,6 +68,7 @@ class _CalculatorState extends State<Calculator> {
                 // +/- button
                 else if (index == 1) {
                   return MyButton(
+                    key: const Key('('),
                     buttonText: buttons[index],
                     color: widget.color[bracketAndDelOpacity],
                     textColor: Colors.white,
@@ -80,6 +82,7 @@ class _CalculatorState extends State<Calculator> {
                 // % Button
                 else if (index == 2) {
                   return MyButton(
+                    key: const Key(')'),
                     buttonText: buttons[index],
                     color: widget.color[bracketAndDelOpacity],
                     textColor: Colors.white,
@@ -93,6 +96,7 @@ class _CalculatorState extends State<Calculator> {
                 // Delete Button
                 else if (index == 3) {
                   return MyButton(
+                    key: const Key('del'),
                     buttontapped: () {
                       setState(() {
                         userInput = userInput.substring(0, userInput.length - 1);
@@ -106,6 +110,7 @@ class _CalculatorState extends State<Calculator> {
                 // Equal_to Button
                 else if (index == 18) {
                   return MyButton(
+                    key: const Key('='),
                     buttontapped: () {
                       setState(() {
                         if (userInput == '') {
@@ -137,6 +142,7 @@ class _CalculatorState extends State<Calculator> {
                 //  other buttons
                 else {
                   return MyButton(
+                    key: Key(buttons[index]),
                     buttontapped: () {
                       setState(() {
                         userInput += buttons[index];
