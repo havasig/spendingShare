@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   bool passwordHadFocus = false;
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-  final _emailTextEditingController = TextEditingController(text: 'havasi.gaabor@gmail.com');
+  final _emailTextEditingController = TextEditingController(text: 'havasig@gmail.com');
   final _passwordTextEditingController = TextEditingController(text: 'Passw0rd');
   final _formKey = GlobalKey<FormState>(debugLabel: '_LoginFormState');
 
@@ -78,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: h(16)),
                   Button(
+                    key: const Key('login_button'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         signInWithEmailAndPassword();
